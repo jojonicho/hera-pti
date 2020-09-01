@@ -3,7 +3,6 @@ import { User } from "../types";
 
 interface MyContext {
   user: User | null;
-  // setUser: any;
   setUser: React.Dispatch<React.SetStateAction<User | null>> | null;
 }
 

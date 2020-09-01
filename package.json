@@ -1,5 +1,5 @@
 {
-  "name": "custom-tier-list",
+  "name": "hera",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,10 +8,6 @@
     "@emotion/react": "^11.0.0-next.10",
     "@emotion/styled": "^10.0.27",
     "@reduxjs/toolkit": "^1.4.0",
-    "@types/jest": "25.2.3",
-    "@types/node": "14.0.5",
-    "@types/react": "16.9.35",
-    "@types/react-dom": "16.9.8",
     "dotenv": "^8.2.0",
     "emotion-theming": "^10.0.27",
     "js-cookie": "^2.2.1",
@@ -44,8 +40,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "devDependencies": {
-    "@types/react-helmet": "^6.0.0",
-    "@types/react-router-dom": "^5.1.5"
-  }
+  "devDependencies": {}
 }
