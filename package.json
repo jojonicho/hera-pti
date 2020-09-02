@@ -22,8 +22,7 @@
     "react-scripts": "3.4.1",
     "react-toastify": "^6.0.8",
     "swr": "^0.3.0",
-    "typeface-overpass": "^0.0.72",
-    "typescript": "3.9.3"
+    "typeface-overpass": "^0.0.72"
   },
   "scripts": {
     "start": "react-scripts start",
