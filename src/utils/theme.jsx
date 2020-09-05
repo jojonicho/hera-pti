@@ -1,14 +1,14 @@
-import React from "react";
-import { theme as chakraTheme } from "@chakra-ui/core";
+import { theme as chakraTheme } from '@chakra-ui/core'
+import React from 'react'
 
 const fonts = {
   ...chakraTheme.fonts,
-  body: "system-ui, sans-serif",
-  heading: "Georgia, serif",
-  mono: "Menlo, monospace",
-};
+  body: 'system-ui, sans-serif',
+  heading: 'Georgia, serif',
+  mono: 'Menlo, monospace',
+}
 
-const breakpoints = ["30em", "48em", "62em", "80em"];
+const breakpoints = ['30em', '48em', '62em', '80em']
 
 const theme = {
   ...chakraTheme,
@@ -36,9 +36,9 @@ const theme = {
           />
         </svg>
       ),
-      viewBox: "0 0 3000 3163",
+      viewBox: '0 0 3000 3163',
     },
   },
-};
+}
 
-export default theme;
+export default theme

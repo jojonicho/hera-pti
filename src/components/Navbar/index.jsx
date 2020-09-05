@@ -1,6 +1,3 @@
-import React, { useContext } from "react";
-import { UserContext } from "../../utils/datastore/UserContext";
-import { Instagram } from "react-content-loader";
 import {
   Stack,
   Text,
@@ -11,10 +8,14 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverBody,
-} from "@chakra-ui/core";
+} from '@chakra-ui/core'
+import React, { useContext } from 'react'
+import { Instagram } from 'react-content-loader'
+
+import { UserContext } from '../../utils/datastore/UserContext'
 
 export const Navbar = ({ children, logout }) => {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext)
   return (
     <>
       <Stack>
@@ -25,27 +26,17 @@ export const Navbar = ({ children, logout }) => {
           justify="flex-end"
           p={1}
           bg="black"
-          minH={"35px"}
+          minH={'35px'}
         >
           {!user ? (
             <Instagram />
           ) : (
             <Stack align="center" isInline spacing={1}>
-              <Image
-                src={user.picture}
-                alt="google-profile"
-                width="35px"
-                borderRadius="50%"
-              />
+              <Image src={user.picture} alt="google-profile" width="35px" borderRadius="50%" />
               <Text color="white">{user.name}</Text>
               <Popover trigger="click" placement="bottom-end">
                 <PopoverTrigger>
-                  <Icon
-                    cursor="pointer"
-                    mr={2}
-                    color="white"
-                    name="triangle-down"
-                  />
+                  <Icon cursor="pointer" mr={2} color="white" name="triangle-down" />
                 </PopoverTrigger>
                 <PopoverContent width="200px">
                   <PopoverBody>
@@ -64,5 +55,5 @@ export const Navbar = ({ children, logout }) => {
         {children}
       </Stack>
     </>
-  );
-};
+  )
+}
