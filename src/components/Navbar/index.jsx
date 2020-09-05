@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../utils/datastore/UserContext";
-import styled from "@emotion/styled/";
 import { Instagram } from "react-content-loader";
 import {
   Stack,

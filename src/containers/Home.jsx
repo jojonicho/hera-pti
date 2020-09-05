@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "@emotion/styled";
 import { AUTH_TOKEN_STORAGE_KEY } from "../constants";
 import { Text, ButtonGroup, Button, Stack } from "@chakra-ui/core";
 
