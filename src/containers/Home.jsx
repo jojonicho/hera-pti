@@ -1,15 +1,16 @@
-import React from "react";
-import { AUTH_TOKEN_STORAGE_KEY } from "../constants";
-import { Text, ButtonGroup, Button, Stack } from "@chakra-ui/core";
+import { Text, ButtonGroup, Button, Stack } from '@chakra-ui/core'
+import React from 'react'
+
+import { AUTH_TOKEN_STORAGE_KEY } from '../constants'
 
 export const Home = () => {
   const headers = new Headers({
-    "Content-Type": "application/json",
-  });
-  const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+    'Content-Type': 'application/json',
+  })
+  const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
 
   if (token) {
-    headers.append("Authorization", `Token ${token}`);
+    headers.append('Authorization', `Token ${token}`)
   }
 
   return (
@@ -30,5 +31,5 @@ export const Home = () => {
         </Button>
       </ButtonGroup>
     </Stack>
-  );
-};
+  )
+}

@@ -1,86 +1,82 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import theme from "../utils/theme";
-import { css, Global } from "@emotion/react";
-import "typeface-overpass";
-import { Home } from "../containers";
+import { ThemeProvider, Stack, ColorModeProvider, CSSReset } from '@chakra-ui/core'
+import { css, Global } from '@emotion/react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
+import { Facebook as Loader } from 'react-content-loader'
+import GoogleLogin from 'react-google-login'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import 'typeface-overpass'
 
-import GoogleLogin from "react-google-login";
-import { AUTH_TOKEN_STORAGE_KEY, API_URL, headers } from "../constants";
-import { UserContext } from "../utils/datastore/UserContext";
-import { Navbar } from "./Navbar";
-import { Facebook as Loader } from "react-content-loader";
-import {
-  ThemeProvider,
-  Stack,
-  ColorModeProvider,
-  CSSReset,
-} from "@chakra-ui/core";
+import { AUTH_TOKEN_STORAGE_KEY, API_URL, headers } from '../constants'
+import { Home } from '../containers'
+import { UserContext } from '../utils/datastore/UserContext'
+import theme from '../utils/theme'
+
+import { Navbar } from './Navbar'
 
 export const Routes = () => {
-  const [user, setUser] = useState(null);
-  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const [user, setUser] = useState(null)
+  const value = useMemo(() => ({ user, setUser }), [user, setUser])
 
   const [isAuthenticated, setIsAuthenticated] = useState(
-    Boolean(localStorage.getItem(AUTH_TOKEN_STORAGE_KEY))
-  );
+    Boolean(localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)),
+  )
   const refreshAuthStatus = useCallback(() => {
-    setIsAuthenticated(Boolean(localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)));
-  }, []);
+    setIsAuthenticated(Boolean(localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)))
+  }, [])
 
   const getUser = useCallback(async () => {
-    const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+    const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
     if (token) {
       try {
         const response = await fetch(`${API_URL}/todos/current-user`, {
           headers: new Headers({
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Token ${token}`,
           }),
-          method: "GET",
-        });
-        const json = await response.json();
-        setUser(json);
+          method: 'GET',
+        })
+        const json = await response.json()
+        setUser(json)
       } catch (e) {
-        console.log(e);
-        refreshAuthStatus();
-        setUser(null);
+        console.log(e)
+        refreshAuthStatus()
+        setUser(null)
       }
     } else {
-      refreshAuthStatus();
-      setUser(null);
+      refreshAuthStatus()
+      setUser(null)
     }
-  }, [refreshAuthStatus]);
+  }, [refreshAuthStatus])
 
   const logout = useCallback(() => {
-    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
-    setUser(null);
-    refreshAuthStatus();
-  }, [refreshAuthStatus]);
+    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
+    setUser(null)
+    refreshAuthStatus()
+  }, [refreshAuthStatus])
 
   const login = useCallback(
-    async (token) => {
+    async token => {
       try {
         const response = await fetch(`${API_URL}/rest-auth/google/`, {
           headers,
-          method: "POST",
-          body: JSON.stringify({ access_token: token.accessToken, code: "" }),
-        });
-        const authToken = await response.json();
-        localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, authToken.key);
-        refreshAuthStatus();
-        getUser();
+          method: 'POST',
+          body: JSON.stringify({ access_token: token.accessToken, code: '' }),
+        })
+        const authToken = await response.json()
+        localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, authToken.key)
+        refreshAuthStatus()
+        getUser()
       } catch (e) {
-        console.log(e);
-        setUser(null);
+        console.log(e)
+        setUser(null)
       }
     },
-    [refreshAuthStatus, getUser]
-  );
+    [refreshAuthStatus, getUser],
+  )
 
   useEffect(() => {
-    getUser();
-  }, [refreshAuthStatus, getUser, isAuthenticated]);
+    getUser()
+  }, [refreshAuthStatus, getUser, isAuthenticated])
 
   return (
     <ThemeProvider theme={theme}>
@@ -141,9 +137,9 @@ export const Routes = () => {
                   <GoogleLogin
                     clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                     buttonText="Login with Google"
-                    onSuccess={(token) => login(token)}
-                    onFailure={(err) => console.log(err)}
-                    cookiePolicy={"single_host_origin"}
+                    onSuccess={token => login(token)}
+                    onFailure={err => console.log(err)}
+                    cookiePolicy={'single_host_origin'}
                   />
                 </Stack>
               )}
@@ -152,5 +148,5 @@ export const Routes = () => {
         </UserContext.Provider>
       </BrowserRouter>
     </ThemeProvider>
-  );
-};
+  )
+}
