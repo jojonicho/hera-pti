@@ -14,6 +14,8 @@ const theme = {
   ...chakraTheme,
   colors: {
     ...chakraTheme.colors,
+    formField: '#E8EAED',
+    formFont: '#5F637E',
     // black: '#16161D'
     brand: '#171837',
     accent: '#F5A200',
