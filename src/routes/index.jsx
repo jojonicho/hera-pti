@@ -1,19 +1,17 @@
-import { ThemeProvider, Stack, ColorModeProvider, CSSReset } from '@chakra-ui/core'
+import { ThemeProvider, CSSReset } from '@chakra-ui/core'
 import { css, Global } from '@emotion/react'
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { Facebook as Loader } from 'react-content-loader'
-import GoogleLogin from 'react-google-login'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import 'typeface-overpass'
+import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom'
 
-import { AUTH_TOKEN_STORAGE_KEY, API_URL, headers } from '../constants'
-import { Home } from '../containers'
+import { Navbar } from '../components/Navbar'
+import { AUTH_TOKEN_STORAGE_KEY, USER_URL, TOKEN_URL, headers } from '../constants'
+import { LandingPage } from '../containers'
 import { UserContext } from '../utils/datastore/UserContext'
 import theme from '../utils/theme'
 
-import { Navbar } from './Navbar'
-
 export const Routes = () => {
+  const history = useHistory()
   const [user, setUser] = useState(null)
   const value = useMemo(() => ({ user, setUser }), [user, setUser])
 
@@ -28,7 +26,7 @@ export const Routes = () => {
     const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
     if (token) {
       try {
-        const response = await fetch(`${API_URL}/todos/current-user`, {
+        const response = await fetch(USER_URL, {
           headers: new Headers({
             'Content-Type': 'application/json',
             Authorization: `Token ${token}`,
@@ -54,10 +52,14 @@ export const Routes = () => {
     refreshAuthStatus()
   }, [refreshAuthStatus])
 
+  useEffect(() => {
+    getUser()
+  }, [refreshAuthStatus, getUser, isAuthenticated])
+
   const login = useCallback(
     async token => {
       try {
-        const response = await fetch(`${API_URL}/rest-auth/google/`, {
+        const response = await fetch(TOKEN_URL, {
           headers,
           method: 'POST',
           body: JSON.stringify({ access_token: token.accessToken, code: '' }),
@@ -66,17 +68,14 @@ export const Routes = () => {
         localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, authToken.key)
         refreshAuthStatus()
         getUser()
+        history.push('/')
       } catch (e) {
         console.log(e)
         setUser(null)
       }
     },
-    [refreshAuthStatus, getUser],
+    [refreshAuthStatus, getUser, history],
   )
-
-  useEffect(() => {
-    getUser()
-  }, [refreshAuthStatus, getUser, isAuthenticated])
 
   return (
     <ThemeProvider theme={theme}>
@@ -121,30 +120,20 @@ export const Routes = () => {
       />
       <BrowserRouter>
         <UserContext.Provider value={value}>
-          <ColorModeProvider>
-            <CSSReset />
-            <Navbar logout={logout}>
-              {isAuthenticated ? (
-                !user ? (
-                  <Loader />
-                ) : (
-                  <Switch>
-                    <Route exact path="/" component={Home} />
-                  </Switch>
-                )
+          <CSSReset />
+          <Navbar logout={logout}>
+            {isAuthenticated ? (
+              !user ? (
+                <Loader />
               ) : (
-                <Stack align="center" justify="center">
-                  <GoogleLogin
-                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                    buttonText="Login with Google"
-                    onSuccess={token => login(token)}
-                    onFailure={err => console.log(err)}
-                    cookiePolicy={'single_host_origin'}
-                  />
-                </Stack>
-              )}
-            </Navbar>
-          </ColorModeProvider>
+                <Switch>
+                  <Route exact path="/" component={LandingPage} />
+                </Switch>
+              )
+            ) : (
+              <LandingPage login={login} />
+            )}
+          </Navbar>
         </UserContext.Provider>
       </BrowserRouter>
     </ThemeProvider>

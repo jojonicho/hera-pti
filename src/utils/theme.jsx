@@ -15,6 +15,10 @@ const theme = {
   colors: {
     ...chakraTheme.colors,
     // black: '#16161D'
+    brand: '#171837',
+    accent: '#F5A200',
+    primary: '#1565C0',
+    secondary: '#5F637E',
   },
   fonts,
   breakpoints,
