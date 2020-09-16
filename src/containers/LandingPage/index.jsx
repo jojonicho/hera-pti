@@ -1,11 +1,13 @@
-import { Text, ButtonGroup, Button, Stack } from '@chakra-ui/core'
 import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
+import { Text, Button, Stack } from '@chakra-ui/core'
 import GoogleLogin from 'react-google-login'
 
-import { ReactComponent as Logo } from '../../assets/logo.svg'
-import { UserContext } from '../../utils/datastore/UserContext'
+import { ReactComponent as Logo } from 'assets/logo.svg'
+import { UserContext } from 'utils/datastore/UserContext'
+import { GOOGLE_CLIENT_ID } from 'constants/auth'
 
-export const LandingPage = ({ login }) => {
+const LandingPage = ({ login }) => {
   const { user } = useContext(UserContext)
   return (
     <Stack
@@ -30,7 +32,7 @@ export const LandingPage = ({ login }) => {
         </Button>
       ) : (
         <GoogleLogin
-          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+          clientId={GOOGLE_CLIENT_ID}
           buttonText="Login with Google"
           onSuccess={token => login(token)}
           onFailure={err => console.log(err)}
@@ -40,3 +42,9 @@ export const LandingPage = ({ login }) => {
     </Stack>
   )
 }
+
+LandingPage.propTypes = {
+  login: PropTypes.func.isRequired,
+}
+
+export default LandingPage

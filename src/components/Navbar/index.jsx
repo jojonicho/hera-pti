@@ -1,24 +1,24 @@
+import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
 import {
   Stack,
   Text,
   Button,
   Image,
   Icon,
-  IconButton,
   Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverBody,
 } from '@chakra-ui/core'
-import React, { useContext } from 'react'
 import { Instagram } from 'react-content-loader'
 import { Link } from 'react-router-dom'
 
-import { ReactComponent as Logo } from '../../assets/logo.svg'
-import { UserContext } from '../../utils/datastore/UserContext'
-import { Footer } from '../Footer'
+import { ReactComponent as Logo } from 'assets/logo.svg'
+import { UserContext } from 'utils/datastore/UserContext'
+import Footer from 'components/Footer'
 
-export const Navbar = ({ children, logout }) => {
+const Navbar = ({ children, logout }) => {
   const { user } = useContext(UserContext)
   return (
     <Stack justify="space-between" h="100vh">
@@ -69,3 +69,10 @@ export const Navbar = ({ children, logout }) => {
     </Stack>
   )
 }
+
+Navbar.propTypes = {
+  children: PropTypes.element,
+  logout: PropTypes.func.isRequired,
+}
+
+export default Navbar
