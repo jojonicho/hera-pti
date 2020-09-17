@@ -4,11 +4,11 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { Facebook as Loader } from 'react-content-loader'
 import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom'
 
-import { Navbar } from '../components/Navbar'
-import { AUTH_TOKEN_STORAGE_KEY, USER_URL, TOKEN_URL, headers } from '../constants'
-import { LandingPage } from '../containers'
-import { UserContext } from '../utils/datastore/UserContext'
-import theme from '../utils/theme'
+import Navbar from 'components/Navbar'
+import { AUTH_TOKEN_STORAGE_KEY, USER_URL, TOKEN_URL, HEADERS } from 'constants/auth'
+import { LandingPage } from 'containers'
+import { UserContext } from 'utils/datastore/UserContext'
+import theme from 'utils/theme'
 
 export const Routes = () => {
   const history = useHistory()
@@ -60,7 +60,7 @@ export const Routes = () => {
     async token => {
       try {
         const response = await fetch(TOKEN_URL, {
-          headers,
+          HEADERS,
           method: 'POST',
           body: JSON.stringify({ access_token: token.accessToken, code: '' }),
         })
