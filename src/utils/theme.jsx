@@ -4,7 +4,7 @@ import React from 'react'
 const fonts = {
   ...chakraTheme.fonts,
   body: 'system-ui, sans-serif',
-  heading: 'Georgia, serif',
+  heading: 'system-ui, sans-serif',
   mono: 'Menlo, monospace',
 }
 
@@ -19,6 +19,9 @@ const theme = {
     accent: '#F5A200',
     primary: '#1565C0',
     secondary: '#5F637E',
+    form: '#E8EAED',
+    formaddon: '#C6C8D1',
+    card: '#F5F5F5',
   },
   fonts,
   breakpoints,
