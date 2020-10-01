@@ -4,8 +4,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { Facebook as Loader } from 'react-content-loader'
 import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom'
 
-import Navbar from 'components/Navbar'
-import { AUTH_TOKEN_STORAGE_KEY, USER_URL, TOKEN_URL, HEADERS } from 'constants/auth'
+import { AUTH_TOKEN_STORAGE_KEY, USER_URL, TOKEN_URL } from 'constants/auth'
 import { LandingPage } from 'containers'
 import { UserContext } from 'utils/datastore/UserContext'
 import theme from 'utils/theme'
@@ -13,7 +12,6 @@ import theme from 'utils/theme'
 export const Routes = () => {
   const history = useHistory()
   const [user, setUser] = useState(null)
-  const value = useMemo(() => ({ user, setUser }), [user, setUser])
 
   const [isAuthenticated, setIsAuthenticated] = useState(
     Boolean(localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)),
@@ -21,6 +19,14 @@ export const Routes = () => {
   const refreshAuthStatus = useCallback(() => {
     setIsAuthenticated(Boolean(localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)))
   }, [])
+
+  const logout = useCallback(() => {
+    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
+    setUser(null)
+    refreshAuthStatus()
+  }, [refreshAuthStatus])
+
+  const value = useMemo(() => ({ user, setUser, logout }), [user, setUser, logout])
 
   const getUser = useCallback(async () => {
     const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
@@ -46,12 +52,6 @@ export const Routes = () => {
     }
   }, [refreshAuthStatus])
 
-  const logout = useCallback(() => {
-    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
-    setUser(null)
-    refreshAuthStatus()
-  }, [refreshAuthStatus])
-
   useEffect(() => {
     getUser()
   }, [refreshAuthStatus, getUser, isAuthenticated])
@@ -59,12 +59,23 @@ export const Routes = () => {
   const login = useCallback(
     async token => {
       try {
+        // for some reason ga work kalo pake yang di auth/constants
+        const headers = new Headers({
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        })
+
         const response = await fetch(TOKEN_URL, {
-          HEADERS,
+          headers,
           method: 'POST',
           body: JSON.stringify({ access_token: token.accessToken, code: '' }),
         })
+
         const authToken = await response.json()
+        if (authToken.detail) {
+          console.log(response)
+          return
+        }
         localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, authToken.key)
         refreshAuthStatus()
         getUser()
@@ -121,19 +132,17 @@ export const Routes = () => {
       <BrowserRouter>
         <UserContext.Provider value={value}>
           <CSSReset />
-          <Navbar logout={logout}>
-            {isAuthenticated ? (
-              !user ? (
-                <Loader />
-              ) : (
-                <Switch>
-                  <Route exact path="/" component={LandingPage} />
-                </Switch>
-              )
+          {isAuthenticated ? (
+            !user ? (
+              <Loader />
             ) : (
-              <LandingPage login={login} />
-            )}
-          </Navbar>
+              <Switch>
+                <Route exact path="/" component={LandingPage} />
+              </Switch>
+            )
+          ) : (
+            <LandingPage login={login} />
+          )}
         </UserContext.Provider>
       </BrowserRouter>
     </ThemeProvider>
