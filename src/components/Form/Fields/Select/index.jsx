@@ -13,9 +13,9 @@ const DefaultSelect = ({
   options,
 }) => (
   <FormControl isRequired={isRequired} isInvalid={errors}>
-    <Flex direction="row" justify="space-between" width="100%" mb={['1rem', '1.5rem']}>
+    <Flex direction="row" justify="space-between" width="100%" mb="1.5rem">
       <Flex direction={['column', 'row']} align={['flex-start', 'center']} width="100%">
-        <Stack width={['100%', '11rem']} pr={4}>
+        <Stack width={['100%', '11rem']} pr={4} mb={[1, 0]}>
           <FormLabel textAlign={['left', 'right']} p={0} fontSize="sm">
             {label}
           </FormLabel>
