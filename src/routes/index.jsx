@@ -4,10 +4,12 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { Facebook as Loader } from 'react-content-loader'
 import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom'
 
-import { AUTH_TOKEN_STORAGE_KEY, USER_URL, TOKEN_URL } from 'constants/auth'
+import Navbar from 'components/Navbar'
+import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
 import { LandingPage } from 'containers'
 import { UserContext } from 'utils/datastore/UserContext'
 import theme from 'utils/theme'
+import { loginApi, userInfoApi } from 'services/user'
 
 export const Routes = () => {
   const history = useHistory()
@@ -31,21 +33,14 @@ export const Routes = () => {
   const getUser = useCallback(async () => {
     const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
     if (token) {
-      try {
-        const response = await fetch(USER_URL, {
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            Authorization: `Token ${token}`,
-          }),
-          method: 'GET',
-        })
-        const json = await response.json()
-        setUser(json)
-      } catch (e) {
-        console.log(e)
+      const [data, error] = await userInfoApi()
+      if (error) {
         refreshAuthStatus()
         setUser(null)
+        return
       }
+
+      setUser(data)
     } else {
       refreshAuthStatus()
       setUser(null)
@@ -58,32 +53,16 @@ export const Routes = () => {
 
   const login = useCallback(
     async token => {
-      try {
-        // for some reason ga work kalo pake yang di auth/constants
-        const headers = new Headers({
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        })
-
-        const response = await fetch(TOKEN_URL, {
-          headers,
-          method: 'POST',
-          body: JSON.stringify({ access_token: token.accessToken, code: '' }),
-        })
-
-        const authToken = await response.json()
-        if (authToken.detail) {
-          console.log(response)
-          return
-        }
-        localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, authToken.key)
-        refreshAuthStatus()
-        getUser()
-        history.push('/')
-      } catch (e) {
-        console.log(e)
+      const [data, error] = await loginApi({ access_token: token.accessToken, code: '' })
+      if (error) {
         setUser(null)
+        return
       }
+
+      localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, data.key)
+      refreshAuthStatus()
+      getUser()
+      history.push('/')
     },
     [refreshAuthStatus, getUser, history],
   )
