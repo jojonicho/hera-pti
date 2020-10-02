@@ -1,5 +1,4 @@
 import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
-import { BASE_URL } from 'constants/urls'
 
 /**
  * Base request builder function.
@@ -13,7 +12,7 @@ export async function request(path, body = {}, method = 'GET', extraHeaders = {}
   let response, data, error
 
   try {
-    response = await fetch(constructUrl(path), {
+    response = await fetch(path, {
       headers: { ...getDefaultHeaders(), ...extraHeaders },
       method,
       body: JSON.stringify(body),
@@ -28,10 +27,6 @@ export async function request(path, body = {}, method = 'GET', extraHeaders = {}
   return [data, error, response]
 }
 
-function constructUrl(path) {
-  return BASE_URL + path
-}
-
 function getDefaultHeaders() {
   const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
   const values = {
@@ -43,5 +38,5 @@ function getDefaultHeaders() {
     values.Authorization = `Token ${token}`
   }
 
-  return new Headers(values)
+  return values
 }
