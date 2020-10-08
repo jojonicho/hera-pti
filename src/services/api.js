@@ -9,14 +9,17 @@ import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
  * @param {object} extraHeaders extra header key-values
  */
 export async function request(path, body = {}, method = 'GET', extraHeaders = {}) {
-  let response, data, error
+  let response, data, error, responseComponent
 
   try {
-    response = await fetch(path, {
+    responseComponent = {
       headers: { ...getDefaultHeaders(), ...extraHeaders },
       method,
-      body: JSON.stringify(body),
-    })
+    }
+    if (method !== 'GET' && method !== 'HEAD') {
+      responseComponent = { body: JSON.stringify(body), ...responseComponent }
+    }
+    response = await fetch(path, responseComponent)
     data = await response.json()
   } catch (err) {
     // can do default/generic error handling here, i.e. error popup notification, console.error, etc
