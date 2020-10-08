@@ -1,30 +1,15 @@
 import React, { useContext } from 'react'
-import PropTypes from 'prop-types'
 import { Text, Button, Stack } from '@chakra-ui/core'
 import GoogleLogin from 'react-google-login'
 
 import { ReactComponent as Logo } from 'assets/logo.svg'
 import { UserContext } from 'utils/datastore/UserContext'
 import { GOOGLE_CLIENT_ID } from 'constants/auth'
-import { Discussion } from 'components'
 import { RequesterLayout } from 'components/Layout/Layouts/RequesterLayout'
 
-const LandingPage = ({ login }) => {
-  const { user } = useContext(UserContext)
-  const messages = [
-    {
-      id: 1,
-      username: 'bob',
-      is_admin: false,
-      content: 'lalaal',
-    },
-    {
-      id: 2,
-      username: 'joni',
-      is_admin: true,
-      content: 'siap bos',
-    },
-  ]
+const LandingPage = () => {
+  const { user, login } = useContext(UserContext)
+
   return (
     <RequesterLayout>
       <Stack
@@ -48,9 +33,6 @@ const LandingPage = ({ login }) => {
             <Button variantColor="blue" variant="outline">
               Visit Dashboard
             </Button>
-            {messages && (
-              <Discussion messageUnreadCount={messages.length} messages={messages} readOnly />
-            )}
           </Stack>
         ) : (
           <GoogleLogin
@@ -64,10 +46,6 @@ const LandingPage = ({ login }) => {
       </Stack>
     </RequesterLayout>
   )
-}
-
-LandingPage.propTypes = {
-  login: PropTypes.func.isRequired,
 }
 
 export default LandingPage
