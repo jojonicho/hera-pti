@@ -4,9 +4,8 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { Facebook as Loader } from 'react-content-loader'
 import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom'
 
-import Navbar from 'components/Navbar'
 import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
-import { LandingPage } from 'containers'
+import { LandingPage, Dashboard } from 'containers'
 import { UserContext } from 'utils/datastore/UserContext'
 import theme from 'utils/theme'
 import { loginApi, userInfoApi } from 'services/user'
@@ -117,6 +116,7 @@ export const Routes = () => {
             ) : (
               <Switch>
                 <Route exact path="/" component={LandingPage} />
+                <Route path="/" component={Dashboard} />
               </Switch>
             )
           ) : (
