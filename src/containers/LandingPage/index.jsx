@@ -6,10 +6,10 @@ import { ReactComponent as Logo } from 'assets/logo.svg'
 import { UserContext } from 'utils/datastore/UserContext'
 import { GOOGLE_CLIENT_ID } from 'constants/auth'
 import { RequesterLayout } from 'components/Layout/Layouts/RequesterLayout'
+import { Discussion } from 'components'
 
 const LandingPage = () => {
   const { user, login } = useContext(UserContext)
-
   return (
     <RequesterLayout>
       <Stack
@@ -33,6 +33,7 @@ const LandingPage = () => {
             <Button variantColor="blue" variant="outline">
               Visit Dashboard
             </Button>
+            <Discussion discussionId="b8c80564-6337-4409-a1ad-a690137cec3f" isActive />
           </Stack>
         ) : (
           <GoogleLogin

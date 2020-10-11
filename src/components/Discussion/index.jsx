@@ -15,12 +15,14 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core'
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Message } from './Message'
 import { useForm } from 'react-hook-form'
 import { UserContext } from 'utils/datastore/UserContext'
-import { getDiscussionById, postMessageById, putDiscussionStatusById } from 'services/discussion'
+import { DISCUSSION_BY_ID_URL, postMessageById, putDiscussionStatusById } from 'services/discussion'
+import { useFetch } from 'services/api'
+import { Code as Loader } from 'react-content-loader'
 
 export const Discussion = ({
   discussionId,
@@ -35,14 +37,17 @@ export const Discussion = ({
     : messageUnreadByRequesterCount
 
   const [cnt, setCount] = useState(messageUnreadCount || 0)
+  const { data, loading } = useFetch(DISCUSSION_BY_ID_URL(discussionId))
+
   const [messages, setMessages] = useState([])
+
   const { register, reset, handleSubmit, formState, errors } = useForm({
     mode: 'onChange',
   })
   const onSubmit = async ({ content }) => {
     const [newMessage, error] = await postMessageById(discussionId, content)
     reset()
-    if (newMessage.error || error) {
+    if (error) {
       return
     }
     setMessages(prev => [newMessage, ...prev])
@@ -58,17 +63,11 @@ export const Discussion = ({
     }
   }
 
-  const getDiscussion = useCallback(async () => {
-    const [data, error] = await getDiscussionById(discussionId)
-    if (error) {
-      return
-    }
-    setMessages(data.messages)
-  }, [discussionId])
-
   useEffect(() => {
-    getDiscussion()
-  }, [getDiscussion])
+    if (data) {
+      setMessages(data.messages)
+    }
+  }, [data, loading])
 
   let prevDate
   var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
@@ -112,7 +111,9 @@ export const Discussion = ({
             <Stack h="20vh" justify="flex-end">
               <Stack h="20vh" overflowY="scroll" overflowX="hidden" flexDir="column-reverse">
                 <Stack ref={messagesRef} />
-                {messages && messages.length > 0 ? (
+                {loading ? (
+                  <Loader />
+                ) : messages && messages.length > 0 ? (
                   messages.map(({ user: messageUser, content, created_at }, id) => {
                     const currentDate = new Date(created_at)
                     const changeDay = currentDate - prevDate >= 24 * 60 * 60
@@ -174,6 +175,7 @@ export const Discussion = ({
                       variantColor="blue"
                       type="submit"
                       isDisabled={!formState.isValid}
+                      isLoading={formState.isSubmitting}
                     >
                       Send
                     </Button>

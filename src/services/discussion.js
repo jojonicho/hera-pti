@@ -1,7 +1,7 @@
 import { DISCUSSION_URL } from 'constants/urls'
 import { request } from './api'
 
-const DISCUSSION_BY_ID_URL = (id, action = '') => `${DISCUSSION_URL}${id}/${action}`
+export const DISCUSSION_BY_ID_URL = (id, action = '') => `${DISCUSSION_URL}${id}/${action}`
 
 export async function getDiscussionById(id) {
   return request(DISCUSSION_BY_ID_URL(id))
