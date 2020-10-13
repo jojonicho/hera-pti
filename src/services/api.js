@@ -1,4 +1,19 @@
+import { useEffect, useState } from 'react'
 import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
+
+export const useFetch = (url, body = {}, method = 'GET', extraHeaders = {}) => {
+  const [state, setState] = useState({ data: null, loading: true })
+  useEffect(async () => {
+    setState({ data: state.data, loading: true })
+    const [apiData, apiError] = await request(url, body, method, extraHeaders)
+    if (apiError) {
+      setState({ data: null, loading: false })
+    } else {
+      setState({ data: apiData, loading: false })
+    }
+  }, [url, useState])
+  return state
+}
 
 /**
  * Base request builder function.
@@ -8,7 +23,7 @@ import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
  * @param {string} method HTTP method
  * @param {object} extraHeaders extra header key-values
  */
-export async function request(path, body = {}, method = 'GET', extraHeaders = {}) {
+export async function request(path, body, method, extraHeaders) {
   let response, data, error, responseComponent
 
   try {
@@ -20,6 +35,9 @@ export async function request(path, body = {}, method = 'GET', extraHeaders = {}
       responseComponent = { body: JSON.stringify(body), ...responseComponent }
     }
     response = await fetch(path, responseComponent)
+    if (!response.ok) {
+      error = response
+    }
     data = await response.json()
   } catch (err) {
     // can do default/generic error handling here, i.e. error popup notification, console.error, etc

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
-import { LandingPage, Dashboard } from 'containers'
+import { LandingPage } from 'containers'
 import { UserContext } from 'utils/datastore/UserContext'
 import theme from 'utils/theme'
 import { loginApi, userInfoApi } from 'services/user'
