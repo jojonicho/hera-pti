@@ -15,19 +15,65 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core'
-import React, { useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Message } from './Message'
 import { useForm } from 'react-hook-form'
+import { UserContext } from 'utils/datastore/UserContext'
+import { getDiscussionById, postMessageById, putDiscussionStatusById } from 'services/discussion'
 
-export const Discussion = ({ messageUnreadCount, messages, readOnly }) => {
+export const Discussion = ({
+  discussionId,
+  fieldName,
+  messageUnreadByAdminCount,
+  messageUnreadByRequesterCount,
+  isActive,
+}) => {
+  const { user } = useContext(UserContext)
+  const messageUnreadCount = user.is_admin
+    ? messageUnreadByAdminCount
+    : messageUnreadByRequesterCount
+
   const [cnt, setCount] = useState(messageUnreadCount || 0)
+  const [messages, setMessages] = useState([])
   const { register, reset, handleSubmit, formState, errors } = useForm({
     mode: 'onChange',
   })
-  const onSubmit = () => {
+  const onSubmit = async ({ content }) => {
+    const [newMessage, error] = await postMessageById(discussionId, content)
     reset()
+    if (newMessage.error || error) {
+      return
+    }
+    setMessages(prev => [newMessage, ...prev])
+    scrollToBottom()
   }
+  const scrollToBottom = () => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      })
+    }
+  }
+
+  const getDiscussion = useCallback(async () => {
+    const [data, error] = await getDiscussionById(discussionId)
+    if (error) {
+      return
+    }
+    setMessages(data.messages)
+  }, [discussionId])
+
+  useEffect(() => {
+    getDiscussion()
+  }, [getDiscussion])
+
+  let prevDate
+  var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+  const messagesRef = useRef(null)
+
   return (
     <Stack align="center">
       <Badge
@@ -47,53 +93,94 @@ export const Discussion = ({ messageUnreadCount, messages, readOnly }) => {
         <PopoverContent border="0" bg="card">
           <PopoverHeader fontWeight="bold" border="0" fontSize="20px">
             <Stack isInline justify="space-between" mr="10%" align="center">
-              <Text>Discussions</Text>
-              <Button variant="outline" size="sm" variantColor="blue">
-                Resolve
-              </Button>
+              <Text>{fieldName}</Text>
+              {user.is_admin && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  variantColor="blue"
+                  onClick={() => putDiscussionStatusById(discussionId)}
+                >
+                  Resolve
+                </Button>
+              )}
             </Stack>
           </PopoverHeader>
           <PopoverCloseButton mt={2} mr={1} />
           <PopoverArrow />
           <PopoverBody>
-            <Stack h="16vh" overflowY="scroll" flexDirection="column-reverse">
-              {messages &&
-                messages.map(({ id, is_admin, username, content }) => (
-                  <Message
-                    key={id}
-                    id={id}
-                    is_admin={is_admin}
-                    username={username}
-                    content={content}
-                  />
-                ))}
+            <Stack h="20vh" justify="flex-end">
+              <Stack h="20vh" overflowY="scroll" overflowX="hidden" flexDir="column-reverse">
+                <Stack ref={messagesRef} />
+                {messages && messages.length > 0 ? (
+                  messages.map(({ user: messageUser, content, created_at }, id) => {
+                    const currentDate = new Date(created_at)
+                    const changeDay = currentDate - prevDate >= 24 * 60 * 60
+                    prevDate = currentDate
+                    return (
+                      <>
+                        <Message
+                          key={id}
+                          id={id}
+                          isAdmin={messageUser.is_admin}
+                          username={messageUser.username}
+                          content={content}
+                          createdAt={currentDate.toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                          })}
+                        />
+                        {changeDay && (
+                          <Text fontWeight="bold" color="gray.600">
+                            {currentDate.toLocaleDateString('en-US', options)}
+                          </Text>
+                        )}
+                      </>
+                    )
+                  })
+                ) : (
+                  <Stack align="center" justify="center" h="100%">
+                    <Text color="gray.600">
+                      There seems to be nothing here.
+                      <br />
+                      Start a disccussion!
+                    </Text>
+                  </Stack>
+                )}
+                {prevDate && (
+                  <Text fontWeight="bold" color="gray.600">
+                    {prevDate.toLocaleDateString('en-US', options)}
+                  </Text>
+                )}
+              </Stack>
+              <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+                <FormControl isInvalid={errors.content && errors.content.message !== ''}>
+                  <InputGroup size="md">
+                    <Input
+                      isReadOnly={!isActive}
+                      variant="filled"
+                      pr="4.5rem"
+                      bg="darkCard"
+                      placeholder={errors.content ? errors.content.message : 'Enter a message'}
+                      name="content"
+                      ref={register({
+                        required: 'Message cannot be blank',
+                      })}
+                    />
+                    <Button
+                      ml="0.5rem"
+                      size="sm"
+                      variantColor="blue"
+                      type="submit"
+                      isDisabled={!formState.isValid}
+                    >
+                      Send
+                    </Button>
+                  </InputGroup>
+                </FormControl>
+              </form>
             </Stack>
-            <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-              <FormControl isInvalid={errors.content && errors.content.message !== ''}>
-                <InputGroup size="md">
-                  <Input
-                    isReadOnly={readOnly}
-                    variant="filled"
-                    pr="4.5rem"
-                    bg="darkCard"
-                    placeholder={errors.content ? errors.content.message : 'Enter a message'}
-                    name="content"
-                    ref={register({
-                      required: 'Message cannot be blank',
-                    })}
-                  />
-                  <Button
-                    ml="0.5rem"
-                    size="sm"
-                    variantColor="blue"
-                    type="submit"
-                    isDisabled={!formState.isValid}
-                  >
-                    Send
-                  </Button>
-                </InputGroup>
-              </FormControl>
-            </form>
           </PopoverBody>
         </PopoverContent>
       </Popover>
@@ -102,16 +189,12 @@ export const Discussion = ({ messageUnreadCount, messages, readOnly }) => {
 }
 
 Discussion.propTypes = {
-  readOnly: PropTypes.bool,
-  messageUnreadCount: PropTypes.number,
-  messages: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      is_admin: PropTypes.bool.isRequired,
-      username: PropTypes.string.isRequired,
-      content: PropTypes.string.isRequired,
-    }),
-  ),
+  isActive: PropTypes.bool,
+  discussionId: PropTypes.string.isRequired,
+  fieldName: PropTypes.string.isRequired,
+  messageUnreadByAdminCount: PropTypes.number.isRequired,
+  messageUnreadByRequesterCount: PropTypes.number.isRequired,
+  resolvedAt: PropTypes.string,
 }
 
 export default Discussion
