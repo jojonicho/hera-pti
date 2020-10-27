@@ -2,7 +2,7 @@ export default function generateStatusBadgeProps(status) {
   let color = status === 'draft' ? 'rejectedBadge' : 'white'
   const bgMap = {
     rejected: 'rejectedBadge',
-    'in-review': 'inReviewBadge',
+    in_review: 'inReviewBadge',
     accepted: 'acceptedBadge',
     ongoing: 'secondary',
     completed: 'completedBadge',

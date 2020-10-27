@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Text, Icon } from '@chakra-ui/core'
 import PaginationNumber from './paginationNumber'
 import PropTypes from 'prop-types'
 
-const DEFAULT_PROJECTS_SHOWN = 5
+const DEFAULT_PROJECTS_SHOWN = 10
 const DEFAULT_PAGES_SHOWN = 10
 
-const Pagination = ({ totalProjects }) => {
-  const [currentPage, setCurrentPage] = useState(1)
-
+const Pagination = ({
+  totalProjects,
+  currentPage,
+  handleClickPrev,
+  handleClickNext,
+  handleClickPageNum,
+}) => {
   const maxPage = Math.ceil(totalProjects / DEFAULT_PROJECTS_SHOWN)
 
   const shownRecordsStart = (currentPage - 1) * DEFAULT_PROJECTS_SHOWN + 1
@@ -27,7 +31,7 @@ const Pagination = ({ totalProjects }) => {
         key={pageNum}
         pageNum={pageNum}
         isCurrentPage={pageNum === currentPage}
-        handlePageChange={() => handlePageChange()}
+        handleClickPageNum={pageNum => handleClickPageNum(pageNum)}
       />
     )
   }
@@ -58,10 +62,6 @@ const Pagination = ({ totalProjects }) => {
     )
   }
 
-  function handlePageChange(pageNum) {
-    if (pageNum >= 1 && pageNum <= maxPage) setCurrentPage(pageNum)
-  }
-
   return (
     <Box>
       <Text textAlign="center">
@@ -76,11 +76,11 @@ const Pagination = ({ totalProjects }) => {
         px="10px"
       >
         <Box as="button">
-          <Icon name="chevron-left" onClick={() => handlePageChange(currentPage - 1)} />
+          <Icon name="chevron-left" onClick={() => handleClickPrev()} />
         </Box>
         {generatePaginationNums()}
         <Box as="button">
-          <Icon name="chevron-right" onClick={() => handlePageChange(currentPage + 1)} />
+          <Icon name="chevron-right" onClick={() => handleClickNext()} />
         </Box>
       </Box>
     </Box>
@@ -89,6 +89,10 @@ const Pagination = ({ totalProjects }) => {
 
 Pagination.propTypes = {
   totalProjects: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  handleClickPrev: PropTypes.func.isRequired,
+  handleClickNext: PropTypes.func.isRequired,
+  handleClickPageNum: PropTypes.func.isRequired,
 }
 
 export default Pagination
