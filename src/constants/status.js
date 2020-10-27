@@ -1,7 +1,7 @@
 export const STATUS = [
   'Draft',
   'Submitted',
-  'In-Review',
+  'In Review',
   'Accepted',
   'Ongoing',
   'Completed',

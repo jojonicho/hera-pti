@@ -16,15 +16,17 @@ import { STATUS } from '../../constants/status'
 import { generateDateFormat1, generateDateFormat2 } from '../../utils/table/generateDateFormat'
 import generateLogoByRequester from '../../utils/table/generateLogoByRequester'
 import generateStatusBadgeProps from '../../utils/table/generateStatusBadgeProps'
+import processStatus from '../../utils/table/processStatus'
 import PropTypes from 'prop-types'
 import commonPropTypes from '../../utils/proptype/commonPropTypes'
 
 const ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
-  name: '50%',
-  status: '15%',
-  lastUpdated: '20%',
-  versions: '10%',
-  discussion: '5%',
+  name: '45%',
+  status: '10%',
+  lastUpdated: '18%',
+  versions: '12%',
+  discussion: '7%',
+  delete: '8%',
 }
 
 const REGULAR_COLUMN_WIDTH_DISTRIBUTION = {
@@ -34,8 +36,9 @@ const REGULAR_COLUMN_WIDTH_DISTRIBUTION = {
   discussion: '5%',
 }
 
-const Row = ({ project, isAdmin }) => {
+const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) => {
   const [isModalShown, setIsModalShown] = useState(false)
+  const [option, setOption] = useState('draft')
 
   const widthDistribution = isAdmin
     ? ADMIN_COLUMN_WIDTH_DISTRIBUTION
@@ -70,6 +73,7 @@ const Row = ({ project, isAdmin }) => {
                 width="65%"
                 mb="20px"
                 variant="unstyled"
+                onChange={e => setOption(processStatus(e.target.value))}
               >
                 {STATUS.map(status => (
                   <option key={status}>{status}</option>
@@ -83,7 +87,10 @@ const Row = ({ project, isAdmin }) => {
                   width="45%"
                   bg="primary"
                   color="white"
-                  onClick={() => setIsModalShown(false)}
+                  onClick={() => {
+                    handleChangeStatus(project.id, option)
+                    setIsModalShown(false)
+                  }}
                 >
                   Continue
                 </Button>
@@ -92,9 +99,9 @@ const Row = ({ project, isAdmin }) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Box w={widthDistribution.name} display="flex" alignItems="center">
+      <Box w={widthDistribution.name} display="flex" alignItems="center" paddingRight="5px">
         <Box w="8%">
-          <Image h="55px" src={generateLogoByRequester(project.requester)}></Image>
+          <Image src={generateLogoByRequester(project.department)}></Image>
         </Box>
         <Box marginLeft="20px">
           {project.title}
@@ -114,7 +121,7 @@ const Row = ({ project, isAdmin }) => {
           color={badgeProps.color}
           textTransform="capitalize"
         >
-          {project.status}
+          {project.status === 'in_review' ? 'In Review' : project.status}
         </Box>
       </Box>
       <Text w={widthDistribution.lastUpdated} textAlign="center" color="secondary">
@@ -136,15 +143,28 @@ const Row = ({ project, isAdmin }) => {
           />
         </Box>
       )}
-      <Box
-        w={widthDistribution.discussion}
-        display="flex"
-        justifyContent="flex-end"
-        alignItems="center"
-      >
-        <Text paddingRight="5px">{project.sum_unread_count}</Text>
-        <Icon name="chat" size="1.1em" />
+      <Box w={widthDistribution.discussion}>
+        <Box w="70%" display="flex" justifyContent="flex-end">
+          <Text paddingRight="5px">
+            {isAdmin
+              ? project.message_unread_by_admin_count
+              : project.message_unread_by_requester_count}
+          </Text>
+          <Icon name="chat" size="1.1em" />
+        </Box>
       </Box>
+      {isAdmin && (
+        <Box w={widthDistribution.delete} display="flex" justifyContent="center">
+          <Button
+            bg="rejectedBadge"
+            color="white"
+            size="sm"
+            onClick={() => handleClickDeleteButton(project.id)}
+          >
+            Delete
+          </Button>
+        </Box>
+      )}
     </Box>
   )
 }
@@ -152,6 +172,8 @@ const Row = ({ project, isAdmin }) => {
 Row.propTypes = {
   project: commonPropTypes.project,
   isAdmin: PropTypes.bool.isRequired,
+  handleClickDeleteButton: PropTypes.func,
+  handleChangeStatus: PropTypes.func,
 }
 
 export default Row

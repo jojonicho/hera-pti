@@ -1,5 +1,5 @@
-import { Box, Button, Heading, Icon, Text } from '@chakra-ui/core'
-import React, { useEffect, useState } from 'react'
+import { Box, Button, Icon, Text } from '@chakra-ui/core'
+import React from 'react'
 import FilterSelect from './filterSelect'
 import Row from './row'
 import SearchBar from './searchBar'
@@ -7,11 +7,12 @@ import PropTypes from 'prop-types'
 import commonPropTypes from '../../utils/proptype/commonPropTypes'
 
 const ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
-  name: '50%',
-  status: '15%',
-  lastUpdated: '20%',
-  versions: '10%',
-  discussion: '5%',
+  name: '45%',
+  status: '10%',
+  lastUpdated: '18%',
+  versions: '12%',
+  discussion: '7%',
+  delete: '8%',
 }
 
 const REGULAR_COLUMN_WIDTH_DISTRIBUTION = {
@@ -21,36 +22,27 @@ const REGULAR_COLUMN_WIDTH_DISTRIBUTION = {
   discussion: '5%',
 }
 
-const Table = ({ projects, isAdmin }) => {
+const Table = ({
+  projects,
+  count,
+  isAdmin,
+  search,
+  filters,
+  handleClickSearchButton,
+  handleChangeFiltersInput,
+  handleChangeStatus,
+  handleClickDeleteButton,
+}) => {
   const widthDistribution = isAdmin
     ? ADMIN_COLUMN_WIDTH_DISTRIBUTION
     : REGULAR_COLUMN_WIDTH_DISTRIBUTION
 
-  const [displayedProjects, setDisplayedProjects] = useState(projects)
-  const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState('')
-
-  function displayProjects() {
-    if (filter) {
-      return projects.filter(project => project.status.toLowerCase() === filter.toLowerCase())
-    }
-    if (search) {
-      return projects.filter(project => project.title.toLowerCase().includes(search.toLowerCase()))
-    }
-    return projects
-  }
-
-  useEffect(() => {
-    setDisplayedProjects(displayProjects())
-  }, [filter, search])
-
   return (
-    <Box w="100%" p="20px">
-      <Heading mb="20px">{isAdmin ? 'Project Requests' : 'Your Projects'}</Heading>
+    <Box w="100%" py="20px">
       <Box d="flex" justifyContent="space-between">
         <Box d="flex" w="45%">
-          <SearchBar handleClickSearchButton={val => setSearch(val)} />
-          <FilterSelect handleChangeFilterInput={val => setFilter(val)} />
+          <SearchBar handleClickSearchButton={handleClickSearchButton} />
+          <FilterSelect filters={filters} handleChangeFiltersInput={handleChangeFiltersInput} />
         </Box>
         {!isAdmin && (
           <Button bg="accent" px="15px" d="flex" alignItems="center">
@@ -86,13 +78,26 @@ const Table = ({ projects, isAdmin }) => {
             Versions
           </Text>
         )}
-        <Box w="5%" display="flex" justifyContent="flex-end">
-          <Icon name="chat" size="1.1em" />
+        <Box w={widthDistribution.discussion}>
+          <Box w="70%" display="flex" justifyContent="flex-end">
+            <Icon name="chat" size="1.1em" />
+          </Box>
         </Box>
+        {isAdmin && (
+          <Text textAlign="center" w={widthDistribution.delete}>
+            Delete
+          </Text>
+        )}
       </Box>
-      {displayedProjects.length ? (
-        displayedProjects.map(project => (
-          <Row key={project.title} project={project} isAdmin={isAdmin} />
+      {count ? (
+        projects.map(project => (
+          <Row
+            key={project.title}
+            project={project}
+            isAdmin={isAdmin}
+            handleChangeStatus={handleChangeStatus}
+            handleClickDeleteButton={handleClickDeleteButton}
+          />
         ))
       ) : (
         <Box
@@ -108,12 +113,16 @@ const Table = ({ projects, isAdmin }) => {
         >
           {isAdmin ? (
             <Text color="secondary" mb="10px">
-              There are no project requests yet
+              {!search && filters.length === 0
+                ? 'There are no project requests yet'
+                : 'Project with specified search input not found'}
             </Text>
           ) : (
             <Box display="flex" flexDir="column" alignItems="center">
               <Text color="secondary" mb="10px">
-                You have not requested any projects yet
+                {!search && filters.length === 0
+                  ? 'You have not requested any projects yet'
+                  : 'Project with specified search input not found'}
               </Text>
               <Button
                 border="1px solid #F5A200"
@@ -137,7 +146,14 @@ const Table = ({ projects, isAdmin }) => {
 
 Table.propTypes = {
   projects: PropTypes.arrayOf(commonPropTypes.project),
+  count: PropTypes.number.isRequired,
   isAdmin: PropTypes.bool.isRequired,
+  search: PropTypes.string.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
+  handleClickSearchButton: PropTypes.func,
+  handleChangeFiltersInput: PropTypes.func,
+  handleChangeStatus: PropTypes.func,
+  handleClickDeleteButton: PropTypes.func,
 }
 
 export default Table

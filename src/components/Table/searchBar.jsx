@@ -5,10 +5,6 @@ import PropTypes from 'prop-types'
 const SearchBar = ({ handleClickSearchButton }) => {
   const [search, setSearch] = useState('')
 
-  function handleChangeSearchInput(value) {
-    setSearch(value)
-  }
-
   return (
     <Box d="flex" alignItems="center" w="70%" mr="10px">
       <Input
@@ -16,7 +12,7 @@ const SearchBar = ({ handleClickSearchButton }) => {
         placeholder="Search by project name"
         borderRadius="md"
         borderColor="border"
-        onChange={e => handleChangeSearchInput(e.target.value)}
+        onChange={e => setSearch(e.target.value)}
       />
       <Button
         bg="secondary"
