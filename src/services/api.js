@@ -1,19 +1,4 @@
-import { useEffect, useState } from 'react'
 import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
-
-export const useFetch = (url, body = {}, method = 'GET', extraHeaders = {}) => {
-  const [state, setState] = useState({ data: null, loading: true })
-  useEffect(async () => {
-    setState({ data: state.data, loading: true })
-    const [apiData, apiError] = await request(url, body, method, extraHeaders)
-    if (apiError) {
-      setState({ data: null, loading: false })
-    } else {
-      setState({ data: apiData, loading: false })
-    }
-  }, [url, useState])
-  return state
-}
 
 /**
  * Base request builder function.
@@ -23,7 +8,7 @@ export const useFetch = (url, body = {}, method = 'GET', extraHeaders = {}) => {
  * @param {string} method HTTP method
  * @param {object} extraHeaders extra header key-values
  */
-export async function request(path, body, method, extraHeaders) {
+export async function request(path, body = {}, method = 'GET', extraHeaders = {}) {
   let response, data, error, responseComponent
 
   try {

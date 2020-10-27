@@ -6,3 +6,9 @@ export const BASE_URL =
 export const USER_URL = BASE_URL + '/auth/user/get-data/'
 export const TOKEN_URL = BASE_URL + '/auth/rest-auth/google/'
 export const DISCUSSION_URL = BASE_URL + '/discussions/'
+
+export const PROJECT_URL = BASE_URL + '/projects/'
+export const PROJECT_PAGE_LIST_URL = projectId => `${PROJECT_URL}${projectId}/pages/`
+
+export const PAGE_URL = BASE_URL + '/pages/'
+export const PAGE_BY_ID_URL = pageId => `${PAGE_URL}${pageId}/`

@@ -21,7 +21,7 @@ import { Message } from './Message'
 import { useForm } from 'react-hook-form'
 import { UserContext } from 'utils/datastore/UserContext'
 import { DISCUSSION_BY_ID_URL, postMessageById, putDiscussionStatusById } from 'services/discussion'
-import { useFetch } from 'services/api'
+import { useFetch } from 'hooks'
 import { Code as Loader } from 'react-content-loader'
 
 export const Discussion = ({
@@ -74,7 +74,7 @@ export const Discussion = ({
   const messagesRef = useRef(null)
 
   return (
-    <Stack align="center">
+    <Stack align="center" justify="center" height="2rem">
       <Badge
         textAlign="center"
         mt={'3.5px'}
@@ -87,9 +87,9 @@ export const Discussion = ({
       </Badge>
       <Popover trigger="click" placement="right" onOpen={() => setCount(0)}>
         <PopoverTrigger>
-          <Icon size="30px" name="chat" cursor="pointer" />
+          <Icon size={['1.2rem', '1.5rem']} name="chat" cursor="pointer" />
         </PopoverTrigger>
-        <PopoverContent border="0" bg="card">
+        <PopoverContent border="0" bg="card" zIndex={999}>
           <PopoverHeader fontWeight="bold" border="0" fontSize="20px">
             <Stack isInline justify="space-between" mr="10%" align="center">
               <Text>{fieldName}</Text>
