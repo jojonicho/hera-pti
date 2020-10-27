@@ -4,10 +4,11 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
-import { LandingPage } from 'containers'
+import { LandingPage, Dashboard } from 'containers'
 import { UserContext } from 'utils/datastore/UserContext'
 import theme from 'utils/theme'
 import { loginApi, userInfoApi } from 'services/user'
+import PageDetails from 'containers/PageDetails'
 
 export const Routes = () => {
   const [user, setUser] = useState('')
@@ -93,6 +94,9 @@ export const Routes = () => {
           <CSSReset />
           <Switch>
             <Route exact path="/" component={LandingPage} />
+            <Route path="/dashboard/" component={Dashboard} />
+            <Route path="/page/:pageId/create/" component={() => <PageDetails create />} />
+            <Route path="/page/:pageId/" component={PageDetails} />
           </Switch>
         </UserContext.Provider>
       </BrowserRouter>

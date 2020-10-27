@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 const TabContainer = ({ labels, contents }) => (
   <Tabs variant="enclosed">
     <TabList borderBottom="0">
-      {labels.map((label, index) => (
+      {labels.map((item, index) => (
         <Tab
           key={`tab${index}`}
           bg="formaddon"
@@ -13,9 +13,13 @@ const TabContainer = ({ labels, contents }) => (
           roundedTop="lg"
           mr="0.4rem"
           px="1.5rem"
-          _selected={{ bg: 'card', fontWeight: 'bold', opacity: '100%' }}
+          _selected={{ bg: 'card', opacity: '100%' }}
+          _active={{}}
+          borderWidth="2px"
+          borderColor={item.border !== '' ? item.border : 'transparent'}
+          borderBottom="0"
         >
-          {label}
+          {item.label}
         </Tab>
       ))}
     </TabList>
@@ -36,7 +40,12 @@ const TabContainer = ({ labels, contents }) => (
 )
 
 TabContainer.propTypes = {
-  labels: PropTypes.arrayOf(PropTypes.string).isRequired,
+  labels: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      border: PropTypes.string,
+    }),
+  ).isRequired,
   contents: PropTypes.arrayOf(PropTypes.element).isRequired,
 }
 

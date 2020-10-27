@@ -16,3 +16,18 @@ export const PROJECT_REQUEST_TYPES = [
     value: 'Chores',
   },
 ]
+
+export const PRIORITY_CHOICES = [
+  {
+    key: 1,
+    value: 'High',
+  },
+  {
+    key: 2,
+    value: 'Medium',
+  },
+  {
+    key: 3,
+    value: 'Low',
+  },
+]
