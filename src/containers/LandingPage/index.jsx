@@ -5,7 +5,7 @@ import GoogleLogin from 'react-google-login'
 import { ReactComponent as Logo } from 'assets/logo.svg'
 import { UserContext } from 'utils/datastore/UserContext'
 import { GOOGLE_CLIENT_ID } from 'constants/auth'
-import { RequesterLayout } from 'components'
+import { Layout } from 'components/Layout'
 
 const LandingPage = () => {
   const { user, login } = useContext(UserContext)
@@ -30,47 +30,49 @@ const LandingPage = () => {
     console.log(err)
   }
   return (
-    <RequesterLayout>
-      <Stack
-        align="center"
-        justify="center"
-        spacing={3}
-        p={5}
-        width={['100%', '80%', '80vw', '33vw']}
-      >
-        <Logo fill="black" />
-        <Text fontSize="calc(1.5rem + 0.5vw)" fontWeight="bold">
-          Requirements Gatherer
-        </Text>
-        <Text>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum, atque libero? Debitis
-          deserunt ex voluptatem. Error quae, officiis reiciendis repellendus cupiditate,
-          necessitatibus ducimus rem debitis non vitae voluptatum ratione veniam.
-        </Text>
-        {user ? (
-          <Stack>
-            <Button variantColor="blue" variant="outline">
-              Visit Dashboard
-            </Button>
-          </Stack>
-        ) : (
-          <>
-            <GoogleLogin
-              clientId={GOOGLE_CLIENT_ID}
-              buttonText="Login with Google"
-              onSuccess={async token => {
-                const loginUser = await login(token)
-                loginToast(loginUser)
-              }}
-              onFailure={err => {
-                errorToast(err)
-              }}
-              cookiePolicy={'single_host_origin'}
-            />
-          </>
-        )}
+    <Layout>
+      <Stack alignItems="center" justifyContent="center" flexGrow={1}>
+        <Stack
+          align="center"
+          justify="center"
+          spacing={3}
+          p={5}
+          width={['100%', '80%', '80vw', '33vw']}
+        >
+          <Logo fill="black" />
+          <Text fontSize="calc(1.5rem + 0.5vw)" fontWeight="bold">
+            Requirements Gatherer
+          </Text>
+          <Text>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum, atque libero? Debitis
+            deserunt ex voluptatem. Error quae, officiis reiciendis repellendus cupiditate,
+            necessitatibus ducimus rem debitis non vitae voluptatum ratione veniam.
+          </Text>
+          {user ? (
+            <Stack>
+              <Button variantColor="blue" variant="outline">
+                Visit Dashboard
+              </Button>
+            </Stack>
+          ) : (
+            <>
+              <GoogleLogin
+                clientId={GOOGLE_CLIENT_ID}
+                buttonText="Login with Google"
+                onSuccess={async token => {
+                  const loginUser = await login(token)
+                  loginToast(loginUser)
+                }}
+                onFailure={err => {
+                  errorToast(err)
+                }}
+                cookiePolicy={'single_host_origin'}
+              />
+            </>
+          )}
+        </Stack>
       </Stack>
-    </RequesterLayout>
+    </Layout>
   )
 }
 

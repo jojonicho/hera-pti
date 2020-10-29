@@ -12,13 +12,13 @@ import {
   Select,
   Text,
 } from '@chakra-ui/core'
-import { STATUS } from '../../constants/status'
-import { generateDateFormat1, generateDateFormat2 } from '../../utils/table/generateDateFormat'
-import generateLogoByRequester from '../../utils/table/generateLogoByRequester'
-import generateStatusBadgeProps from '../../utils/table/generateStatusBadgeProps'
-import processStatus from '../../utils/table/processStatus'
+import { STATUS } from 'constants/status'
+import { generateDateFormat1, generateDateFormat2 } from 'utils/table/generateDateFormat'
+import generateLogoByRequester from 'utils/table/generateLogoByRequester'
+import generateStatusBadgeProps from 'utils/table/generateStatusBadgeProps'
+import processStatus from 'utils/table/processStatus'
 import PropTypes from 'prop-types'
-import commonPropTypes from '../../utils/proptype/commonPropTypes'
+import commonPropTypes from 'utils/proptype/commonPropTypes'
 
 const ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '45%',
@@ -51,9 +51,10 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
       bg="card"
       rounded="18px"
       width="100%"
-      mb="10px"
-      px="30px"
-      py="10px"
+      maxHeight="4rem"
+      mb="1rem"
+      px="2rem"
+      py="1rem"
       color="#000"
       fontWeight="500"
       d="flex"
@@ -65,9 +66,10 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
         <ModalContent>
           <ModalBody>
             <Box px="50px" py="60px" display="flex" flexDir="column" alignItems="center">
-              <Text mb="5px">You&apos;re about to change {project.title} to</Text>
+              <Text mb="5px">You are about to change {project.title} to</Text>
               <Select
-                fontSize="30px"
+                fontSize="1.25rem"
+                padding="0.25rem"
                 fontWeight="700"
                 icon="triangle-down"
                 width="65%"
@@ -100,8 +102,12 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
         </ModalContent>
       </Modal>
       <Box w={widthDistribution.name} display="flex" alignItems="center" paddingRight="5px">
-        <Box w="8%">
-          <Image src={generateLogoByRequester(project.department)}></Image>
+        <Box w="8%" justifyContent="center" alignItems="center">
+          <Image
+            src={generateLogoByRequester(project.department)}
+            maxHeight="3.5rem"
+            maxWidth="3.5rem"
+          />
         </Box>
         <Box marginLeft="20px">
           {project.title}
@@ -171,7 +177,7 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
 
 Row.propTypes = {
   project: commonPropTypes.project,
-  isAdmin: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool,
   handleClickDeleteButton: PropTypes.func,
   handleChangeStatus: PropTypes.func,
 }

@@ -16,7 +16,7 @@ import PropTypes from 'prop-types'
 import { useForm, FormProvider } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 
-import { PageInfoForm, PageContentForm, TabContainer, RequesterLayout } from 'components'
+import { PageInfoForm, PageContentForm, TabContainer, Layout } from 'components'
 import { PAGE_BY_ID_URL, PAGE_HISTORY_BY_ID_URL } from 'constants/urls'
 import { request } from 'services/api'
 import { cleanListInput, changeToListInput } from 'utils/form'
@@ -102,101 +102,103 @@ const PageDetails = ({ create, isHistory }) => {
   }, [errors.access_details, errors.page_url, errors.priority, errors.flow])
 
   return (
-    <RequesterLayout>
-      <Stack width={['95%', '85%']} spacing="2vh" mt="3vh">
-        <Breadcrumb spacing={[1, 2]} separator={<Icon color="brand" name="chevron-right" />}>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/project/${project.id}`}>{project.title}</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink>{pageName}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-        <Editable
-          placeholder="New Page"
-          fontWeight="600"
-          fontSize={['2xl', '3xl']}
-          isPreviewFocusable={!isReadOnly}
-          onChange={value => setPageName(value)}
-          isDisabled={isReadOnly}
-          mt="4vh"
-        >
-          {({ isEditing, onRequestEdit }) => (
-            <Flex>
-              <EditableInput value={pageName} />
-              {isEditing || (
-                <>
-                  <Text onClick={onRequestEdit}>{pageName}</Text>
-                  {!isReadOnly && (
-                    <IconButton
-                      variant="ghost"
-                      icon="edit"
-                      aria-label="Edit page name"
-                      size="lg"
-                      _hover={{ bg: 'white' }}
-                      onClick={onRequestEdit}
-                    />
-                  )}
-                </>
-              )}
-            </Flex>
-          )}
-        </Editable>
-        <FormProvider
-          {...methods}
-          errors={errors}
-          setValue={setValue}
-          create={create}
-          isReadOnly={isReadOnly}
-          isHistory={isHistory}
-          discussions={discussions}
-          targetPageId={pageId}
-        >
-          <TabContainer
-            labels={[
-              { label: 'General Info', border: infoTabBorder },
-              { label: 'Page Content', border: contentTabBorder },
-            ]}
-            contents={[pageInfo, pageContent]}
-          />
-        </FormProvider>
-        <Flex direction="row" justify="space-between" align="center" mt="0.5rem">
-          <Link to={`/project/${project.id}`}>
-            <Button
-              color="secondary"
-              borderColor="secondary"
-              variant="outline"
-              fontWeight="normal"
-              width="9rem"
-              fontSize="0.875rem"
-            >
-              Return to project
-            </Button>
-          </Link>
-          {!isReadOnly && (
-            <Button
-              bg="primary"
-              variantColor="blue"
-              fontWeight="normal"
-              variant="solid"
-              width="8rem"
-              isLoading={formState.isSubmitting}
-              loadingText="Submitting"
-              fontSize="0.875rem"
-              onClick={handleSubmit(onSubmit)}
-            >
-              Save
-            </Button>
-          )}
-        </Flex>
+    <Layout>
+      <Stack alignItems="center" justifyContent="center" flexGrow={1}>
+        <Stack width={['95%', '85%']} spacing="2vh" mt="3vh">
+          <Breadcrumb spacing={[1, 2]} separator={<Icon color="brand" name="chevron-right" />}>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href={`/project/${project.id}`}>{project.title}</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>{pageName}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+          <Editable
+            placeholder="New Page"
+            fontWeight="600"
+            fontSize={['2xl', '3xl']}
+            isPreviewFocusable={!isReadOnly}
+            onChange={value => setPageName(value)}
+            isDisabled={isReadOnly}
+            mt="4vh"
+          >
+            {({ isEditing, onRequestEdit }) => (
+              <Flex>
+                <EditableInput value={pageName} />
+                {isEditing || (
+                  <>
+                    <Text onClick={onRequestEdit}>{pageName}</Text>
+                    {!isReadOnly && (
+                      <IconButton
+                        variant="ghost"
+                        icon="edit"
+                        aria-label="Edit page name"
+                        size="lg"
+                        _hover={{ bg: 'white' }}
+                        onClick={onRequestEdit}
+                      />
+                    )}
+                  </>
+                )}
+              </Flex>
+            )}
+          </Editable>
+          <FormProvider
+            {...methods}
+            errors={errors}
+            setValue={setValue}
+            create={create}
+            isReadOnly={isReadOnly}
+            isHistory={isHistory}
+            discussions={discussions}
+            targetPageId={pageId}
+          >
+            <TabContainer
+              labels={[
+                { label: 'General Info', border: infoTabBorder },
+                { label: 'Page Content', border: contentTabBorder },
+              ]}
+              contents={[pageInfo, pageContent]}
+            />
+          </FormProvider>
+          <Flex direction="row" justify="space-between" align="center" mt="0.5rem">
+            <Link to={`/project/${project.id}`}>
+              <Button
+                color="secondary"
+                borderColor="secondary"
+                variant="outline"
+                fontWeight="normal"
+                width="9rem"
+                fontSize="0.875rem"
+              >
+                Return to project
+              </Button>
+            </Link>
+            {!isReadOnly && (
+              <Button
+                bg="primary"
+                variantColor="blue"
+                fontWeight="normal"
+                variant="solid"
+                width="8rem"
+                isLoading={formState.isSubmitting}
+                loadingText="Submitting"
+                fontSize="0.875rem"
+                onClick={handleSubmit(onSubmit)}
+              >
+                Save
+              </Button>
+            )}
+          </Flex>
+        </Stack>
       </Stack>
-    </RequesterLayout>
+    </Layout>
   )
 }
 

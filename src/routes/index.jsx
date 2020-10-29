@@ -11,11 +11,10 @@ import { loginApi, userInfoApi } from 'services/user'
 import PageDetails from 'containers/PageDetails'
 
 export const Routes = () => {
-  const [user, setUser] = useState('')
+  const [user, setUser] = useState({})
   const toast = useToast()
   const errorToast = useCallback(
     err => {
-      // uncomment this if error when starting
       toast({
         title: 'An error occurred.',
         description: err && err.error ? err.error : 'unknown error',

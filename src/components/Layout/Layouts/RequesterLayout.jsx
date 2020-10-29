@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button } from '@chakra-ui/core'
 
-import Layout from '../index'
+import LayoutComponent from '../LayoutComponent/'
 import Footer from '../../Footer'
 import Navbar from '../../Navbar'
 
@@ -19,9 +19,9 @@ export const RequesterLayout = ({ children }) => {
   )
 
   return (
-    <Layout footer={footer} navbar={navbar}>
+    <LayoutComponent footer={footer} navbar={navbar}>
       {children}
-    </Layout>
+    </LayoutComponent>
   )
 }
 

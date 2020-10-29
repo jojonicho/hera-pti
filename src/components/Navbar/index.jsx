@@ -22,7 +22,15 @@ const Navbar = ({ navItems }) => {
   const { user, logout } = useContext(UserContext)
   const toast = useToast()
   return (
-    <Stack spacing={1} isInline align="center" justify="space-between" p={'8px'} bg="brand">
+    <Stack
+      spacing={1}
+      isInline
+      align="center"
+      justify="space-between"
+      p="8px"
+      bg="brand"
+      minWidth="100vw"
+    >
       <Stack isInline ml={2} color="white" align="center">
         <Link to="/">
           <Logo cursor="pointer" fill="white" width="30px" height="30px" />
