@@ -1,83 +1,131 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Box, Heading } from '@chakra-ui/core'
-import Pagination from '../../components/Pagination'
-import Table from '../../components/Table'
-import processStatus from '../../utils/table/processStatus'
-import { request } from '../../services/api'
-import { PROJECT_URL } from '../../constants/urls'
-import { UserContext } from '../../utils/datastore/UserContext'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Box,
+  Icon,
+  Heading,
+  Spinner,
+  Stack,
+} from '@chakra-ui/core'
+import { Pagination, Table } from 'components'
+import { Layout } from 'components/Layout'
+import { request } from 'services/api'
+import { PROJECT_URL } from 'constants/urls'
+import { UserContext } from 'utils/datastore/UserContext'
+import processStatus from 'utils/table/processStatus'
 
 const Dashboard = () => {
   const { user } = useContext(UserContext)
-  const [projects, setProjects] = useState([])
-  const [count, setCount] = useState(0)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [next, setNext] = useState('')
-  const [prev, setPrev] = useState('')
+  const [data, setData] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    setIsLoading(true)
     const fetchData = async () => {
       let filtersString = ''
       filters.forEach(filter => (filtersString += processStatus(filter) + ','))
       const [data, error] = await request(
         `${PROJECT_URL}?title=${search}&status=${filtersString}&page=${currentPage}`,
       )
-      if (error) return
-      setProjects(data.results)
-      setCount(data.count)
-      setNext(data.next)
-      setPrev(data.previous)
+      if (!error) {
+        setData(data)
+      }
+      setIsLoading(false)
     }
-
     fetchData()
   }, [search, filters, currentPage])
 
   const handleChangeStatus = async (id, status) => {
-    const updatedProject = projects.filter(project => project.id === id)
-    updatedProject[0].status = status
     const [error] = await request(`${PROJECT_URL}${id}/set-status/`, { status: status }, 'PUT')
     if (error) return
-    setProjects([...projects.filter(project => project.id !== id), ...updatedProject])
+    setData(prev => ({
+      ...prev,
+      results: [
+        ...prev.results.map(project => {
+          if (project.id === id) {
+            project.status = status
+          }
+          return project
+        }),
+      ],
+    }))
   }
 
   const handleClickDeleteButton = async id => {
     const [error] = await request(`${PROJECT_URL}${id}`, {}, 'DELETE')
     if (error) return
-    setProjects(projects.filter(project => project.id !== id))
+    setData(prev => ({
+      ...prev,
+      results: prev.results.filter(project => project.id !== id),
+    }))
   }
 
+  const breadcrumbComponent = (
+    <Breadcrumb spacing={[1, 2]} separator={<Icon color="brand" name="chevron-right" />}>
+      <BreadcrumbItem>
+        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+      </BreadcrumbItem>
+      <BreadcrumbItem>
+        <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+      </BreadcrumbItem>
+    </Breadcrumb>
+  )
+
   return (
-    <Box margin="auto" width="95vw" py="20px">
-      <Heading mb="20px">{user.isAdmin ? 'Project Requests' : 'Your Projects'}</Heading>
-      <Table
-        projects={projects}
-        count={count}
-        isAdmin={user.isAdmin}
-        search={search}
-        filters={filters}
-        handleClickSearchButton={val => setSearch(val)}
-        handleChangeFiltersInput={values => setFilters(values)}
-        handleChangeStatus={handleChangeStatus}
-        handleClickDeleteButton={handleClickDeleteButton}
-      />
-      <Box display="flex" justifyContent="center">
-        {count > 0 && (
-          <Pagination
-            totalProjects={count}
-            currentPage={currentPage}
-            handleClickPrev={() => {
-              if (prev) setCurrentPage(currentPage - 1)
-            }}
-            handleClickNext={() => {
-              if (next) setCurrentPage(currentPage + 1)
-            }}
-            handleClickPageNum={pageNum => setCurrentPage(pageNum)}
-          />
+    <Layout>
+      <Stack
+        py="5rem"
+        px="9rem"
+        display="flex"
+        flexGrow={1}
+        flexFlow="column"
+        flexDirection="column"
+      >
+        {breadcrumbComponent}
+        <Heading my="2rem" height="2rem" textAlign="left">
+          {user.is_admin ? 'Project Requests' : 'Your Projects'}
+        </Heading>
+        {isLoading ? (
+          <Box display="flex" alignItems="center" flexGrow={1} justifyContent="center">
+            <Spinner />
+          </Box>
+        ) : (
+          <Box display="flex" flexDirection="column" justifyContent="space-between" flexGrow={1}>
+            <Table
+              projects={data.results}
+              count={data.count}
+              isAdmin={user.is_admin}
+              search={search}
+              filters={filters}
+              handleClickSearchButton={val => setSearch(val)}
+              handleChangeFiltersInput={values => setFilters(values)}
+              handleChangeStatus={handleChangeStatus}
+              handleClickDeleteButton={handleClickDeleteButton}
+            />
+            <Box display="flex" justifyContent="center">
+              {data.count > 0 && (
+                <Pagination
+                  totalProjects={data.count}
+                  currentPage={currentPage}
+                  handleClickPrev={() => {
+                    if (data.prev) setCurrentPage(currentPage - 1)
+                  }}
+                  handleClickNext={() => {
+                    if (data.next) setCurrentPage(currentPage + 1)
+                  }}
+                  handleClickPageNum={pageNum => setCurrentPage(pageNum)}
+                />
+              )}
+            </Box>
+          </Box>
         )}
-      </Box>
-    </Box>
+      </Stack>
+    </Layout>
   )
 }
 

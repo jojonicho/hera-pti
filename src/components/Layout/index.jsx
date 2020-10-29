@@ -1,22 +1,24 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { Stack } from '@chakra-ui/core'
 
-export const Layout = ({ children, navbar, footer }) => {
-  return (
-    <Stack justify="space-between" h="100vh">
-      {navbar}
-      <Stack align="center" justify="center">
-        {children}
-      </Stack>
-      {footer}
-    </Stack>
-  )
+import RequesterLayout from './Layouts/RequesterLayout'
+import AdminLayout from './Layouts/AdminLayout'
+import { UserContext } from 'utils/datastore/UserContext'
+
+export const Layout = ({ children }) => {
+  const { user } = useContext(UserContext)
+
+  let Layout
+  if (user.is_admin) {
+    Layout = AdminLayout
+  } else {
+    Layout = RequesterLayout
+  }
+
+  return <Layout>{children}</Layout>
 }
 
 Layout.propTypes = {
-  navbar: PropTypes.element,
-  footer: PropTypes.element,
   children: PropTypes.element,
 }
 

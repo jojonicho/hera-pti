@@ -147,7 +147,7 @@ const Table = ({
 Table.propTypes = {
   projects: PropTypes.arrayOf(commonPropTypes.project),
   count: PropTypes.number.isRequired,
-  isAdmin: PropTypes.bool.isRequired,
+  isAdmin: PropTypes.bool,
   search: PropTypes.string.isRequired,
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleClickSearchButton: PropTypes.func,
