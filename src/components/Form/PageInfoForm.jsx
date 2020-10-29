@@ -22,8 +22,8 @@ const PageInfoForm = ({ create, isReadOnly, projectId, pageId }) => {
   }, [projectId, pageId])
 
   useEffect(() => {
-    fetchPageList()
-  }, [fetchPageList])
+    !isReadOnly && fetchPageList()
+  }, [isReadOnly, fetchPageList])
 
   return (
     <Stack
@@ -32,35 +32,10 @@ const PageInfoForm = ({ create, isReadOnly, projectId, pageId }) => {
       align={create ? 'center' : 'flex-start'}
     >
       <Stack width={['100%', '100%', '100%', '80%']}>
-        <Select
-          name="parent"
-          label="Parent Page"
-          create={create}
-          isReadOnly={isReadOnly}
-          options={parentPageChoices}
-        />
-        <Input
-          name="page_url"
-          label="Page URL"
-          create={create}
-          isRequired
-          isReadOnly={isReadOnly}
-        />
-        <Select
-          name="priority"
-          label="Page Priority"
-          create={create}
-          isRequired
-          isReadOnly={isReadOnly}
-          options={PRIORITY_CHOICES}
-        />
-        <ListInput
-          name="access_details"
-          label="Access Details"
-          create={create}
-          isRequired
-          isReadOnly={isReadOnly}
-        />
+        <Select name="parent" label="Parent Page" options={parentPageChoices} />
+        <Input name="page_url" label="Page URL" isRequired />
+        <Select name="priority" label="Page Priority" isRequired options={PRIORITY_CHOICES} />
+        <ListInput name="access_details" label="Access Details" isRequired />
       </Stack>
     </Stack>
   )

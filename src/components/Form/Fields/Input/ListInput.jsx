@@ -4,8 +4,8 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 import PropTypes from 'prop-types'
 import FormFieldWrapper from '../FormFieldWrapper'
 
-const ListInput = ({ name, isRequired, isReadOnly, ...props }) => {
-  const { register, control, errors } = useFormContext()
+const ListInput = ({ name, isRequired, ...props }) => {
+  const { register, control, isReadOnly } = useFormContext()
   const { fields, append, remove } = useFieldArray({
     control,
     name: name,
@@ -27,11 +27,12 @@ const ListInput = ({ name, isRequired, isReadOnly, ...props }) => {
       append({ value: '' })
       return
     }
-    isReadOnly || lastField.current.addEventListener('keydown', appendInputField)
+    lastField.current.addEventListener('keydown', appendInputField)
+    isReadOnly && lastField.current.removeEventListener('keydown', appendInputField)
   }, [fields, append, isReadOnly, lastField, appendInputField])
 
   return (
-    <FormFieldWrapper {...props} errors={errors[name]} isRequired={isRequired}>
+    <FormFieldWrapper {...props} name={name} isRequired={isRequired}>
       {fields.length === 1 ? (
         <InputGroup rounded="md" key={fields[0].id}>
           <InputLeftAddon bg="formaddon" height="2rem">
@@ -47,8 +48,8 @@ const ListInput = ({ name, isRequired, isReadOnly, ...props }) => {
             bg="form"
             height="2rem"
             roundedLeft="0"
-            isReadOnly={isReadOnly}
-            _readOnly={{ bg: 'form' }}
+            isDisabled={isReadOnly}
+            _disabled={{ bg: 'form' }}
           />
         </InputGroup>
       ) : (
@@ -67,8 +68,8 @@ const ListInput = ({ name, isRequired, isReadOnly, ...props }) => {
               bg="form"
               height="2rem"
               roundedLeft="0"
-              isReadOnly={isReadOnly}
-              _readOnly={{ bg: 'form' }}
+              isDisabled={isReadOnly}
+              _disabled={{ bg: 'form' }}
             />
             {!isReadOnly && (
               <InputRightElement height="2rem">
@@ -94,8 +95,6 @@ ListInput.propTypes = {
   label: PropTypes.string.isRequired,
   helperText: PropTypes.string,
   isRequired: PropTypes.bool,
-  isReadOnly: PropTypes.bool,
-  create: PropTypes.bool,
 }
 
 export default ListInput

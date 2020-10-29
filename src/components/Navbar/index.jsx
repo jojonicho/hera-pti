@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   PopoverBody,
+  useToast,
 } from '@chakra-ui/core'
 import { Instagram } from 'react-content-loader'
 import { Link } from 'react-router-dom'
@@ -19,7 +20,7 @@ import PropTypes from 'prop-types'
 
 const Navbar = ({ navItems }) => {
   const { user, logout } = useContext(UserContext)
-
+  const toast = useToast()
   return (
     <Stack spacing={1} isInline align="center" justify="space-between" p={'8px'} bg="brand">
       <Stack isInline ml={2} color="white" align="center">
@@ -46,7 +47,17 @@ const Navbar = ({ navItems }) => {
             <PopoverContent width="200px" border="0">
               <PopoverBody p="0">
                 <Stack spacing={0}>
-                  <Button variant="outline" onClick={logout}>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      toast({
+                        title: `Goodbye, ${user.given_name}`,
+                        duration: 5000,
+                        isClosable: true,
+                      })
+                      logout()
+                    }}
+                  >
                     Logout
                   </Button>
                 </Stack>
