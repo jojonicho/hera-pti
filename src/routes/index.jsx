@@ -1,4 +1,4 @@
-import { ThemeProvider, CSSReset } from '@chakra-ui/core'
+import { ThemeProvider, CSSReset, useToast } from '@chakra-ui/core'
 import { css, Global } from '@emotion/react'
 import React, { useState, useEffect, useCallback } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
@@ -12,6 +12,21 @@ import PageDetails from 'containers/PageDetails'
 
 export const Routes = () => {
   const [user, setUser] = useState('')
+  const toast = useToast()
+  const errorToast = useCallback(
+    err => {
+      // uncomment this if error when starting
+      toast({
+        title: 'An error occurred.',
+        description: err && err.error ? err.error : 'unknown error',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+      console.log(err)
+    },
+    [toast],
+  )
 
   const getUser = useCallback(async () => {
     const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
@@ -19,34 +34,35 @@ export const Routes = () => {
       const [data, error] = await userInfoApi()
       if (error) {
         setUser(null)
-        return
+        errorToast(error.error)
       }
       setUser(data)
+      return data
     }
-  }, [])
-
-  useEffect(() => {
-    getUser()
-  }, [getUser])
+  }, [errorToast])
 
   const login = useCallback(
     async token => {
       const [data, error] = await loginApi({ access_token: token.accessToken, code: '' })
       if (error) {
         setUser(null)
-        // TODO: notify error
+        errorToast(error.error)
         return
       }
       localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, data.key)
-      await getUser()
+      return await getUser()
     },
-    [getUser],
+    [getUser, errorToast],
   )
 
   const logout = useCallback(() => {
     localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
     setUser(null)
   }, [])
+
+  useEffect(() => {
+    getUser()
+  }, [getUser])
 
   return (
     <ThemeProvider theme={theme}>
@@ -96,6 +112,7 @@ export const Routes = () => {
             <Route exact path="/" component={LandingPage} />
             <Route path="/dashboard/" component={Dashboard} />
             <Route path="/page/:pageId/create/" component={() => <PageDetails create />} />
+            <Route path="/page/:pageId/history/" component={() => <PageDetails isHistory />} />
             <Route path="/page/:pageId/" component={PageDetails} />
           </Switch>
         </UserContext.Provider>

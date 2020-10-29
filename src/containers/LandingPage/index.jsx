@@ -1,15 +1,34 @@
 import React, { useContext } from 'react'
-import { Text, Button, Stack } from '@chakra-ui/core'
+import { Text, Button, Stack, useToast } from '@chakra-ui/core'
 import GoogleLogin from 'react-google-login'
 
 import { ReactComponent as Logo } from 'assets/logo.svg'
 import { UserContext } from 'utils/datastore/UserContext'
 import { GOOGLE_CLIENT_ID } from 'constants/auth'
-import { RequesterLayout } from 'components/Layout/Layouts/RequesterLayout'
-import { Discussion } from 'components'
+import { RequesterLayout } from 'components'
 
 const LandingPage = () => {
   const { user, login } = useContext(UserContext)
+
+  const toast = useToast()
+  const loginToast = loginUser =>
+    toast({
+      title: `Welcome back, ${loginUser.email}`,
+      description: loginUser.is_admin && 'You are an admin',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
+  const errorToast = err => {
+    toast({
+      title: 'An error occurred.',
+      description: err.error,
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    })
+    console.log(err)
+  }
   return (
     <RequesterLayout>
       <Stack
@@ -33,16 +52,22 @@ const LandingPage = () => {
             <Button variantColor="blue" variant="outline">
               Visit Dashboard
             </Button>
-            <Discussion discussionId="b8c80564-6337-4409-a1ad-a690137cec3f" isActive />
           </Stack>
         ) : (
-          <GoogleLogin
-            clientId={GOOGLE_CLIENT_ID}
-            buttonText="Login with Google"
-            onSuccess={token => login(token)}
-            onFailure={err => console.log(err)}
-            cookiePolicy={'single_host_origin'}
-          />
+          <>
+            <GoogleLogin
+              clientId={GOOGLE_CLIENT_ID}
+              buttonText="Login with Google"
+              onSuccess={async token => {
+                const loginUser = await login(token)
+                loginToast(loginUser)
+              }}
+              onFailure={err => {
+                errorToast(err)
+              }}
+              cookiePolicy={'single_host_origin'}
+            />
+          </>
         )}
       </Stack>
     </RequesterLayout>

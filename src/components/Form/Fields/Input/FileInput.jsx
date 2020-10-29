@@ -9,7 +9,7 @@ import FormFieldWrapper from '../FormFieldWrapper'
 import { IMAGE_TYPE } from 'constants/input'
 
 const FileInput = ({ name, isRequired, accept, ...props }) => {
-  const { register, unregister, errors, setValue, watch } = useFormContext()
+  const { register, unregister, setValue, watch, isReadOnly } = useFormContext()
 
   const [fileDisplay, setFileDisplay] = useState(null)
   const [fileName, setFileName] = useState(null)
@@ -20,21 +20,27 @@ const FileInput = ({ name, isRequired, accept, ...props }) => {
   const onDrop = useCallback(
     droppedFiles => {
       setValue(name, droppedFiles[0])
+      setValue(`${name}_is_updated`, true)
     },
     [setValue, name],
   )
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: accept,
+    disabled: isReadOnly,
   })
   const file = watch(name)
 
   useEffect(() => {
     register(name)
+    const fileIsUpdated = `${name}_is_updated`
+    register(fileIsUpdated)
+    setValue(fileIsUpdated, false)
     return () => {
       unregister(name)
+      unregister(fileIsUpdated)
     }
-  }, [register, unregister, name])
+  }, [register, unregister, setValue, name])
 
   useEffect(() => {
     if (file) {
@@ -57,7 +63,7 @@ const FileInput = ({ name, isRequired, accept, ...props }) => {
   }, [file])
 
   return (
-    <FormFieldWrapper {...props} errors={errors[name]} isRequired={isRequired}>
+    <FormFieldWrapper {...props} name={name} isRequired={isRequired}>
       <div {...getRootProps()}>
         <input {...getInputProps()} />
         <Stack
@@ -90,7 +96,7 @@ const FileInput = ({ name, isRequired, accept, ...props }) => {
                   {fileName}
                 </Text>
               </Flex>
-              <CloseButton onClick={() => setValue(name, null)} />
+              {!isReadOnly && <CloseButton onClick={() => setValue(name, null)} />}
             </Flex>
           ) : (
             <Text color="border" fontSize="xs">
@@ -108,8 +114,6 @@ FileInput.propTypes = {
   label: PropTypes.string.isRequired,
   helperText: PropTypes.string,
   isRequired: PropTypes.bool,
-  isReadOnly: PropTypes.bool,
-  create: PropTypes.bool,
   accept: PropTypes.string,
 }
 

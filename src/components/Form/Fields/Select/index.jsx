@@ -4,11 +4,11 @@ import PropTypes from 'prop-types'
 import { useFormContext } from 'react-hook-form'
 import FormFieldWrapper from '../FormFieldWrapper'
 
-const DefaultSelect = ({ name, isRequired, isReadOnly, options, ...props }) => {
-  const { register, errors } = useFormContext()
+const DefaultSelect = ({ name, isRequired, options, ...props }) => {
+  const { register, isReadOnly } = useFormContext()
 
   return (
-    <FormFieldWrapper {...props} errors={errors[name]} isRequired={isRequired}>
+    <FormFieldWrapper {...props} name={name} isRequired={isRequired}>
       <Select
         ref={register({ required: isRequired })}
         name={name}
@@ -39,8 +39,6 @@ DefaultSelect.propTypes = {
   ).isRequired,
   label: PropTypes.string,
   isRequired: PropTypes.bool,
-  isReadOnly: PropTypes.bool,
-  create: PropTypes.bool,
 }
 
 export default DefaultSelect

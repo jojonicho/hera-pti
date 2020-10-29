@@ -12,3 +12,6 @@ export const PROJECT_PAGE_LIST_URL = projectId => `${PROJECT_URL}${projectId}/pa
 
 export const PAGE_URL = BASE_URL + '/pages/'
 export const PAGE_BY_ID_URL = pageId => `${PAGE_URL}${pageId}/`
+export const PAGE_HISTORY_URL = BASE_URL + '/histories/pages/'
+export const PAGE_HISTORY_BY_ID_URL = pageId => `${PAGE_HISTORY_URL}${pageId}/`
+export const HISTORY_DISCUSSION_URL = BASE_URL + '/histories/discussions/'
