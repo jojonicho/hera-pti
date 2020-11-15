@@ -40,7 +40,7 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
 
   const [cnt, setCount] = useState(messageUnreadCount || 0)
   const [fieldName, setFieldName] = useState(targetFieldName)
-
+  const [isResolved, setIsResolved] = useState(false)
   const [state, setState] = useState({ data: null, loading: false })
 
   const { register, reset, handleSubmit, formState, errors } = useForm({
@@ -70,6 +70,13 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
     const [response] = await request(DISCUSSION_BY_ID_URL(isActive, discussionId))
     setFieldName(response.target_field_name)
     setState({ data: response.messages, loading: false })
+  }
+
+  const onResolve = async () => {
+    const [error] = await putDiscussionStatusById(isActive, discussionId)
+    if (!error) {
+      setIsResolved(true)
+    }
   }
 
   let prevDate
@@ -108,7 +115,8 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
                     variant="outline"
                     size="sm"
                     variantColor="blue"
-                    onClick={() => putDiscussionStatusById(isActive, discussionId)}
+                    onClick={onResolve}
+                    isDisabled={isResolved}
                   >
                     Resolve
                   </Button>
@@ -175,7 +183,7 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
                   <FormControl isInvalid={errors.content && errors.content.message !== ''}>
                     <InputGroup size="md">
                       <Input
-                        isReadOnly={!isActive}
+                        isReadOnly={!isActive || isResolved}
                         variant="filled"
                         pr="4.5rem"
                         bg="darkCard"
