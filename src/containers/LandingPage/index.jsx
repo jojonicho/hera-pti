@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
 import { Text, Button, Stack, useToast } from '@chakra-ui/core'
 import GoogleLogin from 'react-google-login'
 
@@ -51,7 +52,7 @@ const LandingPage = () => {
           {user ? (
             <Stack>
               <Button variantColor="blue" variant="outline">
-                Visit Dashboard
+                <Link to="/dashboard">Visit Dashboard</Link>
               </Button>
             </Stack>
           ) : (

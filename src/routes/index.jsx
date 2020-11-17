@@ -1,4 +1,4 @@
-import { ThemeProvider, CSSReset, useToast } from '@chakra-ui/core'
+import { ThemeProvider, CSSReset, useToast, Spinner, Box } from '@chakra-ui/core'
 import { css, Global } from '@emotion/react'
 import React, { useState, useEffect, useCallback } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
@@ -11,7 +11,9 @@ import { loginApi, userInfoApi } from 'services/user'
 import PageDetails from 'containers/PageDetails'
 
 export const Routes = () => {
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+
   const toast = useToast()
   const errorToast = useCallback(
     err => {
@@ -28,6 +30,7 @@ export const Routes = () => {
   )
 
   const getUser = useCallback(async () => {
+    setIsLoading(true)
     const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
     if (token) {
       const [data, error] = await userInfoApi()
@@ -36,8 +39,10 @@ export const Routes = () => {
         errorToast(error.error)
       }
       setUser(data)
+      setIsLoading(false)
       return data
     }
+    setIsLoading(false)
   }, [errorToast])
 
   const login = useCallback(
@@ -62,6 +67,19 @@ export const Routes = () => {
   useEffect(() => {
     getUser()
   }, [getUser])
+
+  if (isLoading)
+    return (
+      <Box
+        minHeight="100vh"
+        minWidth="100vw"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Spinner />
+      </Box>
+    )
 
   return (
     <ThemeProvider theme={theme}>
@@ -105,7 +123,7 @@ export const Routes = () => {
         `}
       />
       <BrowserRouter>
-        <UserContext.Provider value={{ user, setUser, login, logout }}>
+        <UserContext.Provider value={{ user, login, logout }}>
           <CSSReset />
           <Switch>
             <Route exact path="/" component={LandingPage} />

@@ -71,7 +71,7 @@ const PageDetails = ({ create, isHistory }) => {
       discussions[target_field_name] = { ...rest }
     })
     setDiscussions(discussions)
-  }, [pageId])
+  }, [pageId, create, fields, isHistory, setValue, user.is_admin])
 
   const onSubmit = async () => {
     const values = getValues()
