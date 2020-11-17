@@ -22,6 +22,16 @@ import { request } from 'services/api'
 import { cleanListInput, changeToListInput } from 'utils/form'
 import { UserContext } from 'utils/datastore/UserContext'
 
+const inputFields = [
+  'parent',
+  'page_url',
+  'priority',
+  'flow',
+  'display_details',
+  'preconditions',
+  'access_details',
+]
+
 const PageDetails = ({ create, isHistory }) => {
   const { errors, formState, setValue, getValues, handleSubmit, ...methods } = useForm()
   const { pageId } = useParams()
@@ -38,15 +48,6 @@ const PageDetails = ({ create, isHistory }) => {
     <PageInfoForm create={create} isReadOnly={isReadOnly} projectId={project.id} pageId={pageId} />
   )
   const pageContent = <PageContentForm create={create} />
-  const fields = [
-    'parent',
-    'page_url',
-    'priority',
-    'flow',
-    'display_details',
-    'preconditions',
-    'access_details',
-  ]
 
   const fetchPageData = useCallback(async () => {
     const url = isHistory ? PAGE_HISTORY_BY_ID_URL(pageId) : PAGE_BY_ID_URL(pageId)
@@ -59,7 +60,7 @@ const PageDetails = ({ create, isHistory }) => {
 
     setProject(data.project)
     setPageName(data.title)
-    fields.forEach(field => {
+    inputFields.forEach(field => {
       let v = data[field]
       let value = Array.isArray(v) ? changeToListInput(v, isReadOnly) : v
       setValue(field, value)
@@ -71,13 +72,13 @@ const PageDetails = ({ create, isHistory }) => {
       discussions[target_field_name] = { ...rest }
     })
     setDiscussions(discussions)
-  }, [pageId, create, fields, isHistory, setValue, user.is_admin])
+  }, [pageId, create, isHistory, setValue, user.is_admin])
 
   const onSubmit = async () => {
     const values = getValues()
     const payload = {}
     payload.title = pageName
-    fields.forEach(field => {
+    inputFields.forEach(field => {
       let v = values[field]
       let value = Array.isArray(v) ? cleanListInput(v) : v
       payload[field] = value
