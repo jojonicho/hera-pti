@@ -92,7 +92,7 @@ const Dashboard = () => {
         </Heading>
         {isLoading ? (
           <Box display="flex" alignItems="center" flexGrow={1} justifyContent="center">
-            <Spinner />
+            <Spinner size="xl" />
           </Box>
         ) : (
           <Box display="flex" flexDirection="column" justifyContent="space-between" flexGrow={1}>

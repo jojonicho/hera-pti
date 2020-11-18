@@ -11,16 +11,19 @@ import { DiscussionCreate } from 'components/Discussion/DiscussionCreate'
 const FormFieldWrapper = ({ children, label, name, helperText, isRequired }) => {
   const { width } = useWindowSize()
   const { create, isHistory, errors, discussions, targetPageId, targetProjectId } = useFormContext()
-  const discussion =
-    isHistory || discussions[name] ? (
-      <DiscussionOpen isActive={!isHistory} discussionData={discussions[name]} />
-    ) : (
+
+  let discussion
+  if (discussions[name]) {
+    discussion = <DiscussionOpen isActive={!isHistory} discussionData={discussions[name]} />
+  } else if (!isHistory) {
+    discussion = (
       <DiscussionCreate
         fieldName={name}
         targetPageId={targetPageId}
         targetProjectId={targetProjectId}
       />
     )
+  }
 
   return (
     <FormControl isRequired={isRequired} isInvalid={errors[name] ? true : false}>

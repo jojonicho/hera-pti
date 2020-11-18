@@ -9,7 +9,7 @@ export const Layout = ({ children }) => {
   const { user } = useContext(UserContext)
 
   let Layout
-  if (user.is_admin) {
+  if (user && user.is_admin) {
     Layout = AdminLayout
   } else {
     Layout = RequesterLayout

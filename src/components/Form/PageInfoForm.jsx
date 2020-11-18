@@ -11,14 +11,16 @@ const PageInfoForm = ({ create, isReadOnly, projectId, pageId }) => {
   const [parentPageChoices, setParentPageChoices] = useState([])
 
   const fetchPageList = useCallback(async () => {
-    const [data, error] = await request(PROJECT_PAGE_LIST_URL(projectId))
-    if (error) {
-      return
+    if (projectId && pageId) {
+      const [data, error] = await request(PROJECT_PAGE_LIST_URL(projectId))
+      if (error) {
+        return
+      }
+      const pageList = data
+        .filter(({ id }) => id !== pageId)
+        .map(({ id, title }) => ({ key: id, value: title }))
+      setParentPageChoices(pageList)
     }
-    const pageList = data
-      .filter(({ id }) => id !== pageId)
-      .map(({ id, title }) => ({ key: id, value: title }))
-    setParentPageChoices(pageList)
   }, [projectId, pageId])
 
   useEffect(() => {

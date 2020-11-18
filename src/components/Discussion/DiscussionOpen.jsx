@@ -143,9 +143,8 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
                       const changeDay = currentDate - prevDate >= 24 * 60 * 60
                       prevDate = currentDate
                       return (
-                        <>
+                        <div key={id}>
                           <Message
-                            key={id}
                             id={id}
                             isAdmin={messageUser.is_admin}
                             username={messageUser.username}
@@ -161,7 +160,7 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
                               {currentDate.toLocaleDateString('en-US', options)}
                             </Text>
                           )}
-                        </>
+                        </div>
                       )
                     })
                   ) : (
@@ -217,11 +216,11 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
 
 DiscussionOpen.propTypes = {
   isActive: PropTypes.bool,
-  discussionData: PropTypes.objectOf({
+  discussionData: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    message_unread_by_admin_count: PropTypes.number.isRequired,
-    message_unread_by_requester_count: PropTypes.number.isRequired,
-    target_field_name: PropTypes.string.isRequired,
+    message_unread_by_admin_count: PropTypes.number,
+    message_unread_by_requester_count: PropTypes.number,
+    target_field_name: PropTypes.string,
     resolved_at: PropTypes.string,
   }).isRequired,
   isReadOnly: PropTypes.bool,
