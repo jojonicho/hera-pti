@@ -26,20 +26,18 @@ import { Code as Loader } from 'react-content-loader'
 import { request } from 'services/api'
 import { smoothScrollToRef } from 'utils/discussion/smoothScrollToRef'
 
-export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
+export const DiscussionOpen = ({ discussionData, isActive, isReadOnly, label }) => {
   const { user } = useContext(UserContext)
   const {
     id: discussionId,
     message_unread_by_admin_count: messageUnreadByAdminCount,
     message_unread_by_requester_count: messageUnreadByRequesterCount,
-    target_field_name: targetFieldName,
   } = discussionData
   const messageUnreadCount = user.is_admin
     ? messageUnreadByAdminCount
     : messageUnreadByRequesterCount
 
   const [cnt, setCount] = useState(messageUnreadCount || 0)
-  const [fieldName, setFieldName] = useState(targetFieldName)
   const [isResolved, setIsResolved] = useState(false)
   const [state, setState] = useState({ data: null, loading: false })
 
@@ -68,7 +66,6 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
     setCount(0)
     setState(prev => ({ data: prev.data, loading: true }))
     const [response] = await request(DISCUSSION_BY_ID_URL(isActive, discussionId))
-    setFieldName(response.target_field_name)
     setState({ data: response.messages, loading: false })
   }
 
@@ -109,7 +106,7 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
           <PopoverContent border="0" bg="card" zIndex={999}>
             <PopoverHeader fontWeight="bold" border="0" fontSize="20px">
               <Stack isInline justify="space-between" mr="10%" align="center">
-                <Text>{fieldName}</Text>
+                <Text>{label}</Text>
                 {state.data && user.is_admin && (
                   <Button
                     variant="outline"
@@ -215,12 +212,12 @@ export const DiscussionOpen = ({ discussionData, isActive, isReadOnly }) => {
 }
 
 DiscussionOpen.propTypes = {
+  label: PropTypes.string.isRequired,
   isActive: PropTypes.bool,
   discussionData: PropTypes.shape({
     id: PropTypes.string.isRequired,
     message_unread_by_admin_count: PropTypes.number,
     message_unread_by_requester_count: PropTypes.number,
-    target_field_name: PropTypes.string,
     resolved_at: PropTypes.string,
   }).isRequired,
   isReadOnly: PropTypes.bool,

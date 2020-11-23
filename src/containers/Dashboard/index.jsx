@@ -78,14 +78,7 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <Stack
-        py="5rem"
-        px="9rem"
-        display="flex"
-        flexGrow={1}
-        flexFlow="column"
-        flexDirection="column"
-      >
+      <Stack px="9vw" display="flex" flexGrow={1} flexFlow="column">
         {breadcrumbComponent}
         <Heading my="2rem" height="2rem" textAlign="left">
           {user.is_admin ? 'Project Requests' : 'Your Projects'}
