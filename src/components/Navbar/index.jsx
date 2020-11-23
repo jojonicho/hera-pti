@@ -27,7 +27,8 @@ const Navbar = ({ navItems }) => {
       isInline
       align="center"
       justify="space-between"
-      p="8px"
+      p="2"
+      pr={['2', '1.5vw']}
       bg="brand"
       minWidth="100vw"
     >
@@ -45,7 +46,7 @@ const Navbar = ({ navItems }) => {
         <Stack align="center" justify="space-between" isInline spacing={2}>
           {navItems.map(navItem => navItem)}
           <Image src={user.picture} alt="google-profile" width="30px" borderRadius="50%" />
-          <Text fontSize="calc(0.7rem + 0.2vw)" color="white">
+          <Text fontSize="calc(0.7rem + 0.2vw)" color="white" textAlign="center">
             {user.name}
           </Text>
           <Popover trigger="click" placement="bottom-end">

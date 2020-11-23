@@ -12,9 +12,11 @@ const FormFieldWrapper = ({ children, label, name, helperText, isRequired }) => 
   const { width } = useWindowSize()
   const { create, isHistory, errors, discussions, targetPageId, targetProjectId } = useFormContext()
 
-  let discussion
+  let discussion = <Stack size={['1.2rem', '1.5rem']} />
   if (discussions[name]) {
-    discussion = <DiscussionOpen isActive={!isHistory} discussionData={discussions[name]} />
+    discussion = (
+      <DiscussionOpen isActive={!isHistory} discussionData={discussions[name]} label={label} />
+    )
   } else if (!isHistory) {
     discussion = (
       <DiscussionCreate

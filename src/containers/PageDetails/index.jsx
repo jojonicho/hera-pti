@@ -1,4 +1,5 @@
 import {
+  Badge,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -104,8 +105,8 @@ const PageDetails = ({ create, isHistory }) => {
 
   return (
     <Layout>
-      <Stack alignItems="center" justifyContent="center" flexGrow={1}>
-        <Stack width={['95%', '85%']} spacing="2vh" mt="3vh">
+      <Stack align="center" justify="center" flexGrow={1}>
+        <Stack width={['95%', '85%']} spacing="2vh">
           <Breadcrumb spacing={[1, 2]} separator={<Icon color="brand" name="chevron-right" />}>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">Home</BreadcrumbLink>
@@ -130,7 +131,7 @@ const PageDetails = ({ create, isHistory }) => {
             mt="4vh"
           >
             {({ isEditing, onRequestEdit }) => (
-              <Flex>
+              <Flex align="flex-start">
                 <EditableInput value={pageName} />
                 {isEditing || (
                   <>
@@ -144,6 +145,11 @@ const PageDetails = ({ create, isHistory }) => {
                         _hover={{ bg: 'white' }}
                         onClick={onRequestEdit}
                       />
+                    )}
+                    {isHistory && (
+                      <Badge ml="0.3rem" mt={['0.3rem', '0.6rem']} fontSize="sm">
+                        History v{project.version}
+                      </Badge>
                     )}
                   </>
                 )}

@@ -4,25 +4,35 @@ import PropTypes from 'prop-types'
 export const LayoutComponent = ({ children, navbar, footer }) => {
   const containerStyle = {
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexFlow: 'column',
     minHeight: '100vh',
     minWidth: '100vw',
   }
 
   const contentStyle = {
     display: 'flex',
-    flexFlow: 'column',
-    flexGrow: 1,
     minWidth: '100vw',
+    minHeight: '100vh',
+    paddingTop: '5rem',
+    paddingBottom: '4rem',
+  }
+
+  const navbarStyle = {
+    position: 'fixed',
+    top: 0,
+    zIndex: 999,
+  }
+
+  const footerStyle = {
+    position: 'fixed',
+    bottom: 0,
+    zIndex: 999,
   }
 
   return (
     <div style={containerStyle}>
-      {navbar}
+      <div style={navbarStyle}>{navbar}</div>
       <div style={contentStyle}>{children}</div>
-      {footer}
+      <div style={footerStyle}>{footer}</div>
     </div>
   )
 }
