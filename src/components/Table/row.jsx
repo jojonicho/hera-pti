@@ -19,6 +19,7 @@ import generateStatusBadgeProps from 'utils/table/generateStatusBadgeProps'
 import processStatus from 'utils/table/processStatus'
 import PropTypes from 'prop-types'
 import commonPropTypes from 'utils/proptype/commonPropTypes'
+import { VersionHistoryModal } from 'components'
 
 const ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '45%',
@@ -38,6 +39,7 @@ const REGULAR_COLUMN_WIDTH_DISTRIBUTION = {
 
 const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) => {
   const [isModalShown, setIsModalShown] = useState(false)
+  const [isVersionModalShown, setIsVersionModalShown] = useState(false)
   const [option, setOption] = useState('draft')
 
   const widthDistribution = isAdmin
@@ -101,6 +103,12 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
           </ModalBody>
         </ModalContent>
       </Modal>
+      <VersionHistoryModal
+        projectId={project.id}
+        isModalShown={isVersionModalShown}
+        setIsModalShown={setIsVersionModalShown}
+        isAdmin={isAdmin}
+      />
       <Box w={widthDistribution.name} display="flex" alignItems="center" paddingRight="5px">
         <Box w="8%" justifyContent="center" alignItems="center">
           <Image
@@ -130,7 +138,13 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
           {project.status === 'in_review' ? 'In Review' : project.status}
         </Box>
       </Box>
-      <Text w={widthDistribution.lastUpdated} textAlign="center" color="secondary">
+      <Text
+        w={widthDistribution.lastUpdated}
+        textAlign="center"
+        color="secondary"
+        cursor="pointer"
+        onClick={() => setIsVersionModalShown(true)}
+      >
         {generateDateFormat1(project.updated_at)}
       </Text>
       {isAdmin && (
