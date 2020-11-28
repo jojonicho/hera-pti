@@ -120,6 +120,22 @@ export const Routes = () => {
           input:focus {
             outline: none;
           }
+
+          .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #5f637e #dedede;
+          }
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 12px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: #dedede;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #5f637e;
+            border-radius: 20px;
+            border: 2px solid #5f637e;
+          }
         `}
       />
       <BrowserRouter>
