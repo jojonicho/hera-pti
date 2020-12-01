@@ -93,6 +93,7 @@ const Dashboard = () => {
               projects={data.results}
               count={data.count}
               isAdmin={user.is_admin}
+              isSuperAdmin={user.is_superadmin}
               search={search}
               filters={filters}
               handleClickSearchButton={val => setSearch(val)}

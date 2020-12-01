@@ -6,6 +6,16 @@ import SearchBar from './searchBar'
 import PropTypes from 'prop-types'
 import commonPropTypes from '../../utils/proptype/commonPropTypes'
 
+const SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
+  name: '40%',
+  status: '10%',
+  lastUpdated: '15%',
+  versions: '12%',
+  receiver: '10%',
+  discussion: '5%',
+  delete: '8%',
+}
+
 const ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '45%',
   status: '10%',
@@ -26,6 +36,7 @@ const Table = ({
   projects,
   count,
   isAdmin,
+  isSuperAdmin,
   search,
   filters,
   handleClickSearchButton,
@@ -33,7 +44,9 @@ const Table = ({
   handleChangeStatus,
   handleClickDeleteButton,
 }) => {
-  const widthDistribution = isAdmin
+  const widthDistribution = isSuperAdmin
+    ? SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION
+    : isAdmin
     ? ADMIN_COLUMN_WIDTH_DISTRIBUTION
     : REGULAR_COLUMN_WIDTH_DISTRIBUTION
 
@@ -78,6 +91,11 @@ const Table = ({
             Versions
           </Text>
         )}
+        {isSuperAdmin && (
+          <Text textAlign="center" w={widthDistribution.receiver}>
+            Receiver
+          </Text>
+        )}
         <Box w={widthDistribution.discussion}>
           <Box w="70%" display="flex" justifyContent="flex-end">
             <Icon name="chat" size="1.1em" />
@@ -95,6 +113,7 @@ const Table = ({
             key={project.title}
             project={project}
             isAdmin={isAdmin}
+            isSuperAdmin={isSuperAdmin}
             handleChangeStatus={handleChangeStatus}
             handleClickDeleteButton={handleClickDeleteButton}
           />
@@ -148,6 +167,7 @@ Table.propTypes = {
   projects: PropTypes.arrayOf(commonPropTypes.project),
   count: PropTypes.number.isRequired,
   isAdmin: PropTypes.bool,
+  isSuperAdmin: PropTypes.bool,
   search: PropTypes.string.isRequired,
   filters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleClickSearchButton: PropTypes.func,

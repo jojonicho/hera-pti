@@ -12,23 +12,13 @@ const commonPropTypes = {
     deadline: PropTypes.string,
     created_at: PropTypes.string,
     updated_at: PropTypes.string,
+    receiver: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      image: PropTypes.string,
+    }),
     message_unread_by_admin_count: PropTypes.number,
     message_unread_by_requester_count: PropTypes.number,
-    // values below are not used/available on `projects/`. Last checked: 24/11/20
-    figma_url: PropTypes.string,
-    assets_url: PropTypes.string,
-    access_url: PropTypes.string,
-    requester: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-    deleted_at: PropTypes.string,
-    sum_unread_count: PropTypes.number,
-    discussion_set: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        unread_count: PropTypes.number,
-      }),
-    ),
   }),
 }
 
