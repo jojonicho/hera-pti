@@ -8,10 +8,18 @@ export const TOKEN_URL = BASE_URL + '/auth/rest-auth/google/'
 export const DISCUSSION_URL = BASE_URL + '/discussions/'
 
 export const PROJECT_URL = BASE_URL + '/projects/'
-export const PROJECT_PAGE_LIST_URL = projectId => `${PROJECT_URL}${projectId}/pages/`
+export const PROJECT_BY_ID_URL = projectId => `${PROJECT_URL}${projectId}/`
+export const SET_STATUS_PROJECT_BY_ID_URL = projectId =>
+  `${PROJECT_BY_ID_URL(projectId)}set-status/`
+export const PROJECT_PAGE_LIST_URL = projectId => `${PROJECT_BY_ID_URL(projectId)}pages/`
+export const PROJECT_HISTORY_URL = BASE_URL + '/histories/projects/'
+export const PROJECT_HISTORY_BY_ID_URL = projectId => `${PROJECT_HISTORY_URL}${projectId}/`
+export const PROJECT_PAGE_LIST_HISTORY_URL = projectId =>
+  `${PROJECT_HISTORY_BY_ID_URL(projectId)}pages/`
 
 export const PAGE_URL = BASE_URL + '/pages/'
 export const PAGE_BY_ID_URL = pageId => `${PAGE_URL}${pageId}/`
+export const SET_PARENT_PAGE_BY_ID_URL = pageId => `${PAGE_BY_ID_URL(pageId)}set-parent/`
 export const PAGE_HISTORY_URL = BASE_URL + '/histories/pages/'
 export const PAGE_HISTORY_BY_ID_URL = pageId => `${PAGE_HISTORY_URL}${pageId}/`
 export const HISTORY_DISCUSSION_URL = BASE_URL + '/histories/discussions/'

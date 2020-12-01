@@ -1,7 +1,7 @@
 function generateMap(data) {
   let map = new Map()
 
-  data.pages.forEach(page => {
+  data.forEach(page => {
     let children = []
     if (map.has(page.parent)) {
       children = map.get(page.parent)
@@ -14,7 +14,7 @@ function generateMap(data) {
 }
 
 function getRootList(data) {
-  return data.pages.filter(page => page.parent === null)
+  return data.filter(page => page.parent === null)
 }
 
 export default function generateOrder(data) {

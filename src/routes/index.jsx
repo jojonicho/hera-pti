@@ -10,6 +10,8 @@ import theme from 'utils/theme'
 import { loginApi, userInfoApi } from 'services/user'
 import PageDetails from 'containers/PageDetails'
 
+import ProjectDetails from 'containers/ProjectDetails'
+
 export const Routes = () => {
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -143,6 +145,18 @@ export const Routes = () => {
           <CSSReset />
           <Switch>
             <Route exact path="/" component={LandingPage} />
+            <Route
+              path="/project/create/"
+              component={() => <ProjectDetails create isAdmin={user.is_admin} />}
+            />
+            <Route
+              path="/project/:projectId/history/"
+              component={() => <ProjectDetails isHistory isAdmin={user.is_admin} />}
+            />
+            <Route
+              path="/project/:projectId/"
+              component={() => <ProjectDetails isAdmin={user.is_admin} />}
+            />
             <Route path="/dashboard/" component={Dashboard} />
             <Route path="/page/:pageId/create/" component={() => <PageDetails create />} />
             <Route path="/page/:pageId/history/" component={() => <PageDetails isHistory />} />
