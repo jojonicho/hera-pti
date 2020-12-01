@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/core": "^0.8.0",
+    "@chakra-ui/react": "^1.0.0",
     "@emotion/core": "^10.0.35",
     "@emotion/react": "^11.0.0-next.10",
     "@emotion/styled": "^10.0.27",
@@ -11,6 +12,7 @@
     "emotion-theming": "^10.0.27",
     "eslint-import-resolver-root-import": "^1.0.4",
     "eslint-plugin-react": "^7.20.6",
+    "framer-motion": "^2.9.4",
     "react": "^16.13.1",
     "react-content-loader": "^5.1.0",
     "react-dom": "^16.13.1",

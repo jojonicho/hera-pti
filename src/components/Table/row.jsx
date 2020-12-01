@@ -5,6 +5,7 @@ import {
   Icon,
   IconButton,
   Image,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -12,6 +13,7 @@ import {
   Select,
   Text,
 } from '@chakra-ui/core'
+import { Code } from '@chakra-ui/react'
 import { STATUS } from 'constants/status'
 import { generateDateFormat1, generateDateFormat2 } from 'utils/table/generateDateFormat'
 import generateLogoByRequester from 'utils/table/generateLogoByRequester'
@@ -20,6 +22,16 @@ import processStatus from 'utils/table/processStatus'
 import PropTypes from 'prop-types'
 import commonPropTypes from 'utils/proptype/commonPropTypes'
 import { VersionHistoryModal } from 'components'
+
+const SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
+  name: '40%',
+  status: '10%',
+  lastUpdated: '15%',
+  versions: '12%',
+  receiver: '10%',
+  discussion: '5%',
+  delete: '8%',
+}
 
 const ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '45%',
@@ -37,12 +49,16 @@ const REGULAR_COLUMN_WIDTH_DISTRIBUTION = {
   discussion: '5%',
 }
 
-const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) => {
+const Row = ({ project, isAdmin, isSuperAdmin, handleClickDeleteButton, handleChangeStatus }) => {
   const [isModalShown, setIsModalShown] = useState(false)
+  const [isVerificationModalShown, setIsVerificationModalShown] = useState(false)
+  const [deleteTitle, setDeleteTitle] = useState('')
   const [isVersionModalShown, setIsVersionModalShown] = useState(false)
   const [option, setOption] = useState('draft')
 
-  const widthDistribution = isAdmin
+  const widthDistribution = isSuperAdmin
+    ? SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION
+    : isAdmin
     ? ADMIN_COLUMN_WIDTH_DISTRIBUTION
     : REGULAR_COLUMN_WIDTH_DISTRIBUTION
 
@@ -65,7 +81,7 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
     >
       <Modal isOpen={isModalShown && isAdmin}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent borderRadius="10px">
           <ModalBody>
             <Box px="50px" py="60px" display="flex" flexDir="column" alignItems="center">
               <Text mb="5px">You are about to change {project.title} to</Text>
@@ -103,6 +119,53 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
           </ModalBody>
         </ModalContent>
       </Modal>
+
+      <Modal isOpen={isVerificationModalShown && isAdmin}>
+        <ModalOverlay />
+        <ModalContent borderRadius="10px">
+          <ModalBody>
+            <Box px="50px" py="60px" display="flex" flexDir="column" alignItems="center">
+              <Text>
+                You are about to <b>permanently delete</b> this project. Please type the following
+                to confirm:
+              </Text>
+              <Code backgroundColor="form">{project.title}</Code>
+              <Input
+                id="delete"
+                borderRadius="md"
+                borderColor="border"
+                my="20px"
+                onChange={e => setDeleteTitle(e.target.value)}
+              />
+              <Box display="flex" justifyContent="space-around" width="100%">
+                <Button
+                  width="45%"
+                  variant="outline"
+                  onClick={() => {
+                    setDeleteTitle('')
+                    setIsVerificationModalShown(false)
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  width="45%"
+                  bg="rejectedBadge"
+                  isDisabled={deleteTitle !== project.title}
+                  color="white"
+                  onClick={() => {
+                    handleClickDeleteButton(project.id, deleteTitle)
+                    setIsVerificationModalShown(false)
+                  }}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </Box>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
       <VersionHistoryModal
         projectId={project.id}
         isModalShown={isVersionModalShown}
@@ -163,6 +226,11 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
           />
         </Box>
       )}
+      {isSuperAdmin && (
+        <Box w={widthDistribution.receiver}>
+          <Text textAlign="center">{project.receiver.name}</Text>
+        </Box>
+      )}
       <Box w={widthDistribution.discussion}>
         <Box w="70%" display="flex" justifyContent="flex-end">
           <Text paddingRight="5px">
@@ -179,7 +247,7 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
             bg="rejectedBadge"
             color="white"
             size="sm"
-            onClick={() => handleClickDeleteButton(project.id)}
+            onClick={() => setIsVerificationModalShown(true)}
           >
             Delete
           </Button>
@@ -192,6 +260,7 @@ const Row = ({ project, isAdmin, handleClickDeleteButton, handleChangeStatus }) 
 Row.propTypes = {
   project: commonPropTypes.project,
   isAdmin: PropTypes.bool,
+  isSuperAdmin: PropTypes.bool,
   handleClickDeleteButton: PropTypes.func,
   handleChangeStatus: PropTypes.func,
 }
