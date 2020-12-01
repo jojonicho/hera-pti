@@ -92,6 +92,7 @@ const ListInput = ({ name, isRequired, ...props }) => {
 
 ListInput.propTypes = {
   name: PropTypes.string.isRequired,
+  errors: PropTypes.array,
   label: PropTypes.string.isRequired,
   helperText: PropTypes.string,
   isRequired: PropTypes.bool,

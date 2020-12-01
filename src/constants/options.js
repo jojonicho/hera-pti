@@ -17,6 +17,69 @@ export const PROJECT_REQUEST_TYPES = [
   },
 ]
 
+export const BIRDEPT_OPTIONS = [
+  {
+    key: 'Pi',
+    value: 'PI',
+  },
+  {
+    key: 'ki',
+    value: 'KI',
+  },
+  {
+    key: 'pti',
+    value: 'PTI',
+  },
+  {
+    key: 'adkesma',
+    value: 'Adkesma',
+  },
+  {
+    key: 'akpem',
+    value: 'Akpem',
+  },
+  {
+    key: 'kastrat',
+    value: 'Kastrat',
+  },
+  {
+    key: 'media',
+    value: 'Media',
+  },
+  {
+    key: 'humas',
+    value: 'Humas',
+  },
+  {
+    key: 'psdm',
+    value: 'PSDM',
+  },
+  {
+    key: 'depor',
+    value: 'Depor',
+  },
+  {
+    key: 'pengmas',
+    value: 'Pengmas',
+  },
+  {
+    key: 'bismit',
+    value: 'Bismit',
+  },
+  {
+    key: 'senbud',
+    value: 'Senbud',
+  },
+  {
+    key: 'keilmuan',
+    value: 'Keilmuan',
+  },
+  {
+    key: 'other',
+    value: 'Lainnya',
+  },
+]
+
 export const PRIORITY_CHOICES = [
   {
     key: 1,
