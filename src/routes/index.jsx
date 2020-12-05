@@ -1,76 +1,21 @@
-import { ThemeProvider, CSSReset, useToast, Spinner, Box } from '@chakra-ui/core'
+import { ThemeProvider, CSSReset, Spinner, Box } from '@chakra-ui/core'
 import { css, Global } from '@emotion/react'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
-import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
-import { LandingPage, Dashboard } from 'containers'
-import { UserContext } from 'utils/datastore/UserContext'
+import ProtectedRoute from './ProtectedRoutes'
+import { UserContext, useUserContext } from 'utils/datastore/UserContext'
 import theme from 'utils/theme'
-import { loginApi, userInfoApi } from 'services/user'
-import PageDetails from 'containers/PageDetails'
-
-import ProjectDetails from 'containers/ProjectDetails'
+import { LandingPage, Dashboard, ProjectDetails, PageDetails, UserManagementPage } from 'containers'
 
 export const Routes = () => {
-  const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-
-  const toast = useToast()
-  const errorToast = useCallback(
-    err => {
-      toast({
-        title: 'An error occurred.',
-        description: err && err.error ? err.error : 'unknown error',
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      })
-      console.log(err)
-    },
-    [toast],
-  )
-
-  const getUser = useCallback(async () => {
-    setIsLoading(true)
-    const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
-    if (token) {
-      const [data, error] = await userInfoApi()
-      if (error) {
-        setUser(null)
-        errorToast(error.error)
-      }
-      setUser(data)
-      setIsLoading(false)
-      return data
-    }
-    setIsLoading(false)
-  }, [errorToast])
-
-  const login = useCallback(
-    async token => {
-      const [data, error] = await loginApi({ access_token: token.accessToken, code: '' })
-      if (error) {
-        setUser(null)
-        errorToast(error.error)
-        return
-      }
-      localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, data.key)
-      return await getUser()
-    },
-    [getUser, errorToast],
-  )
-
-  const logout = useCallback(() => {
-    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
-    setUser(null)
-  }, [])
+  const { user, userIsLoading, getUser, login, logout } = useUserContext()
 
   useEffect(() => {
     getUser()
   }, [getUser])
 
-  if (isLoading)
+  if (userIsLoading)
     return (
       <Box
         minHeight="100vh"
@@ -145,22 +90,26 @@ export const Routes = () => {
           <CSSReset />
           <Switch>
             <Route exact path="/" component={LandingPage} />
-            <Route
+            <ProtectedRoute
               path="/project/create/"
               component={() => <ProjectDetails create isAdmin={user.is_admin} />}
             />
-            <Route
+            <ProtectedRoute
               path="/project/:projectId/history/"
               component={() => <ProjectDetails isHistory isAdmin={user.is_admin} />}
             />
-            <Route
+            <ProtectedRoute
               path="/project/:projectId/"
               component={() => <ProjectDetails isAdmin={user.is_admin} />}
             />
-            <Route path="/dashboard/" component={Dashboard} />
-            <Route path="/page/:pageId/create/" component={() => <PageDetails create />} />
-            <Route path="/page/:pageId/history/" component={() => <PageDetails isHistory />} />
-            <Route path="/page/:pageId/" component={PageDetails} />
+            <ProtectedRoute path="/dashboard/" component={Dashboard} />
+            <ProtectedRoute path="/page/:pageId/create/" component={() => <PageDetails create />} />
+            <ProtectedRoute
+              path="/page/:pageId/history/"
+              component={() => <PageDetails isHistory />}
+            />
+            <ProtectedRoute path="/page/:pageId/" component={PageDetails} />
+            <ProtectedRoute path="/users/" component={UserManagementPage} />
           </Switch>
         </UserContext.Provider>
       </BrowserRouter>

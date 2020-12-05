@@ -17,10 +17,14 @@ import { Link } from 'react-router-dom'
 import { ReactComponent as Logo } from 'assets/logo.svg'
 import { UserContext } from 'utils/datastore/UserContext'
 import PropTypes from 'prop-types'
+import { useWindowSize } from 'hooks'
+import { MOBILE_MAX_WIDTH } from 'constants/size'
 
 const Navbar = ({ navItems }) => {
   const { user, logout } = useContext(UserContext)
+  const { width } = useWindowSize()
   const toast = useToast()
+
   return (
     <Stack
       spacing={1}
@@ -43,12 +47,14 @@ const Navbar = ({ navItems }) => {
       {!user ? (
         <Instagram />
       ) : (
-        <Stack align="center" justify="space-between" isInline spacing={2}>
+        <Stack align="center" justify="space-between" isInline>
           {navItems.map(navItem => navItem)}
           <Image src={user.picture} alt="google-profile" width="30px" borderRadius="50%" />
-          <Text fontSize="calc(0.7rem + 0.2vw)" color="white" textAlign="center">
-            {user.name}
-          </Text>
+          {width > MOBILE_MAX_WIDTH && (
+            <Text fontSize="calc(0.7rem + 0.2vw)" color="white" textAlign="center">
+              {user.name}
+            </Text>
+          )}
           <Popover trigger="click" placement="bottom-end">
             <PopoverTrigger>
               <Icon color="white" cursor="pointer" mr={2} name="triangle-down" size="12px" />

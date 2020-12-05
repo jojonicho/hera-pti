@@ -20,7 +20,7 @@ import generateLogoByRequester from 'utils/table/generateLogoByRequester'
 import generateStatusBadgeProps from 'utils/table/generateStatusBadgeProps'
 import processStatus from 'utils/table/processStatus'
 import PropTypes from 'prop-types'
-import commonPropTypes from 'utils/proptype/commonPropTypes'
+import { projectPropTypes } from 'constants/proptypes/project'
 import { VersionHistoryModal } from 'components'
 
 const SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
@@ -258,7 +258,7 @@ const Row = ({ project, isAdmin, isSuperAdmin, handleClickDeleteButton, handleCh
 }
 
 Row.propTypes = {
-  project: commonPropTypes.project,
+  project: projectPropTypes,
   isAdmin: PropTypes.bool,
   isSuperAdmin: PropTypes.bool,
   handleClickDeleteButton: PropTypes.func,
