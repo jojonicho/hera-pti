@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Box,
-  Icon,
-  Heading,
-  Spinner,
-  Stack,
-} from '@chakra-ui/core'
-import { Pagination, Table } from 'components'
+import { Box, Heading, Spinner, Stack } from '@chakra-ui/core'
+import { Pagination, Table, Breadcrumb } from 'components'
 import { Layout } from 'components/Layout'
 import { request } from 'services/api'
 import { PROJECT_URL } from 'constants/urls'
@@ -65,21 +56,10 @@ const Dashboard = () => {
     }))
   }
 
-  const breadcrumbComponent = (
-    <Breadcrumb spacing={[1, 2]} separator={<Icon color="brand" name="chevron-right" />}>
-      <BreadcrumbItem>
-        <BreadcrumbLink href="/">Home</BreadcrumbLink>
-      </BreadcrumbItem>
-      <BreadcrumbItem>
-        <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-      </BreadcrumbItem>
-    </Breadcrumb>
-  )
-
   return (
     <Layout>
       <Stack px="9vw" display="flex" flexGrow={1} flexFlow="column">
-        {breadcrumbComponent}
+        <Breadcrumb pages={[{ path: '/dashboard/', name: 'Dashboard' }]} />
         <Heading my="2rem" height="2rem" textAlign="left">
           {user.is_admin ? 'Project Requests' : 'Your Projects'}
         </Heading>

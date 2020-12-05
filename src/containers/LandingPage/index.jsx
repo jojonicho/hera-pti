@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { Link, Redirect } from 'react-router-dom'
 import { Text, Button, Stack, useToast } from '@chakra-ui/core'
 import GoogleLogin from 'react-google-login'
 
@@ -8,7 +9,7 @@ import { UserContext } from 'utils/datastore/UserContext'
 import { GOOGLE_CLIENT_ID } from 'constants/auth'
 import { Layout } from 'components/Layout'
 
-const LandingPage = () => {
+const LandingPage = ({ location }) => {
   const { user, login } = useContext(UserContext)
 
   const toast = useToast()
@@ -30,6 +31,11 @@ const LandingPage = () => {
     })
     console.log(err)
   }
+
+  if (user && location.state) {
+    return <Redirect to={location.state.referrer} />
+  }
+
   return (
     <Layout>
       <Stack alignItems="center" justifyContent="center" flexGrow={1}>
@@ -75,6 +81,14 @@ const LandingPage = () => {
       </Stack>
     </Layout>
   )
+}
+
+LandingPage.propTypes = {
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      referrer: PropTypes.object,
+    }),
+  }).isRequired,
 }
 
 export default LandingPage

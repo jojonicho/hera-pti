@@ -1,2 +1,5 @@
 export { default as LandingPage } from './LandingPage'
 export { default as Dashboard } from './Dashboard'
+export { default as PageDetails } from './PageDetails'
+export { default as ProjectDetails } from './ProjectDetails'
+export { default as UserManagementPage } from './UserManagementPage'

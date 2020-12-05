@@ -4,7 +4,7 @@ import FilterSelect from './filterSelect'
 import Row from './row'
 import SearchBar from './searchBar'
 import PropTypes from 'prop-types'
-import commonPropTypes from '../../utils/proptype/commonPropTypes'
+import { projectPropTypes } from 'constants/proptypes/project'
 
 const SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '40%',
@@ -164,7 +164,7 @@ const Table = ({
 }
 
 Table.propTypes = {
-  projects: PropTypes.arrayOf(commonPropTypes.project),
+  projects: PropTypes.arrayOf(projectPropTypes),
   count: PropTypes.number.isRequired,
   isAdmin: PropTypes.bool,
   isSuperAdmin: PropTypes.bool,

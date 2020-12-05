@@ -8,23 +8,20 @@ import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
  * @param {string} method HTTP method
  * @param {object} extraHeaders extra header key-values
  */
-export async function request(
-  path,
-  body = {},
-  method = 'GET',
-  extraHeaders = {},
-  formData = false,
-) {
+export async function request(path, body = {}, method = 'GET', extraHeaders = {}) {
   let response, data, error, responseComponent
+  const isFormData = body instanceof FormData
 
   try {
     responseComponent = {
-      headers: { ...getDefaultHeaders(formData), ...extraHeaders },
+      headers: { ...getDefaultHeaders(isFormData), ...extraHeaders },
       method,
     }
     if (method !== 'GET' && method !== 'HEAD') {
-      const payload = formData ? body : JSON.stringify(body)
-      responseComponent = { body: payload, ...responseComponent }
+      responseComponent = {
+        body: isFormData ? body : JSON.stringify(body),
+        ...responseComponent,
+      }
     }
     response = await fetch(path, responseComponent)
     if (!response.ok) {
@@ -40,14 +37,14 @@ export async function request(
   return [data, error, response]
 }
 
-function getDefaultHeaders(formData) {
+function getDefaultHeaders(isFormData) {
   const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
-  const values = formData
-    ? {}
-    : {
+  const values = !isFormData
+    ? {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       }
+    : {}
 
   if (token) {
     values.Authorization = `Token ${token}`

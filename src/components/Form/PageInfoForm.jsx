@@ -1,31 +1,35 @@
 import { Stack } from '@chakra-ui/core'
 import React, { useEffect, useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { useFormContext } from 'react-hook-form'
 
 import { Input, ListInput, Select } from 'components/Form/Fields'
 import { PRIORITY_CHOICES } from 'constants/options'
-import { PROJECT_PAGE_LIST_URL } from 'constants/urls'
-import { request } from 'services/api'
+import { retrievePageListFromProjectApi } from 'services/project'
 
-const PageInfoForm = ({ create, isReadOnly, projectId, pageId }) => {
+const PageInfoForm = ({ create, isReadOnly, projectId, pageId, parentPage }) => {
   const [parentPageChoices, setParentPageChoices] = useState([])
+  const { setValue } = useFormContext()
 
   const fetchPageList = useCallback(async () => {
-    if (projectId && pageId) {
-      const [data, error] = await request(PROJECT_PAGE_LIST_URL(projectId))
-      if (error) {
-        return
-      }
+    if (!isReadOnly && projectId && pageId) {
+      const [data, error] = await retrievePageListFromProjectApi(projectId)
+      if (error) return
+
       const pageList = data
         .filter(({ id }) => id !== pageId)
         .map(({ id, title }) => ({ key: id, value: title }))
       setParentPageChoices(pageList)
     }
-  }, [projectId, pageId])
+  }, [isReadOnly, projectId, pageId])
 
   useEffect(() => {
-    !isReadOnly && fetchPageList()
-  }, [isReadOnly, fetchPageList])
+    fetchPageList()
+  }, [fetchPageList])
+
+  useEffect(() => {
+    setValue('parent', parentPage)
+  }, [parentPageChoices, parentPage, setValue])
 
   return (
     <Stack
@@ -46,8 +50,9 @@ const PageInfoForm = ({ create, isReadOnly, projectId, pageId }) => {
 PageInfoForm.propTypes = {
   create: PropTypes.bool,
   isReadOnly: PropTypes.bool,
-  projectId: PropTypes.string,
-  pageId: PropTypes.string,
+  projectId: PropTypes.string.isRequired,
+  pageId: PropTypes.string.isRequired,
+  parentPage: PropTypes.string,
 }
 
 export default PageInfoForm

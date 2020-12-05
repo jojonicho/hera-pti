@@ -1,27 +1,22 @@
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   ButtonGroup,
   Editable,
   EditableInput,
   Flex,
-  Icon,
   IconButton,
   Stack,
   Text,
 } from '@chakra-ui/core'
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { ProjectInfoForm } from 'components'
+import { ProjectInfoForm, Card, Breadcrumb } from 'components'
 import { useForm, FormProvider } from 'react-hook-form'
-import { Card } from 'components'
 import TreeContainer from 'components/TreeContainer'
 
 import { useParams, useHistory, Link } from 'react-router-dom'
 import { PROJECT_BY_ID_URL, PROJECT_HISTORY_BY_ID_URL } from 'constants/urls'
-import { postProjectById, putProjectStatus } from 'services/projectdetails'
+import { postProjectById, putProjectStatus } from 'services/project'
 import { request } from 'services/api'
 
 const ProjectDetails = ({ create, isHistory, isAdmin }) => {
@@ -118,17 +113,12 @@ const ProjectDetails = ({ create, isHistory, isAdmin }) => {
   return (
     <Stack width="100%" direction="column" align="center" spacing={0} mt="2vh">
       <Stack width={['95%', '85%']} spacing="2vh">
-        <Breadcrumb spacing={[1, 2]} separator={<Icon color="brand" name="chevron-right" />}>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink href="/project">{title}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
+        <Breadcrumb
+          pages={[
+            { path: '/dashboard/', name: 'Dashboard' },
+            { path: `/project/${projectId}/`, name: title },
+          ]}
+        />
         <Flex
           direction={['column', 'column', 'column', 'row']}
           justify="space-between"

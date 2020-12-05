@@ -2,8 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import LayoutComponent from '../LayoutComponent/'
-import Footer from '../../Footer'
-import Navbar from '../../Navbar'
+import { Footer, Navbar } from 'components'
 
 export const AdminLayout = ({ children }) => {
   const footer = <Footer />

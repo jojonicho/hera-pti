@@ -1,13 +1,9 @@
 import {
   Badge,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   Editable,
   EditableInput,
   Flex,
-  Icon,
   IconButton,
   Text,
   Stack,
@@ -17,10 +13,9 @@ import PropTypes from 'prop-types'
 import { useForm, FormProvider } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 
-import { PageInfoForm, PageContentForm, TabContainer, Layout } from 'components'
-import { PAGE_BY_ID_URL, PAGE_HISTORY_BY_ID_URL } from 'constants/urls'
-import { request } from 'services/api'
-import { cleanListInput, changeToListInput } from 'utils/form'
+import { PageInfoForm, PageContentForm, TabContainer, Layout, Breadcrumb } from 'components'
+import { retrievePageApi, retrievePageHistoryApi, updatePageApi } from 'services/page'
+import { cleanData, changeToInput } from 'utils/form'
 import { UserContext } from 'utils/datastore/UserContext'
 
 const inputFields = [
@@ -40,56 +35,56 @@ const PageDetails = ({ create, isHistory }) => {
 
   const [isReadOnly, setIsReadOnly] = useState(false)
   const [pageName, setPageName] = useState('New Page')
+  const [parent, setParent] = useState('')
   const [project, setProject] = useState({ id: '', title: 'Project' })
   const [discussions, setDiscussions] = useState('')
   const [infoTabBorder, setInfoTabBorder] = useState('')
   const [contentTabBorder, setContentTabBorder] = useState('')
 
   const pageInfo = (
-    <PageInfoForm create={create} isReadOnly={isReadOnly} projectId={project.id} pageId={pageId} />
+    <PageInfoForm
+      create={create}
+      isReadOnly={isReadOnly}
+      projectId={project.id}
+      pageId={pageId}
+      parentPage={parent}
+    />
   )
   const pageContent = <PageContentForm create={create} />
 
   const fetchPageData = useCallback(async () => {
-    const url = isHistory ? PAGE_HISTORY_BY_ID_URL(pageId) : PAGE_BY_ID_URL(pageId)
-    const [data, error] = await request(url)
-    if (error || create) {
-      return
+    const retrievePage = isHistory ? retrievePageHistoryApi : retrievePageApi
+    const [data, error] = await retrievePage(pageId)
+    if (error) return
+
+    if (!create) {
+      const isReadOnly = user.is_admin || isHistory || data.project.status !== 'draft'
+      setIsReadOnly(isReadOnly)
+
+      setProject(data.project)
+      setPageName(data.title)
+      setParent(data.parent)
+      inputFields.forEach(field => setValue(field, changeToInput(data[field], isReadOnly)))
+      setValue('sketch', data.sketch)
+
+      const discussions = {}
+      data.discussions.forEach(({ target_field_name, ...rest }) => {
+        discussions[target_field_name] = { ...rest }
+      })
+      setDiscussions(discussions)
     }
-    const isReadOnly = user.is_admin || isHistory || data.project.status !== 'draft'
-    setIsReadOnly(isReadOnly)
-
-    setProject(data.project)
-    setPageName(data.title)
-    inputFields.forEach(field => {
-      let v = data[field]
-      let value = Array.isArray(v) ? changeToListInput(v, isReadOnly) : v
-      setValue(field, value)
-    })
-    setValue('sketch', data.sketch)
-
-    const discussions = {}
-    data.discussions.forEach(({ target_field_name, ...rest }) => {
-      discussions[target_field_name] = { ...rest }
-    })
-    setDiscussions(discussions)
-  }, [pageId, create, isHistory, setValue, user.is_admin])
+  }, [pageId, create, isHistory, setValue, user])
 
   const onSubmit = async () => {
     const values = getValues()
-    const payload = {}
-    payload.title = pageName
-    inputFields.forEach(field => {
-      let v = values[field]
-      let value = Array.isArray(v) ? cleanListInput(v) : v
-      payload[field] = value
-    })
-    await request(PAGE_BY_ID_URL(pageId), payload, 'PUT')
+    const payload = { title: pageName }
+    inputFields.forEach(field => (payload[field] = cleanData(values[field])))
+    await updatePageApi(pageId, payload)
 
     if (values.sketch_is_updated) {
       const data = new FormData()
       data.append('sketch', values.sketch)
-      await request(PAGE_BY_ID_URL(pageId), data, 'PUT', {}, true)
+      await updatePageApi(pageId, data)
     }
   }
 
@@ -105,22 +100,15 @@ const PageDetails = ({ create, isHistory }) => {
 
   return (
     <Layout>
-      <Stack align="center" justify="center" flexGrow={1}>
+      <Stack align="center" flexGrow={1}>
         <Stack width={['95%', '85%']} spacing="2vh">
-          <Breadcrumb spacing={[1, 2]} separator={<Icon color="brand" name="chevron-right" />}>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink href={`/project/${project.id}`}>{project.title}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>{pageName}</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb
+            pages={[
+              { path: '/dashboard/', name: 'Dashboard' },
+              { path: `/project/${project.id}/`, name: project.title },
+              { path: `/page/${pageId}/`, name: pageName },
+            ]}
+          />
           <Editable
             placeholder="New Page"
             fontWeight="600"
@@ -128,7 +116,7 @@ const PageDetails = ({ create, isHistory }) => {
             isPreviewFocusable={!isReadOnly}
             onChange={value => setPageName(value)}
             isDisabled={isReadOnly}
-            mt="4vh"
+            mt="5vh"
           >
             {({ isEditing, onRequestEdit }) => (
               <Flex align="flex-start">
