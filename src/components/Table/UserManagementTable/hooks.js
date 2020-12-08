@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { updateUserRoleApi } from 'services/user'
+
 export function useUserData(user) {
   const [userData, setUserData] = useState({
     affiliation: user.affiliation,
@@ -7,18 +9,27 @@ export function useUserData(user) {
     is_superadmin: user.is_superadmin,
   })
 
-  const changeToAdmin = () =>
-    setUserData({
-      ...userData,
+  const changeToAdmin = async () => {
+    const payload = {
       is_admin: !userData.is_admin,
       is_superadmin: false,
-    })
-
-  const changeToSuperAdmin = () => {
+    }
+    updateUserRoleApi(user.id, payload)
     setUserData({
       ...userData,
+      ...payload,
+    })
+  }
+
+  const changeToSuperAdmin = async () => {
+    const payload = {
       is_admin: !userData.is_superadmin,
       is_superadmin: !userData.is_superadmin,
+    }
+    updateUserRoleApi(user.id, payload)
+    setUserData({
+      ...userData,
+      ...payload,
     })
   }
 
