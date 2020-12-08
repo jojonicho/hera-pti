@@ -21,7 +21,7 @@ const Dashboard = () => {
       let filtersString = ''
       filters.forEach(filter => (filtersString += processStatus(filter) + ','))
       const [data, error] = await request(
-        `${PROJECT_URL}?title=${search}&status=${filtersString}&page=${currentPage}`,
+        `${PROJECT_URL}?search=${search}&status=${filtersString}&page=${currentPage}`,
       )
       if (!error) {
         setData(data)
