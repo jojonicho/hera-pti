@@ -9,10 +9,10 @@ export async function userInfoApi() {
   return request(USER_DATA_URL)
 }
 
-export async function retrieveUsers(page = 1) {
+export async function retrieveUsersApi(page = 1) {
   return request(USER_LIST_URL(page))
 }
 
-export async function updateUserRole(userId, payload) {
+export async function updateUserRoleApi(userId, payload) {
   return request(USER_SET_ROLE_URL(userId), payload, 'PUT')
 }

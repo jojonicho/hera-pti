@@ -3,14 +3,14 @@ import React, { useState, useEffect, useCallback } from 'react'
 
 import { Layout, Breadcrumb } from 'components'
 import UserManagementTable from 'components/Table/UserManagementTable'
-import { retrieveUsers } from 'services/user'
+import { retrieveUsersApi } from 'services/user'
 
 const UserManagementPage = () => {
   const [count, setCount] = useState(0)
   const [users, setUsers] = useState([])
 
   const fetchUserData = useCallback(async () => {
-    const [data, error] = await retrieveUsers()
+    const [data, error] = await retrieveUsersApi()
     if (error) return
 
     setCount(data.count)
