@@ -1,7 +1,9 @@
 import { Box, Button, Icon, Text } from '@chakra-ui/core'
 import React from 'react'
+import useWindowSize from 'hooks/useWindowSize'
+import { IPAD_MAX_WIDTH, MOBILE_MAX_WIDTH } from 'constants/size'
 import FilterSelect from './filterSelect'
-import Row from './row'
+import { Row, MobileRow } from './row'
 import SearchBar from './searchBar'
 import PropTypes from 'prop-types'
 import { projectPropTypes } from 'constants/proptypes/project'
@@ -44,6 +46,10 @@ const Table = ({
   handleChangeStatus,
   handleClickDeleteButton,
 }) => {
+  const { width } = useWindowSize()
+  const isMobile = width <= MOBILE_MAX_WIDTH
+  const isIpad = width <= IPAD_MAX_WIDTH
+
   const widthDistribution = isSuperAdmin
     ? SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION
     : isAdmin
@@ -52,13 +58,13 @@ const Table = ({
 
   return (
     <Box w="100%" py="20px">
-      <Box d="flex" justifyContent="space-between">
-        <Box d="flex" w="45%">
-          <SearchBar handleClickSearchButton={handleClickSearchButton} />
+      <Box d="flex" flexDir={isIpad ? 'column' : 'row'} justifyContent="space-between">
+        <Box d="flex" w={isIpad ? '100%' : '45%'} flexDir={isMobile ? 'column' : 'row'}>
+          <SearchBar isMobile handleClickSearchButton={handleClickSearchButton} />
           <FilterSelect filters={filters} handleChangeFiltersInput={handleChangeFiltersInput} />
         </Box>
         {!isAdmin && (
-          <Button bg="accent" px="15px" d="flex" alignItems="center">
+          <Button bg="accent" px="15px" d="flex" alignItems="center" mt={isMobile ? '5px' : '0'}>
             <Icon name="add" size="0.7em" color="black" mr="10px" />
             <Text fontWeight="400" color="black">
               Request New Project
@@ -66,58 +72,71 @@ const Table = ({
           </Button>
         )}
       </Box>
-      <Box
-        bg="formField"
-        rounded="1em"
-        width="100%"
-        my="20px"
-        px="30px"
-        py="10px"
-        color="secondary"
-        fontWeight="700"
-        d="flex"
-        justifyContent="space-around"
-        alignItems="center"
-      >
-        <Text w={widthDistribution.name}>Project Name</Text>
-        <Text textAlign="center" w={widthDistribution.status}>
-          Status
-        </Text>
-        <Text textAlign="center" w={widthDistribution.lastUpdated}>
-          Last Updated
-        </Text>
-        {isAdmin && (
-          <Text textAlign="center" w={widthDistribution.versions}>
-            Versions
+      {!isIpad && (
+        <Box
+          bg="formField"
+          rounded="1em"
+          width="100%"
+          my="20px"
+          px="30px"
+          py="10px"
+          color="secondary"
+          fontWeight="700"
+          d="flex"
+          justifyContent="space-around"
+          alignItems="center"
+        >
+          <Text w={widthDistribution.name}>Project Name</Text>
+          <Text textAlign="center" w={widthDistribution.status}>
+            Status
           </Text>
-        )}
-        {isSuperAdmin && (
-          <Text textAlign="center" w={widthDistribution.receiver}>
-            Receiver
+          <Text textAlign="center" w={widthDistribution.lastUpdated}>
+            Last Updated
           </Text>
-        )}
-        <Box w={widthDistribution.discussion}>
-          <Box w="70%" display="flex" justifyContent="flex-end">
-            <Icon name="chat" size="1.1em" />
+          {isAdmin && (
+            <Text textAlign="center" w={widthDistribution.versions}>
+              Versions
+            </Text>
+          )}
+          {isSuperAdmin && (
+            <Text textAlign="center" w={widthDistribution.receiver}>
+              Receiver
+            </Text>
+          )}
+          <Box w={widthDistribution.discussion}>
+            <Box w="70%" display="flex" justifyContent="flex-end">
+              <Icon name="chat" size="1.1em" />
+            </Box>
           </Box>
+          {isAdmin && (
+            <Text textAlign="center" w={widthDistribution.delete}>
+              Delete
+            </Text>
+          )}
         </Box>
-        {isAdmin && (
-          <Text textAlign="center" w={widthDistribution.delete}>
-            Delete
-          </Text>
-        )}
-      </Box>
+      )}
       {count ? (
-        projects.map(project => (
-          <Row
-            key={project.title}
-            project={project}
-            isAdmin={isAdmin}
-            isSuperAdmin={isSuperAdmin}
-            handleChangeStatus={handleChangeStatus}
-            handleClickDeleteButton={handleClickDeleteButton}
-          />
-        ))
+        projects.map(project =>
+          isIpad ? (
+            <MobileRow
+              key={project.title}
+              project={project}
+              isAdmin={isAdmin}
+              isSuperAdmin={isSuperAdmin}
+              handleChangeStatus={handleChangeStatus}
+              handleClickDeleteButton={handleClickDeleteButton}
+            />
+          ) : (
+            <Row
+              key={project.title}
+              project={project}
+              isAdmin={isAdmin}
+              isSuperAdmin={isSuperAdmin}
+              handleChangeStatus={handleChangeStatus}
+              handleClickDeleteButton={handleClickDeleteButton}
+            />
+          ),
+        )
       ) : (
         <Box
           bg="card"

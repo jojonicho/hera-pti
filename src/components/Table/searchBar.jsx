@@ -2,11 +2,17 @@ import React, { useState } from 'react'
 import { Button, Box, Input } from '@chakra-ui/core'
 import PropTypes from 'prop-types'
 
-const SearchBar = ({ handleClickSearchButton }) => {
+const SearchBar = ({ isMobile, handleClickSearchButton }) => {
   const [search, setSearch] = useState('')
 
   return (
-    <Box d="flex" alignItems="center" w="70%" mr="10px">
+    <Box
+      d="flex"
+      alignItems="center"
+      w={isMobile ? '100%' : '70%'}
+      mr="10px"
+      mb={isMobile ? '5px' : '0'}
+    >
       <Input
         id="search"
         placeholder="Search by project name"
@@ -29,6 +35,7 @@ const SearchBar = ({ handleClickSearchButton }) => {
 }
 
 SearchBar.propTypes = {
+  isMobile: PropTypes.bool,
   handleClickSearchButton: PropTypes.func.isRequired,
 }
 
