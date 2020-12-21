@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { DISCUSSION_URL } from 'constants/urls'
 import { request } from 'services/api'
-import { DiscussionOpen } from './DiscussionOpen'
+import { DiscussionList } from './DiscussionList'
 
 export const DiscussionCreate = ({ fieldName, targetProjectId, targetPageId }) => {
   const [state, setState] = useState({ data: null, loading: false })
@@ -37,7 +37,7 @@ export const DiscussionCreate = ({ fieldName, targetProjectId, targetPageId }) =
       <Spinner />
     )
   ) : (
-    <DiscussionOpen discussionData={state.data} isActive />
+    <DiscussionList label={fieldName} discussions={[state.data]} isActive />
   )
 }
 

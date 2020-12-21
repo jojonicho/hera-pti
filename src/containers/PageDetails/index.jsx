@@ -68,9 +68,13 @@ const PageDetails = ({ create, isHistory }) => {
       setValue('sketch', data.sketch)
 
       const discussions = {}
-      data.discussions.forEach(({ target_field_name, ...rest }) => {
-        discussions[target_field_name] = { ...rest }
+      data.discussions.map(({ target_field_name, ...rest }) => {
+        if (!discussions[target_field_name]) {
+          discussions[target_field_name] = []
+        }
+        discussions[target_field_name].push(rest)
       })
+
       setDiscussions(discussions)
     }
   }, [pageId, create, isHistory, setValue, user])

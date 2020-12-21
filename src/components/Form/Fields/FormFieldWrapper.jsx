@@ -5,8 +5,7 @@ import { useFormContext } from 'react-hook-form'
 
 import { useWindowSize } from 'hooks'
 import { MOBILE_MAX_WIDTH } from 'constants/size'
-import { DiscussionOpen } from 'components/Discussion/DiscussionOpen'
-import { DiscussionCreate } from 'components/Discussion/DiscussionCreate'
+import { DiscussionCreate, DiscussionList } from 'components/Discussion'
 
 const FormFieldWrapper = ({ children, label, name, helperText, isRequired }) => {
   const { width } = useWindowSize()
@@ -15,7 +14,14 @@ const FormFieldWrapper = ({ children, label, name, helperText, isRequired }) => 
   let discussion = <Stack size={['1.2rem', '1.5rem']} />
   if (discussions[name]) {
     discussion = (
-      <DiscussionOpen isActive={!isHistory} discussionData={discussions[name]} label={label} />
+      <DiscussionList
+        isActive={!isHistory}
+        discussions={discussions[name]}
+        label={label}
+        targetFieldName={name}
+        targetPageId={targetPageId}
+        targetProjectId={targetProjectId}
+      />
     )
   } else if (!isHistory) {
     discussion = (

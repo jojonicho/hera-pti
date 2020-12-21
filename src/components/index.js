@@ -1,7 +1,6 @@
 export { default as Breadcrumb } from './Breadcrumb'
 export { default as Card } from './Card'
-export { DiscussionCreate } from './Discussion/DiscussionCreate'
-export { DiscussionOpen } from './Discussion/DiscussionOpen'
+export { DiscussionCreate, DiscussionDetail, DiscussionList } from './Discussion'
 export { default as Footer } from './Footer'
 export { default as Layout } from './Layout'
 export { default as RequesterLayout } from './Layout/Layouts/RequesterLayout'
