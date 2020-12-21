@@ -1,2 +1,3 @@
 export { DiscussionCreate } from './DiscussionCreate'
-export { DiscussionOpen } from './DiscussionOpen'
+export { DiscussionDetail } from './DiscussionDetail'
+export { DiscussionList } from './DiscussionList'
