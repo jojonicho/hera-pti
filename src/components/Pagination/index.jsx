@@ -2,24 +2,14 @@ import React from 'react'
 import { Box, Text, Icon } from '@chakra-ui/core'
 import PaginationNumber from './paginationNumber'
 import PropTypes from 'prop-types'
+import { DEFAULT_PAGES_SHOWN } from 'constants/pagination'
 
-const DEFAULT_PROJECTS_SHOWN = 10
-const DEFAULT_PAGES_SHOWN = 10
+const Pagination = ({ totalItems, itemsShownPerPage, currentPage, setCurrentPage }) => {
+  const maxPage = Math.ceil(totalItems / itemsShownPerPage)
 
-const Pagination = ({
-  totalProjects,
-  currentPage,
-  handleClickPrev,
-  handleClickNext,
-  handleClickPageNum,
-}) => {
-  const maxPage = Math.ceil(totalProjects / DEFAULT_PROJECTS_SHOWN)
-
-  const shownRecordsStart = (currentPage - 1) * DEFAULT_PROJECTS_SHOWN + 1
+  const shownRecordsStart = (currentPage - 1) * itemsShownPerPage + 1
   const shownRecordsEnd =
-    DEFAULT_PROJECTS_SHOWN * currentPage < totalProjects
-      ? DEFAULT_PROJECTS_SHOWN * currentPage
-      : totalProjects
+    itemsShownPerPage * currentPage < totalItems ? itemsShownPerPage * currentPage : totalItems
 
   function generateRange(start, end) {
     return Array.from({ length: end - start }, (v, k) => k + start)
@@ -31,7 +21,7 @@ const Pagination = ({
         key={pageNum}
         pageNum={pageNum}
         isCurrentPage={pageNum === currentPage}
-        handleClickPageNum={pageNum => handleClickPageNum(pageNum)}
+        handleClickPageNum={pageNum => setCurrentPage(pageNum)}
       />
     )
   }
@@ -65,7 +55,7 @@ const Pagination = ({
   return (
     <Box>
       <Text textAlign="center">
-        Showing {shownRecordsStart}-{shownRecordsEnd} records out of {totalProjects}
+        Showing {shownRecordsStart}-{shownRecordsEnd} records out of {totalItems}
       </Text>
       <Box
         borderRadius="2em"
@@ -76,11 +66,21 @@ const Pagination = ({
         px="10px"
       >
         <Box as="button">
-          <Icon name="chevron-left" onClick={() => handleClickPrev()} />
+          <Icon
+            name="chevron-left"
+            onClick={() => {
+              if (currentPage !== 1) setCurrentPage(currentPage - 1)
+            }}
+          />
         </Box>
         {generatePaginationNums()}
         <Box as="button">
-          <Icon name="chevron-right" onClick={() => handleClickNext()} />
+          <Icon
+            name="chevron-right"
+            onClick={() => {
+              if (currentPage !== maxPage) setCurrentPage(currentPage + 1)
+            }}
+          />
         </Box>
       </Box>
     </Box>
@@ -88,11 +88,10 @@ const Pagination = ({
 }
 
 Pagination.propTypes = {
-  totalProjects: PropTypes.number.isRequired,
+  totalItems: PropTypes.number.isRequired,
+  itemsShownPerPage: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
-  handleClickPrev: PropTypes.func.isRequired,
-  handleClickNext: PropTypes.func.isRequired,
-  handleClickPageNum: PropTypes.func.isRequired,
+  setCurrentPage: PropTypes.func.isRequired,
 }
 
 export default Pagination
