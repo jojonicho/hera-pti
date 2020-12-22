@@ -60,7 +60,11 @@ const Table = ({
     <Box w="100%" py="20px">
       <Box d="flex" flexDir={isIpad ? 'column' : 'row'} justifyContent="space-between">
         <Box d="flex" w={isIpad ? '100%' : '45%'} flexDir={isMobile ? 'column' : 'row'}>
-          <SearchBar isMobile handleClickSearchButton={handleClickSearchButton} />
+          <SearchBar
+            placeholderLabel="project name"
+            isMobile
+            handleClickSearchButton={handleClickSearchButton}
+          />
           <FilterSelect filters={filters} handleChangeFiltersInput={handleChangeFiltersInput} />
         </Box>
         {!isAdmin && (

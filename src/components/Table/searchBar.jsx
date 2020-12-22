@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Box, Input } from '@chakra-ui/core'
 import PropTypes from 'prop-types'
 
-const SearchBar = ({ isMobile, handleClickSearchButton }) => {
+const SearchBar = ({ placeholderLabel, isMobile, handleClickSearchButton }) => {
   const [search, setSearch] = useState('')
 
   return (
@@ -15,7 +15,7 @@ const SearchBar = ({ isMobile, handleClickSearchButton }) => {
     >
       <Input
         id="search"
-        placeholder="Search by project name"
+        placeholder={`Search by ${placeholderLabel}`}
         borderRadius="md"
         borderColor="border"
         onChange={e => setSearch(e.target.value)}
@@ -35,6 +35,7 @@ const SearchBar = ({ isMobile, handleClickSearchButton }) => {
 }
 
 SearchBar.propTypes = {
+  placeholderLabel: PropTypes.string,
   isMobile: PropTypes.bool,
   handleClickSearchButton: PropTypes.func.isRequired,
 }

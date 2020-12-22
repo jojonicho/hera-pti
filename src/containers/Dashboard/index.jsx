@@ -6,6 +6,7 @@ import { request } from 'services/api'
 import { PROJECT_URL } from 'constants/urls'
 import { UserContext } from 'utils/datastore/UserContext'
 import processStatus from 'utils/table/processStatus'
+import { DEFAULT_PROJECTS_SHOWN } from 'constants/pagination'
 
 const Dashboard = () => {
   const { user } = useContext(UserContext)
@@ -21,7 +22,7 @@ const Dashboard = () => {
       let filtersString = ''
       filters.forEach(filter => (filtersString += processStatus(filter) + ','))
       const [data, error] = await request(
-        `${PROJECT_URL}?search=${search}&status=${filtersString}&page=${currentPage}`,
+        `${PROJECT_URL}?search=${search}&status=${filtersString}&page=${currentPage}&page_size=${DEFAULT_PROJECTS_SHOWN}`,
       )
       if (!error) {
         setData(data)
@@ -84,15 +85,10 @@ const Dashboard = () => {
             <Box display="flex" justifyContent="center">
               {data.count > 0 && (
                 <Pagination
-                  totalProjects={data.count}
+                  totalItems={data.count}
+                  itemsShownPerPage={DEFAULT_PROJECTS_SHOWN}
                   currentPage={currentPage}
-                  handleClickPrev={() => {
-                    if (data.prev) setCurrentPage(currentPage - 1)
-                  }}
-                  handleClickNext={() => {
-                    if (data.next) setCurrentPage(currentPage + 1)
-                  }}
-                  handleClickPageNum={pageNum => setCurrentPage(pageNum)}
+                  setCurrentPage={setCurrentPage}
                 />
               )}
             </Box>
