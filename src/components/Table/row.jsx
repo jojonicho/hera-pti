@@ -21,6 +21,7 @@ import processStatus from 'utils/table/processStatus'
 import PropTypes from 'prop-types'
 import { projectPropTypes } from 'constants/proptypes/project'
 import { VersionHistoryModal } from 'components'
+import { Link } from 'react-router-dom'
 
 const Modals = ({
   project,
@@ -44,15 +45,15 @@ const Modals = ({
         <ModalOverlay />
         <ModalContent borderRadius="10px">
           <ModalBody>
-            <Box px="50px" py="60px" display="flex" flexDir="column" alignItems="center">
-              <Text mb="5px">You are about to change {project.title} to</Text>
+            <Box px="2.5em" py="3em" display="flex" flexDir="column" alignItems="center">
+              <Text mb="0.25em">You are about to change {project.title} to</Text>
               <Select
                 fontSize="1.25rem"
                 padding="0.25rem"
                 fontWeight="700"
                 icon="triangle-down"
                 width="65%"
-                mb="20px"
+                mb="1em"
                 variant="unstyled"
                 onChange={e => setOption(processStatus(e.target.value))}
               >
@@ -85,7 +86,7 @@ const Modals = ({
         <ModalOverlay />
         <ModalContent borderRadius="10px">
           <ModalBody>
-            <Box px="50px" py="60px" display="flex" flexDir="column" alignItems="center">
+            <Box px="2.5em" py="3em" display="flex" flexDir="column" alignItems="center">
               <Text>
                 You are about to <b>permanently delete</b> this project. Please type the following
                 to confirm:
@@ -95,7 +96,7 @@ const Modals = ({
                 id="delete"
                 borderRadius="md"
                 borderColor="border"
-                my="20px"
+                my="1em"
                 onChange={e => setDeleteTitle(e.target.value)}
               />
               <Box display="flex" justifyContent="space-around" width="100%">
@@ -204,8 +205,8 @@ export const Row = ({
       rounded="18px"
       width="100%"
       mb="1rem"
-      px="2rem"
-      py="0.5rem"
+      px="1.5em"
+      py="0.5em"
       color="#000"
       fontWeight="500"
       d="flex"
@@ -226,21 +227,24 @@ export const Row = ({
         isVersionModalShown={isVersionModalShown}
         setIsVersionModalShown={setIsVersionModalShown}
       />
-      <Box w={widthDistribution.name} display="flex" alignItems="center" paddingRight="5px">
-        <Box w="8%" justifyContent="center" alignItems="center">
-          <Image
-            src={generateLogoByRequester(project.department)}
-            maxHeight="3.5rem"
-            maxWidth="3.5rem"
-          />
-        </Box>
-        <Box marginLeft="20px">
-          {project.title}
-          <Text fontSize="0.8em" fontWeight="400" color="secondary">
-            {project.description}
-          </Text>
-        </Box>
+      <Box w={widthDistribution.name}>
+        <Link to={`/project/${project.id}/`}>
+          <Box display="flex" alignItems="center" paddingRight="0.25em">
+            <Image
+              src={generateLogoByRequester(project.department)}
+              maxHeight="3.5rem"
+              maxWidth="3.5rem"
+            />
+            <Box marginLeft="1em">
+              {project.title}
+              <Text fontSize="0.8em" fontWeight="400" color="secondary">
+                {project.description}
+              </Text>
+            </Box>
+          </Box>
+        </Link>
       </Box>
+
       <Box w={widthDistribution.status} display="flex" justifyContent="center">
         <Box
           as="button"
@@ -279,7 +283,7 @@ export const Row = ({
       )}
       <Box w={widthDistribution.discussion}>
         <Box w="70%" display="flex" justifyContent="flex-end" alignItems="center">
-          <Text paddingRight="5px">
+          <Text paddingRight="0.25em">
             {isAdmin
               ? project.message_unread_by_admin_count
               : project.message_unread_by_requester_count}
@@ -360,7 +364,7 @@ export const MobileRow = ({
           maxHeight="2.5rem"
           maxWidth="2.5rem"
         />
-        <Box w="70%" ml="10px">
+        <Box w="70%" ml="0.5em">
           <Text>{project.title}</Text>
           <Text fontSize="0.8em" fontWeight="400" color="secondary">
             {project.description}
@@ -395,7 +399,7 @@ export const MobileRow = ({
         )}
         <Box d="flex" flexDir="column" alignItems="flex-end">
           <Box d="flex" alignItems="center">
-            <Text paddingRight="5px">
+            <Text paddingRight="0.25em">
               {isAdmin
                 ? project.message_unread_by_admin_count
                 : project.message_unread_by_requester_count}

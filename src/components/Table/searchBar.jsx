@@ -10,8 +10,8 @@ const SearchBar = ({ placeholderLabel, isMobile, handleClickSearchButton }) => {
       d="flex"
       alignItems="center"
       w={isMobile ? '100%' : '70%'}
-      mr="10px"
-      mb={isMobile ? '5px' : '0'}
+      mr="0.5em"
+      mb={isMobile ? '0.25em' : '0'}
     >
       <Input
         id="search"
@@ -24,7 +24,7 @@ const SearchBar = ({ placeholderLabel, isMobile, handleClickSearchButton }) => {
         bg="secondary"
         color="#FFF"
         fontWeight="400"
-        px="30px"
+        px="1.5em"
         borderRadius="md"
         onClick={() => handleClickSearchButton(search)}
       >

@@ -17,8 +17,8 @@ const filterSelect = ({ filters, handleChangeFiltersInput }) => {
       <PopoverTrigger>
         <Button>Filter by Status</Button>
       </PopoverTrigger>
-      <PopoverContent w="170px">
-        <Box display="flex" justifyContent="center" py="15px">
+      <PopoverContent w="10em">
+        <Box display="flex" justifyContent="center" py="1em">
           <CheckboxGroup
             defaultValue={filters}
             onChange={values => handleChangeFiltersInput(values)}
