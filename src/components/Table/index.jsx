@@ -7,6 +7,7 @@ import { Row, MobileRow } from './row'
 import SearchBar from './searchBar'
 import PropTypes from 'prop-types'
 import { projectPropTypes } from 'constants/proptypes/project'
+import { Link } from 'react-router-dom'
 
 const SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '40%',
@@ -57,7 +58,7 @@ const Table = ({
     : REGULAR_COLUMN_WIDTH_DISTRIBUTION
 
   return (
-    <Box w="100%" py="20px">
+    <Box w="100%" py="1em">
       <Box d="flex" flexDir={isIpad ? 'column' : 'row'} justifyContent="space-between">
         <Box d="flex" w={isIpad ? '100%' : '45%'} flexDir={isMobile ? 'column' : 'row'}>
           <SearchBar
@@ -68,12 +69,20 @@ const Table = ({
           <FilterSelect filters={filters} handleChangeFiltersInput={handleChangeFiltersInput} />
         </Box>
         {!isAdmin && (
-          <Button bg="accent" px="15px" d="flex" alignItems="center" mt={isMobile ? '5px' : '0'}>
-            <Icon name="add" size="0.7em" color="black" mr="10px" />
-            <Text fontWeight="400" color="black">
-              Request New Project
-            </Text>
-          </Button>
+          <Link to="/project/create/">
+            <Button
+              bg="accent"
+              px="0.75em"
+              d="flex"
+              alignItems="center"
+              mt={isMobile ? '0.25em' : '0'}
+            >
+              <Icon name="add" size="0.7em" color="black" mr="0.5em" />
+              <Text fontWeight="400" color="black">
+                Request New Project
+              </Text>
+            </Button>
+          </Link>
         )}
       </Box>
       {!isIpad && (
@@ -81,9 +90,9 @@ const Table = ({
           bg="formField"
           rounded="1em"
           width="100%"
-          my="20px"
-          px="30px"
-          py="10px"
+          my="1em"
+          px="1.5em"
+          py="0.5em"
           color="secondary"
           fontWeight="700"
           d="flex"
@@ -146,38 +155,40 @@ const Table = ({
           bg="card"
           rounded="18px"
           width="100%"
-          mb="10px"
-          p="70px"
+          mb="0.5em"
+          p="3.5em"
           d="flex"
           flexDir="column"
           justifyContent="space-around"
           alignItems="center"
         >
           {isAdmin ? (
-            <Text color="secondary" mb="10px">
+            <Text color="secondary" mb="0.5em">
               {!search && filters.length === 0
                 ? 'There are no project requests yet'
                 : 'Project with specified search input not found'}
             </Text>
           ) : (
             <Box display="flex" flexDir="column" alignItems="center">
-              <Text color="secondary" mb="10px">
+              <Text color="secondary" mb="0.5em">
                 {!search && filters.length === 0
                   ? 'You have not requested any projects yet'
                   : 'Project with specified search input not found'}
               </Text>
-              <Button
-                border="1px solid #F5A200"
-                bg="inherit"
-                px="15px"
-                d="flex"
-                alignItems="center"
-              >
-                <Icon name="add" size="0.7em" color="accent" mr="10px" />
-                <Text fontWeight="400" color="accent">
-                  Request New Project
-                </Text>
-              </Button>
+              <Link to="/project/create/">
+                <Button
+                  border="1px solid #F5A200"
+                  bg="inherit"
+                  px="0.75em"
+                  d="flex"
+                  alignItems="center"
+                >
+                  <Icon name="add" size="0.7em" color="accent" mr="0.5em" />
+                  <Text fontWeight="400" color="accent">
+                    Request New Project
+                  </Text>
+                </Button>
+              </Link>
             </Box>
           )}
         </Box>

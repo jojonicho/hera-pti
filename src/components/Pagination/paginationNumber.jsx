@@ -6,7 +6,7 @@ const PaginationNumber = ({ pageNum, isCurrentPage, handleClickPageNum }) => {
   const colorStyle = isCurrentPage ? { color: '#37B3E9' } : {}
 
   return (
-    <Box as="button" onClick={() => handleClickPageNum(pageNum)} padding="8px" {...colorStyle}>
+    <Box as="button" onClick={() => handleClickPageNum(pageNum)} padding="0.5em" {...colorStyle}>
       <Text>{pageNum}</Text>
     </Box>
   )
