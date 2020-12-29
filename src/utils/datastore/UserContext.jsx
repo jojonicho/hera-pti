@@ -1,6 +1,8 @@
 import { useToast } from '@chakra-ui/core'
-import { useState, useCallback, createContext } from 'react'
+import React, { useState, useCallback, createContext, useEffect } from 'react'
 
+import { LoadingPage } from 'containers'
+import { childrenPropTypes } from 'constants/proptypes/general'
 import { AUTH_TOKEN_STORAGE_KEY } from 'constants/auth'
 import { loginApi, userInfoApi } from 'services/user'
 
@@ -10,9 +12,9 @@ export const UserContext = createContext({
   logout: null,
 })
 
-export const useUserContext = () => {
+export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [userIsLoading, setUserIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const toast = useToast()
   const errorToast = useCallback(
@@ -30,11 +32,11 @@ export const useUserContext = () => {
   )
 
   const getUser = useCallback(async () => {
-    setUserIsLoading(true)
     const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
     if (token) {
+      setIsLoading(true)
       const [data, error] = await userInfoApi()
-      setUserIsLoading(false)
+      setIsLoading(false)
       if (error) {
         setUser(null)
         errorToast(error)
@@ -43,7 +45,6 @@ export const useUserContext = () => {
       setUser(data)
       return data
     }
-    setUserIsLoading(false)
   }, [errorToast])
 
   const login = useCallback(
@@ -70,5 +71,14 @@ export const useUserContext = () => {
     setUser(null)
   }, [])
 
-  return { user, login, logout, getUser, userIsLoading }
+  useEffect(() => {
+    getUser()
+  }, [getUser])
+
+  if (isLoading) return <LoadingPage />
+  return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>
+}
+
+UserProvider.propTypes = {
+  children: childrenPropTypes.isRequired,
 }

@@ -12,6 +12,9 @@ export const SuperAdminLayout = ({ children }) => {
         <NavItem key={1} to="/users">
           User Management
         </NavItem>,
+        <NavItem key={2} to="/dashboard">
+          Dashboard
+        </NavItem>,
       ]}
     />
   )

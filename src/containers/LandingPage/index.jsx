@@ -47,20 +47,20 @@ const LandingPage = ({ location }) => {
           width={['100%', '80%', '80vw', '33vw']}
         >
           <Logo fill="black" />
-          <Text fontSize="calc(1.5rem + 0.5vw)" fontWeight="bold">
+          <Text fontSize="calc(1.5rem + 0.5vw)" fontWeight="bold" margin="1em">
             Requirements Gatherer
           </Text>
-          <Text>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum, atque libero? Debitis
-            deserunt ex voluptatem. Error quae, officiis reiciendis repellendus cupiditate,
-            necessitatibus ducimus rem debitis non vitae voluptatum ratione veniam.
+          <Text textAlign="center">
+            One stop application to define your software project requirements.
           </Text>
           {user ? (
-            <Stack>
-              <Button variantColor="blue" variant="outline">
-                <Link to="/dashboard">Visit Dashboard</Link>
-              </Button>
-            </Stack>
+            <Link to="/dashboard">
+              <Stack>
+                <Button variantColor="blue" variant="outline">
+                  Visit Dashboard
+                </Button>
+              </Stack>
+            </Link>
           ) : (
             <>
               <GoogleLogin

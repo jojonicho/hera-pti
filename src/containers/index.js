@@ -1,4 +1,6 @@
+export { default as ErrorPage } from './ErrorPage'
 export { default as LandingPage } from './LandingPage'
+export { default as LoadingPage } from './LoadingPage'
 export { default as Dashboard } from './Dashboard'
 export { default as PageDetails } from './PageDetails'
 export { default as ProjectDetails } from './ProjectDetails'

@@ -36,14 +36,14 @@ const Navbar = ({ navItems }) => {
       bg="brand"
       minWidth="100vw"
     >
-      <Stack isInline ml={2} color="white" align="center">
-        <Link to="/">
+      <Link to="/">
+        <Stack isInline ml={2} color="white" align="center">
           <Logo cursor="pointer" fill="white" width="30px" height="30px" />
-        </Link>
-        <Text fontSize="calc(0.7rem + 0.2vw)" ml={2}>
-          Requirements Gatherer
-        </Text>
-      </Stack>
+          <Text fontSize="calc(0.7rem + 0.2vw)" ml={2}>
+            Requirements Gatherer
+          </Text>
+        </Stack>
+      </Link>
       {!user ? (
         <Instagram />
       ) : (

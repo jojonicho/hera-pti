@@ -8,7 +8,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/core'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { ProjectInfoForm, Card, Breadcrumb } from 'components'
 import { useForm, FormProvider } from 'react-hook-form'
@@ -18,16 +18,19 @@ import { useParams, useHistory, Link } from 'react-router-dom'
 import { PROJECT_BY_ID_URL, PROJECT_HISTORY_BY_ID_URL } from 'constants/urls'
 import { postProjectById, putProjectStatus } from 'services/project'
 import { request } from 'services/api'
+import { UserContext } from 'utils/datastore/UserContext'
 
-const ProjectDetails = ({ create, isHistory, isAdmin }) => {
+const ProjectDetails = ({ create, isHistory }) => {
   const { errors, getValues, handleSubmit, setValue, formState, ...methods } = useForm()
   const { projectId } = useParams()
+  const { user } = useContext(UserContext)
 
   const [title, setTitle] = useState('New Project')
   const [isReadOnly, setIsReadOnly] = useState(false)
   const [discussions, setDiscussions] = useState({})
 
   let history = useHistory()
+  const isAdmin = user.is_admin
 
   const fields = [
     'department',
@@ -210,5 +213,4 @@ export default ProjectDetails
 ProjectDetails.propTypes = {
   create: PropTypes.bool.isRequired,
   isHistory: PropTypes.bool.isRequired,
-  isAdmin: PropTypes.bool.isRequired,
 }

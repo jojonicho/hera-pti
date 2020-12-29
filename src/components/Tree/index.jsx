@@ -86,7 +86,7 @@ const DropdownMenu = props => {
         setData(
           data
             .map(page => {
-              if (page.parent == itemId) {
+              if (page.parent === itemId) {
                 page.parent = parentId
                 return page
               }

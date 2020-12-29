@@ -30,6 +30,7 @@ import { request } from 'services/api'
 import { putDiscussionStatusById } from 'services/discussion'
 import { UserContext } from 'utils/datastore/UserContext'
 import { toDateString } from 'utils/date/date'
+import convertFieldName from 'utils/discussion/fieldNameConverter'
 import { getColorFromNumber } from 'utils/discussion/numberToColor'
 import { DiscussionDetail } from './DiscussionDetail'
 
@@ -73,10 +74,10 @@ export const DiscussionList = ({
     setState(prev => ({ data: [data, ...prev.data.slice(1)], loading: false }))
   }
 
-  const [cnt, setCount] = useState(messageUnreadCount || 0)
+  const [unreadCount, setUnreadCount] = useState(messageUnreadCount || 0)
 
   const onOpen = () => {
-    setCount(0)
+    setUnreadCount(0)
   }
 
   const onCreate = async () => {
@@ -115,9 +116,9 @@ export const DiscussionList = ({
         fontSize={['0.6rem', '0.8rem']}
         minWidth={['1rem', '1.2rem']}
         position="absolute"
-        variantColor={getColorFromNumber(cnt)}
+        variantColor={getColorFromNumber(unreadCount)}
       >
-        {cnt}
+        {unreadCount}
       </Badge>
 
       <Popover trigger="click" placement="right" onOpen={onOpen}>
@@ -130,7 +131,7 @@ export const DiscussionList = ({
           <PopoverContent bg="card" border="0" zIndex={999} overflowY="scroll">
             <PopoverHeader fontWeight="bold" border="0" fontSize="20px">
               <Stack isInline justify="space-between" mr="10%" align="center">
-                <Text>{label}</Text>
+                <Text>{convertFieldName(label)}</Text>
                 {!isReadOnly &&
                   (isResolved ? (
                     <IconButton icon="add" onClick={onCreate} />
@@ -197,17 +198,18 @@ export const DiscussionList = ({
     </Stack>
   )
 }
+
 DiscussionList.propTypes = {
   label: PropTypes.string.isRequired,
   isActive: PropTypes.bool,
-  discussions: PropTypes.shape([
-    {
+  discussions: PropTypes.arrayOf(
+    PropTypes.shape({
       id: PropTypes.string.isRequired,
       message_unread_by_admin_count: PropTypes.number,
       message_unread_by_requester_count: PropTypes.number,
       resolved_at: PropTypes.string,
-    },
-  ]).isRequired,
+    }),
+  ).isRequired,
   isReadOnly: PropTypes.bool,
   targetFieldName: PropTypes.string,
   targetProjectId: PropTypes.string,
