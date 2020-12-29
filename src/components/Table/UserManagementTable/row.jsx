@@ -54,7 +54,7 @@ export const UserRow = ({ user }) => {
       </Text>
       <Text w={TABLE_COLUMNS[2].width}>{user.email}</Text>
       <Text textAlign="center" w={TABLE_COLUMNS[3].width}>
-        {userData.affiliation}
+        {userData.affiliation || '-'}
       </Text>
       <FlexRow width={TABLE_COLUMNS[4].width}>
         <Switch isChecked={userData.is_admin} onChange={changeToAdmin} />

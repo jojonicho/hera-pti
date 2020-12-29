@@ -24,10 +24,10 @@ export async function request(path, body = {}, method = 'GET', extraHeaders = {}
       }
     }
     response = await fetch(path, responseComponent)
-    if (!response.ok) {
-      error = response
-    }
     data = await response.json()
+    if (!response.ok) {
+      error = data
+    }
   } catch (err) {
     // can do default/generic error handling here, i.e. error popup notification, console.error, etc
     error = err

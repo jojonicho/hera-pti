@@ -1,6 +1,6 @@
 import { Button, FormControl, Input, InputGroup, Stack, Text, useToast } from '@chakra-ui/core'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Code as Loader } from 'react-content-loader'
 import { useForm } from 'react-hook-form'
 import { request } from 'services/api'
@@ -36,15 +36,15 @@ export const DiscussionDetail = ({ discussionData, isHistory, isReadOnly }) => {
     smoothScrollToRef(messagesRef)
   }
 
-  const onOpen = async () => {
+  const onOpen = useCallback(async () => {
     setState(prev => ({ data: prev.data, loading: true }))
     const [response] = await request(DISCUSSION_BY_ID_URL(isHistory, discussionId))
     setState({ data: response.messages, loading: false })
-  }
+  }, [discussionId, isHistory])
 
   useEffect(() => {
     onOpen()
-  }, [])
+  }, [onOpen])
 
   let prevDate
   const messagesRef = useRef(null)

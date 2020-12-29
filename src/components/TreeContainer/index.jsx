@@ -34,11 +34,11 @@ const TreeContainer = ({ projectId, isHistory, isReadOnly, create }) => {
     const [data, error] = await request(url)
     if (error) return
     setPages(data)
-  }, [projectId])
+  }, [isHistory, projectId])
 
   useEffect(() => {
     !create && fetchProjectPagesData()
-  }, [fetchProjectPagesData])
+  }, [create, fetchProjectPagesData])
 
   let order
   if (projectId) {

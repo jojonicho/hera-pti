@@ -13,7 +13,7 @@ const Footer = () => (
     align="center"
     minWidth="100vw"
   >
-    <Text fontSize="calc(0.8rem + 0.1vw)">© Biro PTI 2020</Text>
+    <Text fontSize="calc(0.8rem + 0.1vw)">© PTI Fasilkom UI 2020</Text>
     <Image h="30px" src={bemLogo}></Image>
   </Stack>
 )

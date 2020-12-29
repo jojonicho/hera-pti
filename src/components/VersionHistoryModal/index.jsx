@@ -46,7 +46,7 @@ const VersionHistoryModal = ({ projectId, isModalShown, setIsModalShown, isAdmin
     if (isModalShown) {
       fetchData()
     }
-  }, [isModalShown])
+  }, [isModalShown, isAdmin, projectId, toast])
 
   return (
     <Modal isOpen={isModalShown}>

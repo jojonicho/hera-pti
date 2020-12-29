@@ -1,13 +1,14 @@
-import { Box, Button, Icon, Text } from '@chakra-ui/core'
 import React from 'react'
-import useWindowSize from 'hooks/useWindowSize'
-import { IPAD_MAX_WIDTH, MOBILE_MAX_WIDTH } from 'constants/size'
-import FilterSelect from './filterSelect'
-import { Row, MobileRow } from './row'
-import SearchBar from './searchBar'
-import PropTypes from 'prop-types'
-import { projectPropTypes } from 'constants/proptypes/project'
+import { Box, Button, Icon, Text } from '@chakra-ui/core'
 import { Link } from 'react-router-dom'
+import useWindowSize from 'hooks/useWindowSize'
+import PropTypes from 'prop-types'
+
+import { Row, MobileRow } from './row'
+import { IPAD_MAX_WIDTH, MOBILE_MAX_WIDTH } from 'constants/size'
+import { projectPropTypes } from 'constants/proptypes/project'
+import FilterSelect from './filterSelect'
+import SearchBar from './searchBar'
 
 const SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '40%',
@@ -155,6 +156,7 @@ const Table = ({
           bg="card"
           rounded="18px"
           width="100%"
+          minHeight="40vh"
           mb="0.5em"
           p="3.5em"
           d="flex"

@@ -14,9 +14,12 @@ import { useForm, FormProvider } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 
 import { PageInfoForm, PageContentForm, TabContainer, Layout, Breadcrumb } from 'components'
+import { LoadingPage } from 'containers'
 import { retrievePageApi, retrievePageHistoryApi, updatePageApi } from 'services/page'
 import { cleanData, changeToInput } from 'utils/form'
 import { UserContext } from 'utils/datastore/UserContext'
+import { ApiContext } from 'utils/datastore/ApiContext'
+import { withErrorHandler } from 'decorators'
 
 const inputFields = [
   'parent',
@@ -31,15 +34,17 @@ const inputFields = [
 const PageDetails = ({ create, isHistory }) => {
   const { errors, formState, setValue, getValues, handleSubmit, ...methods } = useForm()
   const { pageId } = useParams()
+  const { setError } = useContext(ApiContext)
   const { user } = useContext(UserContext)
 
   const [isReadOnly, setIsReadOnly] = useState(false)
   const [pageName, setPageName] = useState('New Page')
   const [parent, setParent] = useState('')
   const [project, setProject] = useState({ id: '', title: 'Project' })
-  const [discussions, setDiscussions] = useState('')
+  const [discussions, setDiscussions] = useState({})
   const [infoTabBorder, setInfoTabBorder] = useState('')
   const [contentTabBorder, setContentTabBorder] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
   const pageInfo = (
     <PageInfoForm
@@ -54,8 +59,12 @@ const PageDetails = ({ create, isHistory }) => {
 
   const fetchPageData = useCallback(async () => {
     const retrievePage = isHistory ? retrievePageHistoryApi : retrievePageApi
-    const [data, error] = await retrievePage(pageId)
-    if (error) return
+    const [data, error, response] = await retrievePage(pageId)
+    setIsLoading(false)
+    if (error) {
+      setError({ error, response })
+      return
+    }
 
     if (!create) {
       const isReadOnly = user.is_admin || isHistory || data.project.status !== 'draft'
@@ -68,7 +77,7 @@ const PageDetails = ({ create, isHistory }) => {
       setValue('sketch', data.sketch)
 
       const discussions = {}
-      data.discussions.map(({ target_field_name, ...rest }) => {
+      data.discussions.forEach(({ target_field_name, ...rest }) => {
         if (!discussions[target_field_name]) {
           discussions[target_field_name] = []
         }
@@ -77,7 +86,7 @@ const PageDetails = ({ create, isHistory }) => {
 
       setDiscussions(discussions)
     }
-  }, [pageId, create, isHistory, setValue, user])
+  }, [pageId, create, isHistory, setValue, user, setError])
 
   const onSubmit = async () => {
     const values = getValues()
@@ -102,7 +111,9 @@ const PageDetails = ({ create, isHistory }) => {
     setContentTabBorder(errors.flow ? 'crimson' : '')
   }, [errors.access_details, errors.page_url, errors.priority, errors.flow])
 
-  return (
+  return isLoading ? (
+    <LoadingPage />
+  ) : (
     <Layout>
       <Stack align="center" flexGrow={1}>
         <Stack width={['95%', '85%']} spacing="2vh">
@@ -206,4 +217,4 @@ PageDetails.propTypes = {
   isHistory: PropTypes.bool,
 }
 
-export default PageDetails
+export default withErrorHandler(PageDetails)

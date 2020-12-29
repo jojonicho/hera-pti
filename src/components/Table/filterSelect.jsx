@@ -15,7 +15,7 @@ const filterSelect = ({ filters, handleChangeFiltersInput }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button>Filter by Status</Button>
+        <Button style={{ padding: '1em 2em' }}>Filter by Status</Button>
       </PopoverTrigger>
       <PopoverContent w="10em">
         <Box display="flex" justifyContent="center" py="1em">

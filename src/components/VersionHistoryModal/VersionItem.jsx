@@ -21,6 +21,8 @@ const getStatusCopy = (status, user, projectHistory) => {
       return 'Project is ongoing.'
     case 'closed':
       return 'Project completed.'
+    default:
+      return
   }
 }
 
