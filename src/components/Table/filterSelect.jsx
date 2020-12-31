@@ -9,23 +9,22 @@ import {
 } from '@chakra-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { STATUS } from '../../constants/status'
 
-const filterSelect = ({ filters, handleChangeFiltersInput }) => {
+const filterSelect = ({ filterLabel, options, selectedFilters, handleChangeFiltersInput }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Button style={{ padding: '1em 2em' }}>Filter by Status</Button>
+        <Button style={{ padding: '1em 2em' }}>Filter by {filterLabel}</Button>
       </PopoverTrigger>
       <PopoverContent w="10em">
         <Box display="flex" justifyContent="center" py="1em">
           <CheckboxGroup
-            defaultValue={filters}
+            defaultValue={selectedFilters}
             onChange={values => handleChangeFiltersInput(values)}
           >
-            {STATUS.map(status => (
-              <Checkbox key={status} value={status}>
-                {status}
+            {options.map(option => (
+              <Checkbox key={option} value={option}>
+                {option}
               </Checkbox>
             ))}
           </CheckboxGroup>
@@ -36,7 +35,9 @@ const filterSelect = ({ filters, handleChangeFiltersInput }) => {
 }
 
 filterSelect.propTypes = {
-  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filterLabel: PropTypes.string.isRequired,
+  options: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedFilters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleChangeFiltersInput: PropTypes.func.isRequired,
 }
 

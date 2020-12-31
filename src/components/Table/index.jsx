@@ -9,6 +9,7 @@ import { IPAD_MAX_WIDTH, MOBILE_MAX_WIDTH } from 'constants/size'
 import { projectPropTypes } from 'constants/proptypes/project'
 import FilterSelect from './filterSelect'
 import SearchBar from './searchBar'
+import { STATUS } from '../../constants/status'
 
 const SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '40%',
@@ -42,7 +43,7 @@ const Table = ({
   isAdmin,
   isSuperAdmin,
   search,
-  filters,
+  selectedFilters,
   handleClickSearchButton,
   handleChangeFiltersInput,
   handleChangeStatus,
@@ -67,7 +68,12 @@ const Table = ({
             isMobile
             handleClickSearchButton={handleClickSearchButton}
           />
-          <FilterSelect filters={filters} handleChangeFiltersInput={handleChangeFiltersInput} />
+          <FilterSelect
+            filterLabel="Status"
+            options={STATUS}
+            selectedFilters={selectedFilters}
+            handleChangeFiltersInput={handleChangeFiltersInput}
+          />
         </Box>
         {!isAdmin && (
           <Link to="/project/create/">
@@ -166,14 +172,14 @@ const Table = ({
         >
           {isAdmin ? (
             <Text color="secondary" mb="0.5em">
-              {!search && filters.length === 0
+              {!search && selectedFilters.length === 0
                 ? 'There are no project requests yet'
                 : 'Project with specified search input not found'}
             </Text>
           ) : (
             <Box display="flex" flexDir="column" alignItems="center">
               <Text color="secondary" mb="0.5em">
-                {!search && filters.length === 0
+                {!search && selectedFilters.length === 0
                   ? 'You have not requested any projects yet'
                   : 'Project with specified search input not found'}
               </Text>
@@ -205,7 +211,7 @@ Table.propTypes = {
   isAdmin: PropTypes.bool,
   isSuperAdmin: PropTypes.bool,
   search: PropTypes.string.isRequired,
-  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedFilters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleClickSearchButton: PropTypes.func,
   handleChangeFiltersInput: PropTypes.func,
   handleChangeStatus: PropTypes.func,

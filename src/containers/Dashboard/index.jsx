@@ -11,7 +11,7 @@ import { DEFAULT_PROJECTS_SHOWN } from 'constants/pagination'
 const Dashboard = () => {
   const { user } = useContext(UserContext)
   const [search, setSearch] = useState('')
-  const [filters, setFilters] = useState([])
+  const [selectedFilters, setSelectedFilters] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(true)
@@ -20,7 +20,7 @@ const Dashboard = () => {
     setIsLoading(true)
     const fetchData = async () => {
       let filtersString = ''
-      filters.forEach(filter => (filtersString += processStatus(filter) + ','))
+      selectedFilters.forEach(filter => (filtersString += processStatus(filter) + ','))
       const [data, error] = await request(
         `${PROJECT_URL}?search=${search}&status=${filtersString}&page=${currentPage}&page_size=${DEFAULT_PROJECTS_SHOWN}`,
       )
@@ -30,7 +30,7 @@ const Dashboard = () => {
       setIsLoading(false)
     }
     fetchData()
-  }, [search, filters, currentPage])
+  }, [search, selectedFilters, currentPage])
 
   const handleChangeStatus = async (id, status) => {
     const [error] = await request(`${PROJECT_URL}${id}/set-status/`, { status: status }, 'PUT')
@@ -76,9 +76,9 @@ const Dashboard = () => {
               isAdmin={user.is_admin}
               isSuperAdmin={user.is_superadmin}
               search={search}
-              filters={filters}
+              selectedFilters={selectedFilters}
               handleClickSearchButton={val => setSearch(val)}
-              handleChangeFiltersInput={values => setFilters(values)}
+              handleChangeFiltersInput={values => setSelectedFilters(values)}
               handleChangeStatus={handleChangeStatus}
               handleClickDeleteButton={handleClickDeleteButton}
             />
