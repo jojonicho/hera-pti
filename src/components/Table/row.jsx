@@ -13,11 +13,10 @@ import {
   Text,
 } from '@chakra-ui/core'
 import { Code } from '@chakra-ui/react'
-import { STATUS } from 'constants/status'
+import { STATUS_OPTIONS } from 'constants/options'
 import { generateDateFormat1, generateDateFormat2 } from 'utils/table/generateDateFormat'
 import generateLogoByRequester from 'utils/table/generateLogoByRequester'
 import generateStatusBadgeProps from 'utils/table/generateStatusBadgeProps'
-import processStatus from 'utils/table/processStatus'
 import PropTypes from 'prop-types'
 import { projectPropTypes } from 'constants/proptypes/project'
 import { VersionHistoryModal } from 'components'
@@ -55,10 +54,12 @@ const Modals = ({
                 width="65%"
                 mb="1em"
                 variant="unstyled"
-                onChange={e => setOption(processStatus(e.target.value))}
+                onChange={e => setOption(e.target.value)}
               >
-                {STATUS.map(status => (
-                  <option key={status}>{status}</option>
+                {STATUS_OPTIONS.map(status => (
+                  <option key={status.key} value={status.value}>
+                    {status.key}
+                  </option>
                 ))}
               </Select>
               <Box display="flex" justifyContent="space-around" width="100%">

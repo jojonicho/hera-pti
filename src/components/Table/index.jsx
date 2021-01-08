@@ -9,7 +9,7 @@ import { IPAD_MAX_WIDTH, MOBILE_MAX_WIDTH } from 'constants/size'
 import { projectPropTypes } from 'constants/proptypes/project'
 import FilterSelect from './filterSelect'
 import SearchBar from './searchBar'
-import { STATUS } from '../../constants/status'
+import { STATUS_OPTIONS } from 'constants/options'
 
 const SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION = {
   name: '40%',
@@ -70,7 +70,7 @@ const Table = ({
           />
           <FilterSelect
             filterLabel="Status"
-            options={STATUS}
+            options={STATUS_OPTIONS}
             selectedFilters={selectedFilters}
             handleChangeFiltersInput={handleChangeFiltersInput}
           />

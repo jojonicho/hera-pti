@@ -23,8 +23,8 @@ const filterSelect = ({ filterLabel, options, selectedFilters, handleChangeFilte
             onChange={values => handleChangeFiltersInput(values)}
           >
             {options.map(option => (
-              <Checkbox key={option} value={option}>
-                {option}
+              <Checkbox key={option.key} value={option.value}>
+                {option.key}
               </Checkbox>
             ))}
           </CheckboxGroup>
@@ -36,7 +36,12 @@ const filterSelect = ({ filterLabel, options, selectedFilters, handleChangeFilte
 
 filterSelect.propTypes = {
   filterLabel: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(PropTypes.string).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
+  ).isRequired,
   selectedFilters: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleChangeFiltersInput: PropTypes.func.isRequired,
 }

@@ -94,3 +94,34 @@ export const PRIORITY_CHOICES = [
     value: 'Low',
   },
 ]
+
+export const STATUS_OPTIONS = [
+  {
+    key: 'Draft',
+    value: 'draft',
+  },
+  {
+    key: 'Submitted',
+    value: 'submitted',
+  },
+  {
+    key: 'In Review',
+    value: 'in_review',
+  },
+  {
+    key: 'Accepted',
+    value: 'accepted',
+  },
+  {
+    key: 'Ongoing',
+    value: 'ongoing',
+  },
+  {
+    key: 'Completed',
+    value: 'completed',
+  },
+  {
+    key: 'Rejected',
+    value: 'rejected',
+  },
+]

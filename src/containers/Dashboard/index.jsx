@@ -5,7 +5,6 @@ import { Layout } from 'components/Layout'
 import { request } from 'services/api'
 import { PROJECT_URL } from 'constants/urls'
 import { UserContext } from 'utils/datastore/UserContext'
-import processStatus from 'utils/table/processStatus'
 import { DEFAULT_PROJECTS_SHOWN } from 'constants/pagination'
 
 const Dashboard = () => {
@@ -20,7 +19,7 @@ const Dashboard = () => {
     setIsLoading(true)
     const fetchData = async () => {
       let filtersString = ''
-      selectedFilters.forEach(filter => (filtersString += processStatus(filter) + ','))
+      selectedFilters.forEach(filter => (filtersString += filter + ','))
       const [data, error] = await request(
         `${PROJECT_URL}?search=${search}&status=${filtersString}&page=${currentPage}&page_size=${DEFAULT_PROJECTS_SHOWN}`,
       )
