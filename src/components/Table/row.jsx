@@ -365,12 +365,14 @@ export const MobileRow = ({
           maxHeight="2.5rem"
           maxWidth="2.5rem"
         />
-        <Box w="70%" ml="0.5em">
-          <Text>{project.title}</Text>
-          <Text fontSize="0.8em" fontWeight="400" color="secondary">
-            {project.description}
-          </Text>
-        </Box>
+        <Link to={`/project/${project.id}/`}>
+          <Box w="70%" ml="10px">
+            <Text>{project.title}</Text>
+            <Text fontSize="0.8em" fontWeight="400" color="secondary">
+              {project.description}
+            </Text>
+          </Box>
+        </Link>
       </Box>
       <Box
         d="flex"

@@ -11,7 +11,7 @@ const Card = ({ title, button, children, scrollable, maxHeight, minHeight }) => 
     overflowY={scrollable && 'scroll'}
     minHeight={minHeight || '2em'}
     maxHeight={maxHeight}
-    marginTop={['0.5rem', '0']}
+    marginTop={['0.5rem', '0.5rem', '0.5rem', '0']}
   >
     <Stack isInline justify="space-between" align="center" mb="1.5rem">
       <Heading as="h3" size="lg">

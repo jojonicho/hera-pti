@@ -7,7 +7,15 @@ import { useWindowSize } from 'hooks'
 import { MOBILE_MAX_WIDTH } from 'constants/size'
 import { DiscussionCreate, DiscussionList } from 'components/Discussion'
 
-const FormFieldWrapper = ({ children, label, name, helperText, isRequired }) => {
+const FormFieldWrapper = ({
+  children,
+  label,
+  name,
+  helperText,
+  isRequired,
+  isHidden,
+  isNoDiscussion,
+}) => {
   const { width } = useWindowSize()
   const { create, isHistory, errors, discussions, targetPageId, targetProjectId } = useFormContext()
 
@@ -23,7 +31,7 @@ const FormFieldWrapper = ({ children, label, name, helperText, isRequired }) => 
         targetProjectId={targetProjectId}
       />
     )
-  } else if (!isHistory) {
+  } else if (!isHistory && !isNoDiscussion) {
     discussion = (
       <DiscussionCreate
         fieldName={name}
@@ -34,7 +42,7 @@ const FormFieldWrapper = ({ children, label, name, helperText, isRequired }) => 
   }
 
   return (
-    <FormControl isRequired={isRequired} isInvalid={errors[name] ? true : false}>
+    <FormControl isRequired={isRequired} isInvalid={errors[name] ? true : false} hidden={isHidden}>
       <Flex direction="row" justify="space-between" width="100%" mb="1.5rem">
         <Flex direction={['column', 'row']} align="flex-start" width="100%">
           <Flex direction="row" justify="space-between" width={['100%', 'auto']}>
@@ -67,6 +75,8 @@ FormFieldWrapper.propTypes = {
   name: PropTypes.string.isRequired,
   helperText: PropTypes.string,
   isRequired: PropTypes.bool,
+  isHidden: PropTypes.bool,
+  isNoDiscussion: PropTypes.bool,
 }
 
 export default FormFieldWrapper

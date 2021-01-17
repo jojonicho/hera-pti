@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { useFormContext } from 'react-hook-form'
 import FormFieldWrapper from '../FormFieldWrapper'
 
-const DefaultSelect = ({ name, isRequired, options, ...props }) => {
+const DefaultSelect = ({ name, isRequired, options, onChange, ...props }) => {
   const { register, isReadOnly } = useFormContext()
 
   return (
@@ -18,6 +18,7 @@ const DefaultSelect = ({ name, isRequired, options, ...props }) => {
         placeholder=" "
         isDisabled={isReadOnly}
         _disabled={{ bg: 'form' }}
+        onChange={onChange}
       >
         {options.map(choice => (
           <option key={`select${name}${choice.key}`} value={choice.key}>
@@ -39,6 +40,7 @@ DefaultSelect.propTypes = {
   ).isRequired,
   label: PropTypes.string,
   isRequired: PropTypes.bool,
+  onChange: PropTypes.func,
 }
 
 export default DefaultSelect
