@@ -4,11 +4,17 @@ import PropTypes from 'prop-types'
 import { useFormContext } from 'react-hook-form'
 import FormFieldWrapper from '../FormFieldWrapper'
 
-const DefaultInput = ({ name, isRequired, ...props }) => {
+const DefaultInput = ({ name, isRequired, isHidden, isNoDiscussion, ...props }) => {
   const { register, isReadOnly } = useFormContext()
 
   return (
-    <FormFieldWrapper {...props} name={name} isRequired={isRequired}>
+    <FormFieldWrapper
+      {...props}
+      name={name}
+      isRequired={isRequired}
+      isHidden={isHidden}
+      isNoDiscussion={isNoDiscussion}
+    >
       <Input
         ref={register({ required: isRequired })}
         name={name}
@@ -27,6 +33,8 @@ DefaultInput.propTypes = {
   label: PropTypes.string.isRequired,
   helperText: PropTypes.string,
   isRequired: PropTypes.bool,
+  isHidden: PropTypes.bool,
+  isNoDiscussion: PropTypes.bool,
 }
 
 export default DefaultInput

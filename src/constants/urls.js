@@ -25,3 +25,5 @@ export const PAGE_HISTORY_BY_ID_URL = pageId => `${PAGE_HISTORY_URL}${pageId}/`
 
 export const DISCUSSION_URL = BASE_URL + '/discussions/'
 export const HISTORY_DISCUSSION_URL = BASE_URL + '/histories/discussions/'
+
+export const ORGANIZATION_LIST = BASE_URL + '/organizations/'
