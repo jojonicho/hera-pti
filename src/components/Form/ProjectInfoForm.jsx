@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import { Card } from 'components'
 import { Select, Input } from 'components/Form/Fields'
 import { BIRDEPT_OPTIONS, PROJECT_REQUEST_TYPES } from 'constants/options'
-import { ORGANIZATION_LIST } from 'constants/urls'
-import { request } from 'services/api'
+import { retrieveOrganizationsApi } from 'services/organization'
 import { Box, Spinner } from '@chakra-ui/core'
 import { useToast } from '@chakra-ui/react'
 
@@ -15,7 +14,7 @@ const ProjectInfoForm = ({ create, isReadOnly, dept }) => {
   const toast = useToast()
 
   const fetchData = useCallback(async () => {
-    const [data, error] = await request(ORGANIZATION_LIST)
+    const [data, error] = await retrieveOrganizationsApi()
     if (error) {
       console.log(error)
       toast({
@@ -28,8 +27,8 @@ const ProjectInfoForm = ({ create, isReadOnly, dept }) => {
       return
     }
     const choice = data.map(organization => ({
-      key: organization.id,
-      value: organization.name,
+      value: organization.id,
+      label: organization.name,
     }))
     setOrganizationOptions(choice)
   }, [toast])

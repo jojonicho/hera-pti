@@ -7,7 +7,7 @@ import { ApiContext } from 'utils/datastore/ApiContext'
 
 const ErrorPage = () => {
   const { error } = useContext(ApiContext)
-  console.log(error)
+
   return (
     <Layout>
       <Stack align="center" justify="center" minHeight="90%" minWidth="100vw" spacing="0.1rem">

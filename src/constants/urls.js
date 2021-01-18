@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
 export const BASE_URL = process.env.API_URL || 'http://127.0.0.1:8000'
 
-export const USER_URL = `${BASE_URL}/auth/user`
+export const USER_URL = BASE_URL + '/auth/user'
 export const USER_SET_ROLE_URL = userId => `${USER_URL}/${userId}/set-admin-role/`
 export const USER_DATA_URL = `${USER_URL}/get-data/`
 export const TOKEN_URL = BASE_URL + '/auth/rest-auth/google/'
-export const USER_LIST_URL = page => `${BASE_URL}/auth/users/?page=${page}`
+export const USER_LIST_URL = BASE_URL + '/auth/users/'
 
 export const PROJECT_URL = BASE_URL + '/projects/'
 export const PROJECT_BY_ID_URL = projectId => `${PROJECT_URL}${projectId}/`
@@ -26,4 +26,4 @@ export const PAGE_HISTORY_BY_ID_URL = pageId => `${PAGE_HISTORY_URL}${pageId}/`
 export const DISCUSSION_URL = BASE_URL + '/discussions/'
 export const HISTORY_DISCUSSION_URL = BASE_URL + '/histories/discussions/'
 
-export const ORGANIZATION_LIST = BASE_URL + '/organizations/'
+export const ORGANIZATION_URL = BASE_URL + '/organizations/'

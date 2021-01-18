@@ -7,7 +7,7 @@ import { childrenPropTypes } from 'constants/proptypes/general'
 import { TABLE_COLUMNS, MOBILE_TABLE_COLUMNS, TABLE_ROW_STYLES } from './constants'
 import { useUserData } from './hooks'
 
-export const FlexRow = ({ width, children, ...props }) => (
+const FlexRow = ({ width, children, ...props }) => (
   <Flex direction="row" align="center" justify="center" w={width} {...props}>
     {children}
   </Flex>
@@ -18,7 +18,7 @@ FlexRow.propTypes = {
   children: childrenPropTypes.isRequired,
 }
 
-export const HeaderRow = ({ isMobile }) => {
+const HeaderRow = ({ isMobile }) => {
   const tableColumns = isMobile ? MOBILE_TABLE_COLUMNS : TABLE_COLUMNS
 
   return (
@@ -41,7 +41,7 @@ HeaderRow.propTypes = {
   isMobile: PropTypes.bool.isRequired,
 }
 
-export const UserRow = ({ user }) => {
+const UserRow = ({ user }) => {
   const [userData, changeToAdmin, changeToSuperAdmin] = useUserData(user)
 
   return (
@@ -70,7 +70,7 @@ UserRow.propTypes = {
   user: userPropTypes.isRequired,
 }
 
-export const MobileUserRow = ({ user }) => {
+const MobileUserRow = ({ user }) => {
   const [userData, changeToAdmin, changeToSuperAdmin] = useUserData(user)
 
   return (
@@ -101,3 +101,5 @@ export const MobileUserRow = ({ user }) => {
 MobileUserRow.propTypes = {
   user: userPropTypes.isRequired,
 }
+
+export { FlexRow, HeaderRow, UserRow, MobileUserRow }

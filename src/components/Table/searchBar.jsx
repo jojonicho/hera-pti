@@ -11,7 +11,7 @@ const SearchBar = ({ placeholderLabel, isMobile, handleClickSearchButton }) => {
       alignItems="center"
       w={isMobile ? '100%' : '70%'}
       mr="0.5em"
-      mb={isMobile ? '0.25em' : '0'}
+      mb={isMobile ? '0.5em' : '0'}
     >
       <Input
         id="search"

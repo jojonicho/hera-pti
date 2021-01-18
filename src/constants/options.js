@@ -1,127 +1,138 @@
 export const PROJECT_REQUEST_TYPES = [
   {
-    key: 'new_project',
-    value: 'New Project',
+    value: 'new_project',
+    label: 'New Project',
   },
   {
-    key: 'bug_fix',
-    value: 'Bug Fix',
+    value: 'bug_fix',
+    label: 'Bug Fix',
   },
   {
-    key: 'improvement',
-    value: 'Improvement',
+    value: 'improvement',
+    label: 'Improvement',
   },
   {
-    key: 'chores',
-    value: 'Chores',
+    value: 'chores',
+    label: 'Chores',
   },
 ]
 
 export const BIRDEPT_OPTIONS = [
   {
-    key: 'Pi',
-    value: 'PI',
+    value: 'Pi',
+    label: 'PI',
   },
   {
-    key: 'ki',
-    value: 'KI',
+    value: 'ki',
+    label: 'KI',
   },
   {
-    key: 'pti',
-    value: 'PTI',
+    value: 'pti',
+    label: 'PTI',
   },
   {
-    key: 'adkesma',
-    value: 'Adkesma',
+    value: 'adkesma',
+    label: 'Adkesma',
   },
   {
-    key: 'akpem',
-    value: 'Akpem',
+    value: 'akpem',
+    label: 'Akpem',
   },
   {
-    key: 'kastrat',
-    value: 'Kastrat',
+    value: 'kastrat',
+    label: 'Kastrat',
   },
   {
-    key: 'media',
-    value: 'Media',
+    value: 'media',
+    label: 'Media',
   },
   {
-    key: 'humas',
-    value: 'Humas',
+    value: 'humas',
+    label: 'Humas',
   },
   {
-    key: 'psdm',
-    value: 'PSDM',
+    value: 'psdm',
+    label: 'PSDM',
   },
   {
-    key: 'depor',
-    value: 'Depor',
+    value: 'depor',
+    label: 'Depor',
   },
   {
-    key: 'pengmas',
-    value: 'Pengmas',
+    value: 'pengmas',
+    label: 'Pengmas',
   },
   {
-    key: 'bismit',
-    value: 'Bismit',
+    value: 'bismit',
+    label: 'Bismit',
   },
   {
-    key: 'senbud',
-    value: 'Senbud',
+    value: 'senbud',
+    label: 'Senbud',
   },
   {
-    key: 'keilmuan',
-    value: 'Keilmuan',
+    value: 'keilmuan',
+    label: 'Keilmuan',
   },
   {
-    key: 'other',
-    value: 'Lainnya',
+    value: 'other',
+    label: 'Lainnya',
   },
 ]
 
 export const PRIORITY_CHOICES = [
   {
-    key: 1,
-    value: 'High',
+    value: 1,
+    label: 'High',
   },
   {
-    key: 2,
-    value: 'Medium',
+    value: 2,
+    label: 'Medium',
   },
   {
-    key: 3,
-    value: 'Low',
+    value: 3,
+    label: 'Low',
   },
 ]
 
 export const STATUS_OPTIONS = [
   {
-    key: 'Draft',
+    label: 'Draft',
     value: 'draft',
   },
   {
-    key: 'Submitted',
+    label: 'Submitted',
     value: 'submitted',
   },
   {
-    key: 'In Review',
+    label: 'In Review',
     value: 'in_review',
   },
   {
-    key: 'Accepted',
+    label: 'Accepted',
     value: 'accepted',
   },
   {
-    key: 'Ongoing',
+    label: 'Ongoing',
     value: 'ongoing',
   },
   {
-    key: 'Completed',
+    label: 'Completed',
     value: 'completed',
   },
   {
-    key: 'Rejected',
+    label: 'Rejected',
     value: 'rejected',
+  },
+]
+
+export const ROLE_FILTER_OPTIONS = [
+  {
+    label: 'Admin',
+    value: '&is_admin=true',
+  },
+  {
+    label: 'Super Admin',
+    value: '&is_superadmin=true',
   },
 ]

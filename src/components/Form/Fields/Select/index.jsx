@@ -2,6 +2,8 @@ import { Select } from '@chakra-ui/core'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useFormContext } from 'react-hook-form'
+
+import { optionsPropTypes } from 'constants/proptypes/general'
 import FormFieldWrapper from '../FormFieldWrapper'
 
 const DefaultSelect = ({ name, isRequired, options, onChange, ...props }) => {
@@ -20,9 +22,9 @@ const DefaultSelect = ({ name, isRequired, options, onChange, ...props }) => {
         _disabled={{ bg: 'form' }}
         onChange={onChange}
       >
-        {options.map(choice => (
-          <option key={`select${name}${choice.key}`} value={choice.key}>
-            {choice.value}
+        {options.map((option, id) => (
+          <option key={`${id}${option.value}`} value={option.value}>
+            {option.label}
           </option>
         ))}
       </Select>
@@ -32,12 +34,7 @@ const DefaultSelect = ({ name, isRequired, options, onChange, ...props }) => {
 
 DefaultSelect.propTypes = {
   name: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }),
-  ).isRequired,
+  options: optionsPropTypes.isRequired,
   label: PropTypes.string,
   isRequired: PropTypes.bool,
   onChange: PropTypes.func,
