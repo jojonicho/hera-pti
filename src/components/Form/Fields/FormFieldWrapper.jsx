@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { useFormContext } from 'react-hook-form'
 
 import { useWindowSize } from 'hooks'
-import { MOBILE_MAX_WIDTH } from 'constants/size'
 import { DiscussionCreate, DiscussionList } from 'components/Discussion'
 
 const FormFieldWrapper = ({
@@ -16,7 +15,7 @@ const FormFieldWrapper = ({
   isHidden,
   isNoDiscussion,
 }) => {
-  const { width } = useWindowSize()
+  const { isMobile } = useWindowSize()
   const { create, isHistory, errors, discussions, targetPageId, targetProjectId } = useFormContext()
 
   let discussion = <Stack size={['1.2rem', '1.5rem']} />
@@ -56,13 +55,13 @@ const FormFieldWrapper = ({
                 </FormHelperText>
               )}
             </Stack>
-            {width < MOBILE_MAX_WIDTH && !create && discussion}
+            {isMobile && !create && discussion}
           </Flex>
           <Stack width={['100%', create ? 'calc(100% - 11rem)' : 'calc(100% - 12rem)']}>
             {children}
           </Stack>
         </Flex>
-        {width >= MOBILE_MAX_WIDTH && !create && discussion}
+        {!isMobile && !create && discussion}
       </Flex>
     </FormControl>
   )

@@ -9,8 +9,10 @@ export async function userInfoApi() {
   return request(USER_DATA_URL)
 }
 
-export async function retrieveUsersApi(page = 1) {
-  return request(USER_LIST_URL(page))
+export async function retrieveUsersApi({ page = 1, search = '', role = '', affiliation = '' }) {
+  return request(
+    `${USER_LIST_URL}?page=${page}&search=${search}${role}&affiliation_in=${affiliation}`,
+  )
 }
 
 export async function updateUserRoleApi(userId, payload) {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { updateUserRoleApi } from 'services/user'
 
@@ -32,6 +32,10 @@ export function useUserData(user) {
       ...payload,
     })
   }
+
+  useEffect(() => {
+    setUserData(user)
+  }, [user])
 
   return [userData, changeToAdmin, changeToSuperAdmin]
 }

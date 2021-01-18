@@ -18,11 +18,10 @@ import { ReactComponent as Logo } from 'assets/logo.svg'
 import { UserContext } from 'utils/datastore/UserContext'
 import PropTypes from 'prop-types'
 import { useWindowSize } from 'hooks'
-import { MOBILE_MAX_WIDTH } from 'constants/size'
 
 const Navbar = ({ navItems }) => {
   const { user, logout } = useContext(UserContext)
-  const { width } = useWindowSize()
+  const { isMobile } = useWindowSize()
   const toast = useToast()
 
   return (
@@ -50,7 +49,7 @@ const Navbar = ({ navItems }) => {
         <Stack align="center" justify="space-between" isInline>
           {navItems.map(navItem => navItem)}
           <Image src={user.picture} alt="google-profile" width="30px" borderRadius="50%" />
-          {width > MOBILE_MAX_WIDTH && (
+          {!isMobile && (
             <Text fontSize="calc(0.7rem + 0.2vw)" color="white" textAlign="center">
               {user.name}
             </Text>

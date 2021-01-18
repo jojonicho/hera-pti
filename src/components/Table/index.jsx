@@ -5,7 +5,6 @@ import useWindowSize from 'hooks/useWindowSize'
 import PropTypes from 'prop-types'
 
 import { Row, MobileRow } from './row'
-import { IPAD_MAX_WIDTH, MOBILE_MAX_WIDTH } from 'constants/size'
 import { projectPropTypes } from 'constants/proptypes/project'
 import FilterSelect from './filterSelect'
 import SearchBar from './searchBar'
@@ -49,9 +48,7 @@ const Table = ({
   handleChangeStatus,
   handleClickDeleteButton,
 }) => {
-  const { width } = useWindowSize()
-  const isMobile = width <= MOBILE_MAX_WIDTH
-  const isIpad = width <= IPAD_MAX_WIDTH
+  const { isMobile, isIpad } = useWindowSize()
 
   const widthDistribution = isSuperAdmin
     ? SUPER_ADMIN_COLUMN_WIDTH_DISTRIBUTION
