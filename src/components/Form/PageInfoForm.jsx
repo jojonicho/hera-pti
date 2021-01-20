@@ -1,35 +1,18 @@
 import { Stack } from '@chakra-ui/core'
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useFormContext } from 'react-hook-form'
 
 import { Input, ListInput, Select } from 'components/Form/Fields'
 import { PRIORITY_CHOICES } from 'constants/options'
-import { retrievePageListFromProjectApi } from 'services/project'
+import { optionsPropTypes } from 'constants/proptypes/general'
 
-const PageInfoForm = ({ create, isReadOnly, projectId, pageId, parentPage }) => {
-  const [parentPageChoices, setParentPageChoices] = useState([])
+const PageInfoForm = ({ create, parentPage, parentPageOptions }) => {
   const { setValue } = useFormContext()
-
-  const fetchPageList = useCallback(async () => {
-    if (!isReadOnly && projectId && pageId) {
-      const [data, error] = await retrievePageListFromProjectApi(projectId)
-      if (error) return
-
-      const pageList = data
-        .filter(({ id }) => id !== pageId)
-        .map(({ id, title }) => ({ key: id, value: title }))
-      setParentPageChoices(pageList)
-    }
-  }, [isReadOnly, projectId, pageId])
-
-  useEffect(() => {
-    fetchPageList()
-  }, [fetchPageList])
 
   useEffect(() => {
     setValue('parent', parentPage)
-  }, [parentPageChoices, parentPage, setValue])
+  }, [parentPageOptions, parentPage, setValue])
 
   return (
     <Stack
@@ -38,7 +21,7 @@ const PageInfoForm = ({ create, isReadOnly, projectId, pageId, parentPage }) => 
       align={create ? 'center' : 'flex-start'}
     >
       <Stack width={['100%', '100%', '100%', '80%']}>
-        <Select name="parent" label="Parent Page" options={parentPageChoices} />
+        <Select name="parent" label="Parent Page" options={parentPageOptions} />
         <Input name="page_url" label="Page URL" isRequired />
         <Select name="priority" label="Page Priority" isRequired options={PRIORITY_CHOICES} />
         <ListInput name="access_details" label="Access Details" isRequired />
@@ -49,9 +32,7 @@ const PageInfoForm = ({ create, isReadOnly, projectId, pageId, parentPage }) => 
 
 PageInfoForm.propTypes = {
   create: PropTypes.bool,
-  isReadOnly: PropTypes.bool,
-  projectId: PropTypes.string.isRequired,
-  pageId: PropTypes.string.isRequired,
+  parentPageOptions: optionsPropTypes.isRequired,
   parentPage: PropTypes.string,
 }
 

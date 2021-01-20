@@ -5,20 +5,20 @@ import { ErrorPage } from 'containers'
 import { ApiContext } from 'utils/datastore/ApiContext'
 
 const withErrorHandler = Component => {
-  const WrappedComponent = () => {
+  const WrappedComponent = props => {
     const { error } = useContext(ApiContext)
 
     if (error) {
       return <ErrorPage />
     }
-    return <Component />
+    return <Component {...props} />
   }
 
   return WrappedComponent
 }
 
 withErrorHandler.propTypes = {
-  Component: PropTypes.func,
+  Component: PropTypes.element.isRequired,
 }
 
 export default withErrorHandler
