@@ -56,9 +56,9 @@ const Modals = ({
                 variant="unstyled"
                 onChange={e => setOption(e.target.value)}
               >
-                {STATUS_OPTIONS.map(status => (
-                  <option key={status.key} value={status.value}>
-                    {status.key}
+                {STATUS_OPTIONS.map((status, id) => (
+                  <option key={id} value={status.value}>
+                    {status.label}
                   </option>
                 ))}
               </Select>

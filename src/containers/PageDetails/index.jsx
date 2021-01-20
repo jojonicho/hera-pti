@@ -11,10 +11,11 @@ import {
 import React, { useState, useEffect, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { useForm, FormProvider } from 'react-hook-form'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 
 import { PageInfoForm, PageContentForm, TabContainer, Layout, Breadcrumb } from 'components'
 import { LoadingPage } from 'containers'
+import { retrievePageListFromProjectApi } from 'services/project'
 import { retrievePageApi, retrievePageHistoryApi, updatePageApi } from 'services/page'
 import { cleanData, changeToInput } from 'utils/form'
 import { UserContext } from 'utils/datastore/UserContext'
@@ -32,8 +33,10 @@ const inputFields = [
 ]
 
 const PageDetails = ({ create, isHistory }) => {
-  const { errors, formState, setValue, getValues, handleSubmit, ...methods } = useForm()
+  const methods = useForm()
+  const { errors, formState, setValue, getValues, handleSubmit } = methods
   const { pageId } = useParams()
+  const history = useHistory()
   const { setError } = useContext(ApiContext)
   const { user } = useContext(UserContext)
 
@@ -42,51 +45,60 @@ const PageDetails = ({ create, isHistory }) => {
   const [parent, setParent] = useState('')
   const [project, setProject] = useState({ id: '', title: 'Project' })
   const [discussions, setDiscussions] = useState({})
+
+  const [parentPageOptions, setParentPageOptions] = useState([])
   const [infoTabBorder, setInfoTabBorder] = useState('')
   const [contentTabBorder, setContentTabBorder] = useState('')
   const [isLoading, setIsLoading] = useState(true)
 
   const pageInfo = (
-    <PageInfoForm
-      create={create}
-      isReadOnly={isReadOnly}
-      projectId={project.id}
-      pageId={pageId}
-      parentPage={parent}
-    />
+    <PageInfoForm create={create} parentPageOptions={parentPageOptions} parentPage={parent} />
   )
   const pageContent = <PageContentForm create={create} />
 
   const fetchPageData = useCallback(async () => {
     const retrievePage = isHistory ? retrievePageHistoryApi : retrievePageApi
     const [data, error, response] = await retrievePage(pageId)
-    setIsLoading(false)
     if (error) {
       setError({ error, response })
       return
     }
 
-    if (!create) {
-      const isReadOnly = user.is_admin || isHistory || data.project.status !== 'draft'
-      setIsReadOnly(isReadOnly)
+    const isReadOnly = user.is_admin || isHistory || data.project.status !== 'draft'
+    setIsReadOnly(isReadOnly)
 
-      setProject(data.project)
-      setPageName(data.title)
-      setParent(data.parent)
-      inputFields.forEach(field => setValue(field, changeToInput(data[field], isReadOnly)))
-      setValue('sketch', data.sketch)
+    setProject(data.project)
+    setPageName(data.title)
+    setParent(data.parent)
+    inputFields.forEach(field => setValue(field, changeToInput(data[field], isReadOnly)))
+    setValue('sketch', data.sketch)
 
-      const discussions = {}
-      data.discussions.forEach(({ target_field_name, ...rest }) => {
-        if (!discussions[target_field_name]) {
-          discussions[target_field_name] = []
-        }
-        discussions[target_field_name].push(rest)
-      })
+    const discussions = {}
+    data.discussions.forEach(({ target_field_name, ...rest }) => {
+      if (!discussions[target_field_name]) {
+        discussions[target_field_name] = []
+      }
+      discussions[target_field_name].push(rest)
+    })
+    setDiscussions(discussions)
 
-      setDiscussions(discussions)
+    setIsLoading(false)
+  }, [pageId, isHistory, setValue, user, setError])
+
+  const fetchParentPageOptions = useCallback(async () => {
+    if (project.id) {
+      const [data, error, response] = await retrievePageListFromProjectApi(project.id)
+      if (error) {
+        setError({ error, response })
+        return
+      }
+
+      const pageOptions = data
+        .filter(({ id }) => id !== pageId)
+        .map(page => ({ value: page.id, label: page.title }))
+      setParentPageOptions(pageOptions)
     }
-  }, [pageId, create, isHistory, setValue, user, setError])
+  }, [setError, project, pageId])
 
   const onSubmit = async () => {
     const values = getValues()
@@ -99,11 +111,16 @@ const PageDetails = ({ create, isHistory }) => {
       data.append('sketch', values.sketch)
       await updatePageApi(pageId, data)
     }
+    create && history.push(`/page/${pageId}/`)
   }
 
   useEffect(() => {
     fetchPageData()
   }, [fetchPageData])
+
+  useEffect(() => {
+    fetchParentPageOptions()
+  }, [fetchParentPageOptions])
 
   useEffect(() => {
     const infoInvalid = errors.page_url || errors.access_details || errors.priority
@@ -116,7 +133,7 @@ const PageDetails = ({ create, isHistory }) => {
   ) : (
     <Layout>
       <Stack align="center" flexGrow={1}>
-        <Stack width={['95%', '85%']} spacing="2vh">
+        <Stack width={['90%', '85%']} spacing="2vh">
           <Breadcrumb
             pages={[
               { path: '/dashboard/', name: 'Dashboard' },
@@ -129,7 +146,7 @@ const PageDetails = ({ create, isHistory }) => {
             fontWeight="600"
             fontSize={['2xl', '3xl']}
             isPreviewFocusable={!isReadOnly}
-            onChange={value => setPageName(value)}
+            onChange={setPageName}
             isDisabled={isReadOnly}
             mt="5vh"
           >
@@ -161,8 +178,6 @@ const PageDetails = ({ create, isHistory }) => {
           </Editable>
           <FormProvider
             {...methods}
-            errors={errors}
-            setValue={setValue}
             create={create}
             isReadOnly={isReadOnly}
             isHistory={isHistory}
