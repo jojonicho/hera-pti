@@ -51,6 +51,7 @@ const ProjectInfoForm = ({ create, isReadOnly, dept }) => {
           <Select
             name="department"
             label="Department"
+            helperText="your affiliation"
             create={create}
             isRequired
             isReadOnly={isReadOnly}
@@ -69,12 +70,19 @@ const ProjectInfoForm = ({ create, isReadOnly, dept }) => {
           <Select
             name="receiver"
             label="Receiver"
+            helperText="project executor"
             create={create}
             isRequired
             isReadOnly={isReadOnly}
             options={organizationOptions}
           />
-          <Input name="description" label="Description" create={create} isReadOnly={isReadOnly} />
+          <Input
+            name="description"
+            label="Description"
+            helperText="project goal & background"
+            create={create}
+            isReadOnly={isReadOnly}
+          />
           <Input
             name="deadline"
             label="Deadline"
@@ -86,11 +94,17 @@ const ProjectInfoForm = ({ create, isReadOnly, dept }) => {
           <Input
             name="prototype_url"
             label="Prototype URL"
-            helperText="Figma or other design platforms"
+            helperText="Figma, Wireframe, etc."
             create={create}
             isReadOnly={isReadOnly}
           />
-          <Input name="assets_url" label="Assets URL" create={create} isReadOnly={isReadOnly} />
+          <Input
+            name="assets_url"
+            label="Assets URL"
+            helperText="images/logos at GDrive, etc."
+            create={create}
+            isReadOnly={isReadOnly}
+          />
           <Select
             name="request_type"
             label="Request Type"
@@ -101,8 +115,8 @@ const ProjectInfoForm = ({ create, isReadOnly, dept }) => {
           />
           <Input
             name="access_url"
-            label="Preferred Access URL"
-            helperText="e.g. bem.cs.ui.ac.id/reqgath"
+            label="Access URL"
+            helperText="e.g. bem.cs.ui.ac.id/my-project/"
             create={create}
             isRequired
             isReadOnly={isReadOnly}
