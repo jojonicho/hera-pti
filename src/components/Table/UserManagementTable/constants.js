@@ -10,12 +10,12 @@ export const TABLE_COLUMNS = [
   },
   {
     label: 'Email',
-    width: '33%',
+    width: '28%',
     align: 'left',
   },
   {
     label: 'Affiliation',
-    width: '17%',
+    width: '22%',
   },
   {
     label: 'Admin',

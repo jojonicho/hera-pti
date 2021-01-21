@@ -52,7 +52,9 @@ const UserManagementTable = ({
       <HeaderRow isMobile={isIpad} />
       <Stack width="100%">
         {count ? (
-          users.map((user, id) => <TableRow key={`user${id}`} user={user} />)
+          users.map((user, id) => (
+            <TableRow key={`user${id}`} user={user} affiliationOptions={affiliationOptions} />
+          ))
         ) : (
           <FlexRow bg="card" minHeight="20vh" rounded="0.5rem" color="secondary">
             <Text>No Users</Text>
