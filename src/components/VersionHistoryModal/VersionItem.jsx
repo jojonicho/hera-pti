@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Box, Divider, Heading, Text } from '@chakra-ui/core'
 
@@ -64,7 +65,13 @@ const VersionItem = ({ data }) => {
       )}
       <Box pb={!isLastElement ? '54px' : '0'} ml={isLastElement ? '18px' : '0'}>
         <Heading size="sm" color={status === 'closed' ? 'completedBadge' : 'black'}>
-          {getStatusCopy(status, user, project_history)}
+          {project_history ? (
+            <Link to={`/project/${project_history}/history/`}>
+              {getStatusCopy(status, user, project_history)}
+            </Link>
+          ) : (
+            getStatusCopy(status, user, project_history)
+          )}
         </Heading>
         <Text color="formFont" fontSize="14px" lineHeight="20px">
           {getDetailCopy(version, user, project_history)}
