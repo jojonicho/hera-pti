@@ -9,7 +9,6 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
-  Select,
   Text,
   Tooltip,
 } from '@chakra-ui/core'
@@ -23,6 +22,7 @@ import PropTypes from 'prop-types'
 import { projectPropTypes } from 'constants/proptypes/project'
 import { VersionHistoryModal } from 'components'
 import { Link } from 'react-router-dom'
+import { Dropdown } from './dropdown'
 
 const Modals = ({
   project,
@@ -48,22 +48,16 @@ const Modals = ({
           <ModalBody>
             <Box px="2.5em" py="3em" display="flex" flexDir="column" alignItems="center">
               <Text mb="0.25em">You are about to change {project.title} to</Text>
-              <Select
+              <Dropdown
+                options={STATUS_OPTIONS}
+                setOption={setOption}
                 fontSize="1.25rem"
                 padding="0.25rem"
                 fontWeight="700"
                 icon="triangle-down"
                 width="65%"
                 mb="1em"
-                variant="unstyled"
-                onChange={e => setOption(e.target.value)}
-              >
-                {STATUS_OPTIONS.map((status, id) => (
-                  <option key={id} value={status.value}>
-                    {status.label}
-                  </option>
-                ))}
-              </Select>
+              />
               <Box display="flex" justifyContent="space-around" width="100%">
                 <Button width="45%" variant="outline" onClick={() => setIsModalShown(false)}>
                   Cancel
