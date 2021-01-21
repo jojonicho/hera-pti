@@ -2,6 +2,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Icon } from '@chakra-ui/cor
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
+import { BASE_PATH } from 'constants/urls'
 
 const DefaultBreadcrumb = ({ pages }) => {
   const location = useLocation()
@@ -9,11 +10,11 @@ const DefaultBreadcrumb = ({ pages }) => {
   return (
     <Breadcrumb spacing={[1, 2]} separator={<Icon color="brand" name="chevron-right" />}>
       <BreadcrumbItem>
-        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        <BreadcrumbLink href={BASE_PATH}>Home</BreadcrumbLink>
       </BreadcrumbItem>
       {pages.map(({ path, name }, index) => (
         <BreadcrumbItem key={`breadcrumb${index}`} isCurrentPage={path === location.pathname}>
-          <BreadcrumbLink href={path}>{name}</BreadcrumbLink>
+          <BreadcrumbLink href={BASE_PATH + path}>{name}</BreadcrumbLink>
         </BreadcrumbItem>
       ))}
     </Breadcrumb>
