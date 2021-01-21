@@ -20,7 +20,7 @@ const getStatusCopy = (status, user, projectHistory) => {
       return 'Project rejected.'
     case 'ongoing':
       return 'Project is ongoing.'
-    case 'closed':
+    case 'completed':
       return 'Project completed.'
     default:
       return

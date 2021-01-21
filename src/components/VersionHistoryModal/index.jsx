@@ -16,8 +16,7 @@ import { request } from 'services/api'
 import { PROJECT_URL } from 'constants/urls'
 import VersionItem from './VersionItem'
 
-const filterNonAdminData = (data, isAdmin) =>
-  data.filter(d => !d.project_history || isAdmin).reverse()
+const filterNonAdminData = (data, isAdmin) => data.filter(d => !d.project_history || isAdmin)
 
 const VersionHistoryModal = ({ projectId, isModalShown, setIsModalShown, isAdmin = false }) => {
   const toast = useToast()
