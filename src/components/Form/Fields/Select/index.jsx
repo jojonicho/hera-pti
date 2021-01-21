@@ -8,6 +8,7 @@ import FormFieldWrapper from '../FormFieldWrapper'
 
 const DefaultSelect = ({ name, isRequired, options, onChange, ...props }) => {
   const { register, isReadOnly } = useFormContext()
+  const noAvailableOptions = options.length === 0
 
   return (
     <FormFieldWrapper {...props} name={name} isRequired={isRequired}>
@@ -17,8 +18,8 @@ const DefaultSelect = ({ name, isRequired, options, onChange, ...props }) => {
         bg="form"
         rounded="md"
         height="2rem"
-        placeholder=" "
-        isDisabled={isReadOnly}
+        placeholder={noAvailableOptions ? 'No options available.' : ''}
+        isDisabled={isReadOnly || noAvailableOptions}
         _disabled={{ bg: 'form' }}
         onChange={onChange}
       >

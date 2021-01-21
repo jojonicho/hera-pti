@@ -56,9 +56,14 @@ const PageDetails = ({ create, isHistory }) => {
   )
   const pageContent = <PageContentForm create={create} />
 
+  const setPageTitle = pageName => {
+    setPageName(pageName || 'New Page')
+  }
+
   const fetchPageData = useCallback(async () => {
     const retrievePage = isHistory ? retrievePageHistoryApi : retrievePageApi
     const [data, error, response] = await retrievePage(pageId)
+    setIsLoading(false)
     if (error) {
       setError({ error, response })
       return
@@ -67,8 +72,8 @@ const PageDetails = ({ create, isHistory }) => {
     const isReadOnly = user.is_admin || isHistory || data.project.status !== 'draft'
     setIsReadOnly(isReadOnly)
 
+    setPageTitle(data.title)
     setProject(data.project)
-    setPageName(data.title)
     setParent(data.parent)
     inputFields.forEach(field => setValue(field, changeToInput(data[field], isReadOnly)))
     setValue('sketch', data.sketch)
@@ -81,8 +86,6 @@ const PageDetails = ({ create, isHistory }) => {
       discussions[target_field_name].push(rest)
     })
     setDiscussions(discussions)
-
-    setIsLoading(false)
   }, [pageId, isHistory, setValue, user, setError])
 
   const fetchParentPageOptions = useCallback(async () => {
@@ -137,8 +140,14 @@ const PageDetails = ({ create, isHistory }) => {
           <Breadcrumb
             pages={[
               { path: '/dashboard/', name: 'Dashboard' },
-              { path: `/project/${project.id}/`, name: project.title },
-              { path: `/page/${pageId}/`, name: pageName },
+              {
+                path: isHistory ? `/project/${project.id}/history/` : `/project/${project.id}/`,
+                name: project.title,
+              },
+              {
+                path: isHistory ? `/page/${pageId}/history/` : `/page/${pageId}/`,
+                name: pageName,
+              },
             ]}
           />
           <Editable
@@ -146,7 +155,7 @@ const PageDetails = ({ create, isHistory }) => {
             fontWeight="600"
             fontSize={['2xl', '3xl']}
             isPreviewFocusable={!isReadOnly}
-            onChange={setPageName}
+            onChange={setPageTitle}
             isDisabled={isReadOnly}
             mt="5vh"
           >
@@ -193,7 +202,7 @@ const PageDetails = ({ create, isHistory }) => {
             />
           </FormProvider>
           <Flex direction="row" justify="space-between" align="center" mt="0.5rem">
-            <Link to={`/project/${project.id}`}>
+            <Link to={isHistory ? `/project/${project.id}/history/` : `/project/${project.id}/`}>
               <Button
                 color="secondary"
                 borderColor="secondary"
