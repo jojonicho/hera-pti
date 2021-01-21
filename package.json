@@ -2,6 +2,7 @@
   "name": "hera",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/requirements-gatherer",
   "dependencies": {
     "@chakra-ui/core": "^0.8.0",
     "@chakra-ui/react": "^1.0.0",
