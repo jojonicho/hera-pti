@@ -47,7 +47,7 @@ const LandingPage = ({ location }) => {
           width={['100%', '80%', '80vw', '33vw']}
         >
           <Logo fill="black" />
-          <Text fontSize="calc(1.5rem + 0.5vw)" fontWeight="bold" margin="1em">
+          <Text fontSize="calc(1.5rem + 0.5vw)" fontWeight="bold" textAlign="center" margin="1em">
             Requirements Gatherer
           </Text>
           <Text textAlign="center">
