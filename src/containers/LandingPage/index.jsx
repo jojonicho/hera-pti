@@ -51,7 +51,7 @@ const LandingPage = ({ location }) => {
             Requirements Gatherer
           </Text>
           <Text textAlign="center">
-            One stop application to define your software project requirements.
+            One-stop application to define your software project requirements.
           </Text>
           {user ? (
             <Link to="/dashboard">
