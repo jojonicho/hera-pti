@@ -1,4 +1,4 @@
-import { CloseButton, Flex, Image, Stack, Text } from '@chakra-ui/core'
+import { CloseButton, Flex, Image, Stack, Text, IconButton } from '@chakra-ui/core'
 import React, { useEffect, useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDropzone } from 'react-dropzone'
@@ -27,9 +27,25 @@ const FileInput = ({ name, isRequired, accept, ...props }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: accept,
-    disabled: isReadOnly,
+    disabled: isReadOnly || fileDisplay,
   })
   const file = watch(name)
+
+  const fetchFileBuffer = useCallback(
+    async fileUrl => {
+      let blob = await fetch(fileUrl).then(r => r.blob())
+      blob.name = fileUrl.split('/').pop()
+      setValue(name, blob)
+    },
+    [setValue, name],
+  )
+
+  const clearInput = () => {
+    setValue(name, null)
+    setFileDisplay(null)
+    setFileName(null)
+    setExtension(null)
+  }
 
   useEffect(() => {
     register(name)
@@ -44,23 +60,15 @@ const FileInput = ({ name, isRequired, accept, ...props }) => {
 
   useEffect(() => {
     if (file) {
-      let fileDisplay = ''
-      let fileName = ''
       try {
-        fileDisplay = URL.createObjectURL(file)
-        fileName = file.name
+        setFileDisplay(URL.createObjectURL(file))
+        setFileName(file.name)
+        setExtension(file.name.split('.').pop())
       } catch (error) {
-        fileDisplay = file
-        fileName = file.split('/').pop()
+        fetchFileBuffer(file)
       }
-      const ext = fileName.split('.').pop()
-
-      setFileDisplay(fileDisplay)
-      setFileName(fileName)
-      setExtension(ext)
-      setLoadError(false)
     }
-  }, [file])
+  }, [file, fetchFileBuffer])
 
   return (
     <FormFieldWrapper {...props} name={name} isRequired={isRequired}>
@@ -92,11 +100,22 @@ const FileInput = ({ name, isRequired, accept, ...props }) => {
                     objectFit="cover"
                   />
                 )}
-                <Text fontSize={['xs', 'md']} ml="0.5rem">
+                <Text fontSize={['xs', 'md']} p="0 0.5rem">
                   {fileName}
                 </Text>
               </Flex>
-              {!isReadOnly && <CloseButton onClick={() => setValue(name, null)} />}
+              <Flex direction={['column', 'row']} align="center">
+                <a href={fileDisplay} download={fileName}>
+                  <IconButton
+                    icon="download"
+                    bg="transparent"
+                    _hover={{ bg: 'formaddon' }}
+                    aria-label="Download"
+                    size="sm"
+                  />
+                </a>
+                {!isReadOnly && <CloseButton onClick={clearInput} _hover={{ bg: 'formaddon' }} />}
+              </Flex>
             </Flex>
           ) : (
             <Text color="border" fontSize="xs">
