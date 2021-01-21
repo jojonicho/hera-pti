@@ -7,7 +7,14 @@ import ProtectedRoute from './ProtectedRoutes'
 import ContextProvider from 'utils/datastore/ContextProvider'
 import theme from 'utils/theme'
 import globalStyles from 'constants/globalStyles'
-import { LandingPage, Dashboard, ProjectDetails, PageDetails, UserManagementPage } from 'containers'
+import {
+  LandingPage,
+  Dashboard,
+  NotFoundPage,
+  ProjectDetails,
+  PageDetails,
+  UserManagementPage,
+} from 'containers'
 
 export const Routes = () => (
   <ThemeProvider theme={theme}>
@@ -35,6 +42,7 @@ export const Routes = () => (
           />
           <ProtectedRoute path="/page/:pageId/" component={PageDetails} />
           <ProtectedRoute path="/users/" component={UserManagementPage} />
+          <Route component={NotFoundPage} />
         </Switch>
       </ContextProvider>
     </BrowserRouter>
