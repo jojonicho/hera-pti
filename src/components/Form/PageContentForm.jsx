@@ -20,7 +20,7 @@ const PageContentForm = ({ create }) => (
       <ListInput
         name="preconditions"
         label="Preconditions"
-        helperText="prerequisites for accessing this page"
+        helperText="prerequisites before accessing this page"
       />
       <ListInput
         name="display_details"
