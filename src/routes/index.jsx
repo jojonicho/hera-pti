@@ -20,7 +20,7 @@ export const Routes = () => (
       <ContextProvider>
         <CSSReset />
         <Switch>
-          <Route exact path="/" component={LandingPage} />
+          <Route path="/" component={LandingPage} />
           <ProtectedRoute path="/project/create/" component={() => <ProjectDetails create />} />
           <ProtectedRoute
             path="/project/:projectId/history/"
