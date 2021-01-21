@@ -80,6 +80,7 @@ const Table = ({
               d="flex"
               alignItems="center"
               mt={isMobile ? '0.25em' : '0'}
+              w="100%"
             >
               <Icon name="add" size="0.7em" color="black" mr="0.5em" />
               <Text fontWeight="400" color="black">

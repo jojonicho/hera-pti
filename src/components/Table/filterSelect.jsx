@@ -25,8 +25,8 @@ const filterSelect = ({
           Filter by {filterLabel}
         </Button>
       </PopoverTrigger>
-      <PopoverContent w="auto">
-        <Box display="flex" justifyContent="center" py="1em">
+      <PopoverContent w="auto" zIndex="1">
+        <Box display="flex" flexDir="column" alignItems="center" py="1em">
           <CheckboxGroup
             defaultValue={selectedFilters}
             onChange={values => handleChangeFiltersInput(values)}
@@ -38,6 +38,16 @@ const filterSelect = ({
               </Checkbox>
             ))}
           </CheckboxGroup>
+          <Button
+            size="sm"
+            w="70%"
+            mt="1em"
+            bg="rejectedBadge"
+            color="white"
+            onClick={() => handleChangeFiltersInput([])}
+          >
+            Clear filters
+          </Button>
         </Box>
       </PopoverContent>
     </Popover>
