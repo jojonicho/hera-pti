@@ -30,7 +30,7 @@ const PageInfoForm = ({ create, parentPage, parentPageOptions }) => {
         <Input
           name="page_url"
           label="Page URL"
-          helperText="e.g. bem.cs.ui.ac.id/my-project/my-page/"
+          helperText="e.g. my-project/my-page/"
           isRequired
         />
         <Select
