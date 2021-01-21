@@ -11,12 +11,14 @@ import {
   ModalOverlay,
   Select,
   Text,
+  Tooltip,
 } from '@chakra-ui/core'
 import { Code } from '@chakra-ui/react'
 import { STATUS_OPTIONS } from 'constants/options'
 import { generateDateFormat1, generateDateFormat2 } from 'utils/table/generateDateFormat'
 import generateLogoByRequester from 'utils/table/generateLogoByRequester'
 import generateStatusBadgeProps from 'utils/table/generateStatusBadgeProps'
+import generateRequestTypeFormat from 'utils/table/generateRequestTypeFormat'
 import PropTypes from 'prop-types'
 import { projectPropTypes } from 'constants/proptypes/project'
 import { VersionHistoryModal } from 'components'
@@ -216,7 +218,7 @@ export const Row = ({
     >
       <Modals
         project={project}
-        isAdmin
+        isAdmin={isAdmin}
         isModalShown={isModalShown}
         setIsModalShown={setIsModalShown}
         option={option}
@@ -229,21 +231,25 @@ export const Row = ({
         setIsVersionModalShown={setIsVersionModalShown}
       />
       <Box w={widthDistribution.name}>
-        <Link to={`/project/${project.id}/`}>
-          <Box display="flex" alignItems="center" paddingRight="0.25em">
-            <Image
-              src={generateLogoByRequester(project.department)}
-              maxHeight="3.5rem"
-              maxWidth="3.5rem"
-            />
+        <Box display="flex" alignItems="center" paddingRight="0.25em">
+          <Tooltip label={project.department || 'others'} hasArrow placement="top">
+            <Box h="3.5rem" w="3.5rem">
+              <Image
+                src={generateLogoByRequester(project.department)}
+                maxHeight="3.5rem"
+                maxWidth="3.5rem"
+              />
+            </Box>
+          </Tooltip>
+          <Link to={`/project/${project.id}/`}>
             <Box marginLeft="1em">
-              {project.title}
+              {generateRequestTypeFormat(project.request_type)} {project.title}
               <Text fontSize="0.8em" fontWeight="400" color="secondary">
                 {project.description}
               </Text>
             </Box>
-          </Box>
-        </Link>
+          </Link>
+        </Box>
       </Box>
 
       <Box w={widthDistribution.status} display="flex" justifyContent="center">
@@ -289,7 +295,9 @@ export const Row = ({
               ? project.message_unread_by_admin_count
               : project.message_unread_by_requester_count}
           </Text>
-          <Icon name="chat" size="1.1em" />
+          <Link to={`/project/${project.id}/`}>
+            <Icon name="chat" size="1.1em" />
+          </Link>
         </Box>
       </Box>
       {isAdmin && (
@@ -334,7 +342,7 @@ export const MobileRow = ({
     <Box bg="card" rounded="8px" width="100%" mt="1rem" fontSize="0.8em">
       <Modals
         project={project}
-        isAdmin
+        isAdmin={isAdmin}
         isModalShown={isModalShown}
         setIsModalShown={setIsModalShown}
         option={option}
@@ -360,14 +368,20 @@ export const MobileRow = ({
         </Text>
       </Box>
       <Box d="flex" p="1rem">
-        <Image
-          src={generateLogoByRequester(project.department)}
-          maxHeight="2.5rem"
-          maxWidth="2.5rem"
-        />
+        <Tooltip label={project.department || 'others'} hasArrow placement="top">
+          <Box h="2.5rem" w="2.5rem">
+            <Image
+              src={generateLogoByRequester(project.department)}
+              maxHeight="2.5rem"
+              maxWidth="2.5rem"
+            />
+          </Box>
+        </Tooltip>
         <Link to={`/project/${project.id}/`}>
           <Box w="70%" ml="10px">
-            <Text>{project.title}</Text>
+            <Text>
+              {generateRequestTypeFormat(project.request_type)} {project.title}
+            </Text>
             <Text fontSize="0.8em" fontWeight="400" color="secondary">
               {project.description}
             </Text>
@@ -407,7 +421,9 @@ export const MobileRow = ({
                 ? project.message_unread_by_admin_count
                 : project.message_unread_by_requester_count}
             </Text>
-            <Icon name="chat" size="1.1em" />
+            <Link to={`/project/${project.id}/`}>
+              <Icon name="chat" size="1.1em" />
+            </Link>
           </Box>
           {isAdmin && (
             <Box cursor="pointer" onClick={() => setIsVerificationModalShown(true)}>
