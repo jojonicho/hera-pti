@@ -5,7 +5,13 @@ import {
   Editable,
   EditableInput,
   Flex,
+  Heading,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   Text,
   useToast,
@@ -38,7 +44,7 @@ const fields = [
 ]
 
 const ProjectDetails = ({ create, isHistory }) => {
-  const { errors, getValues, handleSubmit, setValue, formState, ...methods } = useForm()
+  const { errors, getValues, setValue, formState, ...methods } = useForm()
   const { projectId } = useParams()
   const { user } = useContext(UserContext)
 
@@ -49,6 +55,7 @@ const ProjectDetails = ({ create, isHistory }) => {
   const [version, setVersion] = useState('')
   const [status, setStatus] = useState('')
   const [statusBadgeProps, setStatusBadgeProps] = useState('')
+  const [isSubmitModalShown, setIsSubmitModalShown] = useState(false)
 
   let history = useHistory()
   const toast = useToast()
@@ -141,7 +148,7 @@ const ProjectDetails = ({ create, isHistory }) => {
     return payload
   }
 
-  const onSubmitSave = async () => {
+  const onSave = async () => {
     const payload = getPayload()
     const [data, error] = await postProjectById(create, projectId, payload)
     if (error) {
@@ -155,13 +162,16 @@ const ProjectDetails = ({ create, isHistory }) => {
       })
       return
     }
+    toast({
+      title: 'Project saved sucessfully!',
+    })
     if (create) {
       history.push(`/project/${data.id}`)
     }
     fetchProjectData()
   }
 
-  const onSubmitSubmit = async () => {
+  const onSubmit = async () => {
     const payload = getPayload()
     const [data, error] = await postProjectById(create, projectId, payload)
     await putProjectStatus(data.id, 'submitted')
@@ -176,6 +186,9 @@ const ProjectDetails = ({ create, isHistory }) => {
       })
       return
     }
+    toast({
+      title: 'Request submitted sucessfully!',
+    })
     if (create) {
       history.push(`/project/${data.id}`)
     }
@@ -200,7 +213,7 @@ const ProjectDetails = ({ create, isHistory }) => {
     history.push(`/page/${pageId}/create/`)
   }
 
-  const TreeCardButton = !isReadOnly && (
+  const TreeCardButton = !isReadOnly ? (
     <Button
       bg="accent"
       leftIcon="add"
@@ -210,6 +223,54 @@ const ProjectDetails = ({ create, isHistory }) => {
     >
       Create new page
     </Button>
+  ) : (
+    <></>
+  )
+
+  const SubmitModal = (
+    <Modal isOpen={isSubmitModalShown}>
+      <ModalOverlay />
+      <ModalContent borderRadius="20px" maxWidth="500px" maxHeight="570px">
+        <ModalHeader display="flex" justifyContent="space-between">
+          <Heading size="md">Submit</Heading>
+          <Button variantColor="gray" variant="link" onClick={() => setIsSubmitModalShown(false)}>
+            Cancel
+          </Button>
+        </ModalHeader>
+        <ModalBody pb="46px">
+          <Stack
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            flexDir="column"
+            overflowY="auto"
+            maxHeight="445px"
+            className="custom-scrollbar"
+          >
+            <Text fontWeight="bold" fontSize="1.25em">
+              Proceed with your submission?
+            </Text>
+            <Text color="crimson">
+              You cannot edit your request after it is submitted, contact our admin to revoke your
+              submission if needed
+            </Text>
+            <Button
+              width="45%"
+              bg="primary"
+              mt="1em"
+              color="white"
+              onClick={() => {
+                onSubmit()
+                setIsSubmitModalShown(false)
+              }}
+            >
+              Submit
+            </Button>
+          </Stack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 
   return (
@@ -291,19 +352,14 @@ const ProjectDetails = ({ create, isHistory }) => {
               </Editable>
               {!isReadOnly && (
                 <ButtonGroup spacing={4}>
-                  <Button
-                    borderColor="primary"
-                    color="primary"
-                    variant="outline"
-                    onClick={onSubmitSave}
-                  >
+                  <Button borderColor="primary" color="primary" variant="outline" onClick={onSave}>
                     Save as draft
                   </Button>
                   <Button
                     bg="primary"
                     color="white"
                     variant="solid"
-                    onClick={handleSubmit(onSubmitSubmit)}
+                    onClick={() => setIsSubmitModalShown(true)}
                     isLoading={formState.isSubmitting}
                   >
                     Submit
@@ -335,6 +391,7 @@ const ProjectDetails = ({ create, isHistory }) => {
             </Card>
           </Flex>
         </Stack>
+        {SubmitModal}
       </Stack>
     </Layout>
   )
