@@ -16,11 +16,11 @@ export const Routes = () => (
         ${globalStyles}
       `}
     />
-    <BrowserRouter>
+    <BrowserRouter basename="/requirements-gatherer">
       <ContextProvider>
         <CSSReset />
         <Switch>
-          <Route path="/" component={LandingPage} />
+          <Route exact path="/" component={LandingPage} />
           <ProtectedRoute path="/project/create/" component={() => <ProjectDetails create />} />
           <ProtectedRoute
             path="/project/:projectId/history/"

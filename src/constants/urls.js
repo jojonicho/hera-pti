@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-export const BASE_URL = process.env.API_URL || 'http://127.0.0.1:8000'
+export const BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'
 
 export const USER_URL = BASE_URL + '/auth/user'
 export const USER_SET_ROLE_URL = userId => `${USER_URL}/${userId}/set-admin-role/`
