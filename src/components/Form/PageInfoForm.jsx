@@ -21,10 +21,31 @@ const PageInfoForm = ({ create, parentPage, parentPageOptions }) => {
       align={create ? 'center' : 'flex-start'}
     >
       <Stack width={['100%', '100%', '100%', '80%']}>
-        <Select name="parent" label="Parent Page" options={parentPageOptions} />
-        <Input name="page_url" label="Page URL" isRequired />
-        <Select name="priority" label="Page Priority" isRequired options={PRIORITY_CHOICES} />
-        <ListInput name="access_details" label="Access Details" isRequired />
+        <Select
+          name="parent"
+          label="Parent Page"
+          helperText="another page from which this page will be accessed"
+          options={parentPageOptions}
+        />
+        <Input
+          name="page_url"
+          label="Page URL"
+          helperText="e.g. my-project/my-page/"
+          isRequired
+        />
+        <Select
+          name="priority"
+          label="Page Priority"
+          helperText="level of importance"
+          isRequired
+          options={PRIORITY_CHOICES}
+        />
+        <ListInput
+          name="access_details"
+          label="Access Details"
+          helperText="authorization criteria"
+          isRequired
+        />
       </Stack>
     </Stack>
   )

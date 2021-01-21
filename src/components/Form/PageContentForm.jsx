@@ -11,17 +11,26 @@ const PageContentForm = ({ create }) => (
     align={create ? 'center' : 'flex-start'}
   >
     <Stack width={['100%', '100%', '100%', '80%']}>
-      <ListInput name="flow" label="Flow" helperText="sub-flows and expectations" isRequired />
-      <ListInput name="preconditions" label="Preconditions" />
+      <ListInput
+        name="flow"
+        label="Flow"
+        helperText="additional subflows, e.g. display modal on submit"
+        isRequired
+      />
+      <ListInput
+        name="preconditions"
+        label="Preconditions"
+        helperText="prerequisites before accessing this page"
+      />
       <ListInput
         name="display_details"
         label="Display Details"
-        helperText="brief explanation of design"
+        helperText="additional display explanations"
       />
       <FileInput
         name="sketch"
-        label="Page's Reference Sketch"
-        helperText="if design is provided"
+        label="Page's Layout Sketch"
+        helperText="layout sketch for reference"
         accept={IMAGE_TYPE}
       />
     </Stack>
