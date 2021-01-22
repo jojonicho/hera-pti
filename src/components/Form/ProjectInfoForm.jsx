@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Card } from 'components'
-import { Select, Input } from 'components/Form/Fields'
+import { Select, Input, Datepicker } from 'components/Form/Fields'
 import { BIRDEPT_OPTIONS, PROJECT_REQUEST_TYPES } from 'constants/options'
 import { retrieveOrganizationsApi } from 'services/organization'
 import { Box, Spinner } from '@chakra-ui/core'
 import { useToast } from '@chakra-ui/react'
 
-const ProjectInfoForm = ({ create, isReadOnly, dept }) => {
+const ProjectInfoForm = ({ create, isReadOnly, dept, deadline, setDeadline }) => {
   const [department, setDepartment] = useState('')
   const [organizationOptions, setOrganizationOptions] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -83,13 +83,15 @@ const ProjectInfoForm = ({ create, isReadOnly, dept }) => {
             create={create}
             isReadOnly={isReadOnly}
           />
-          <Input
+          <Datepicker
             name="deadline"
             label="Deadline"
             helperText="YYYY-MM-DD"
             create={create}
             isRequired
             isReadOnly={isReadOnly}
+            deadline={deadline}
+            setDeadline={setDeadline}
           />
           <Input
             name="prototype_url"
@@ -131,6 +133,8 @@ ProjectInfoForm.propTypes = {
   create: PropTypes.bool,
   isReadOnly: PropTypes.bool,
   dept: PropTypes.string,
+  deadline: PropTypes.instanceOf(Date),
+  setDeadline: PropTypes.func,
 }
 
 export default ProjectInfoForm

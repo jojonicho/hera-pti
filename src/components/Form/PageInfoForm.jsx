@@ -27,12 +27,7 @@ const PageInfoForm = ({ create, parentPage, parentPageOptions }) => {
           helperText="another page from which this page will be accessed"
           options={parentPageOptions}
         />
-        <Input
-          name="page_url"
-          label="Page URL"
-          helperText="e.g. my-project/my-page/"
-          isRequired
-        />
+        <Input name="page_url" label="Page URL" helperText="e.g. my-project/my-page/" isRequired />
         <Select
           name="priority"
           label="Page Priority"
