@@ -30,6 +30,7 @@ import { request } from 'services/api'
 import generateStatusBadgeProps from 'utils/table/generateStatusBadgeProps'
 import { UserContext } from 'utils/datastore/UserContext'
 import { hasPrefix, trimPrefix } from 'utils/projectdetails/department'
+import { convertDateFormat } from 'utils/datepicker'
 
 const fields = [
   'department',
@@ -44,7 +45,7 @@ const fields = [
 ]
 
 const ProjectDetails = ({ create, isHistory }) => {
-  const { errors, getValues, setValue, formState, ...methods } = useForm()
+  const { errors, getValues, setValue, formState, handleSubmit, ...methods } = useForm()
   const { projectId } = useParams()
   const { user } = useContext(UserContext)
 
@@ -55,6 +56,7 @@ const ProjectDetails = ({ create, isHistory }) => {
   const [version, setVersion] = useState('')
   const [status, setStatus] = useState('')
   const [statusBadgeProps, setStatusBadgeProps] = useState('')
+  const [deadline, setDeadline] = useState(new Date())
   const [isSubmitModalShown, setIsSubmitModalShown] = useState(false)
 
   let history = useHistory()
@@ -92,6 +94,9 @@ const ProjectDetails = ({ create, isHistory }) => {
     setStatus(data.status)
     setStatusBadgeProps(generateStatusBadgeProps(data.status))
     fields.forEach(field => {
+      if (field === 'deadline') {
+        setDeadline(new Date(data[field]))
+      }
       if (field === 'receiver' && data[field]) {
         !isHistory ? setValue(field, data[field].id) : setValue(field, data[field])
         return
@@ -138,7 +143,7 @@ const ProjectDetails = ({ create, isHistory }) => {
         ? 'Other: ' + values.other_department
         : values.department,
       request_type: !values.request_type ? 'new_project' : values.request_type,
-      deadline: !values.deadline ? null : values.deadline,
+      deadline: convertDateFormat(deadline),
       access_url: values.access_url,
       prototype_url: values.prototype_url,
       description: values.description,
@@ -359,7 +364,7 @@ const ProjectDetails = ({ create, isHistory }) => {
                     bg="primary"
                     color="white"
                     variant="solid"
-                    onClick={() => setIsSubmitModalShown(true)}
+                    onClick={handleSubmit(() => setIsSubmitModalShown(true))}
                     isLoading={formState.isSubmitting}
                   >
                     Submit
@@ -379,7 +384,13 @@ const ProjectDetails = ({ create, isHistory }) => {
               discussions={discussions}
               targetProjectId={projectId}
             >
-              <ProjectInfoForm create={create} isReadOnly={isReadOnly} dept={department} />
+              <ProjectInfoForm
+                create={create}
+                isReadOnly={isReadOnly}
+                dept={department}
+                deadline={deadline}
+                setDeadline={setDeadline}
+              />
             </FormProvider>
             <Card title="Project Tree" button={TreeCardButton}>
               <TreeContainer
