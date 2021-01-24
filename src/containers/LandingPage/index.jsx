@@ -15,7 +15,7 @@ const LandingPage = ({ location }) => {
   const toast = useToast()
   const loginToast = loginUser =>
     toast({
-      title: `Welcome back, ${loginUser.email}`,
+      title: `Welcome, ${loginUser.given_name}`,
       description: loginUser.is_admin && 'You are an admin',
       status: 'success',
       duration: 5000,
