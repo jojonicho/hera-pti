@@ -11,7 +11,6 @@ import {
   PopoverBody,
   useToast,
 } from '@chakra-ui/core'
-import { Instagram } from 'react-content-loader'
 import { Link } from 'react-router-dom'
 
 import { ReactComponent as Logo } from 'assets/logo.svg'
@@ -43,9 +42,7 @@ const Navbar = ({ navItems }) => {
           </Text>
         </Stack>
       </Link>
-      {!user ? (
-        <Instagram />
-      ) : (
+      {user && (
         <Stack align="center" justify="space-between" isInline>
           {navItems.map(navItem => navItem)}
           <Image src={user.picture} alt="google-profile" width="30px" borderRadius="50%" />
