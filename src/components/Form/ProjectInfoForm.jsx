@@ -65,6 +65,7 @@ const ProjectInfoForm = ({ create, isReadOnly, dept, deadline, setDeadline }) =>
             isRequired={department === 'other'}
             isReadOnly={isReadOnly}
             isHidden={department !== 'other'}
+            isHiddenLabel
             isNoDiscussion
           />
           <Select

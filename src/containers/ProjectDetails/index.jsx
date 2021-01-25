@@ -49,7 +49,7 @@ const ProjectDetails = ({ create, isHistory }) => {
   const { projectId } = useParams()
   const { user } = useContext(UserContext)
 
-  const [title, setTitle] = useState('New Project')
+  const [title, setTitle] = useState('Project Name')
   const [isReadOnly, setIsReadOnly] = useState(false)
   const [discussions, setDiscussions] = useState({})
   const [department, setDepartment] = useState('')
@@ -89,7 +89,7 @@ const ProjectDetails = ({ create, isHistory }) => {
     const isReadOnly = isHistory || isAdmin || data.status !== 'draft'
     setIsReadOnly(isReadOnly)
 
-    setTitle(data.title)
+    setTitle(data.title || 'Project Name')
     setVersion(data.version)
     setStatus(data.status)
     setStatusBadgeProps(generateStatusBadgeProps(data.status))
@@ -136,7 +136,7 @@ const ProjectDetails = ({ create, isHistory }) => {
   const getPayload = () => {
     const values = getValues()
     const payload = {
-      title: title,
+      title: title || 'Project Name',
       department: !values.department
         ? 'other'
         : values.department === 'other'
@@ -301,11 +301,12 @@ const ProjectDetails = ({ create, isHistory }) => {
               mb="0.5rem"
             >
               <Editable
-                placeholder="New Project"
+                placeholder="Project Name"
                 fontWeight="600"
                 fontSize={['2xl', '3xl']}
                 isPreviewFocusable={!isReadOnly}
                 onChange={value => setTitle(value)}
+                onSubmit={value => setTitle(value || 'Project Name')}
                 isDisabled={isReadOnly}
               >
                 {({ isEditing, onRequestEdit }) => (
@@ -392,7 +393,7 @@ const ProjectDetails = ({ create, isHistory }) => {
                 setDeadline={setDeadline}
               />
             </FormProvider>
-            <Card title="Project Tree" button={TreeCardButton}>
+            <Card title="Project Pages Tree" button={TreeCardButton}>
               <TreeContainer
                 projectId={projectId}
                 isHistory={isHistory}

@@ -68,7 +68,11 @@ const LandingPage = ({ location }) => {
                 buttonText="Login with Google"
                 onSuccess={async token => {
                   const loginUser = await login(token)
-                  loginToast(loginUser)
+                  if (loginUser) {
+                    loginToast(loginUser)
+                  } else {
+                    errorToast('Authentication service unreachable')
+                  }
                 }}
                 onFailure={err => {
                   errorToast(err)

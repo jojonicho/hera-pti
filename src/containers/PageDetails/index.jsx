@@ -41,7 +41,7 @@ const PageDetails = ({ create, isHistory }) => {
   const { user } = useContext(UserContext)
 
   const [isReadOnly, setIsReadOnly] = useState(false)
-  const [pageName, setPageName] = useState('New Page')
+  const [pageName, setPageName] = useState('Page Name')
   const [parent, setParent] = useState('')
   const [project, setProject] = useState({ id: '', title: 'Project' })
   const [discussions, setDiscussions] = useState({})
@@ -57,7 +57,7 @@ const PageDetails = ({ create, isHistory }) => {
   const pageContent = <PageContentForm create={create} />
 
   const setPageTitle = pageName => {
-    setPageName(pageName || 'New Page')
+    setPageName(pageName || 'Page Name')
   }
 
   const fetchPageData = useCallback(async () => {
@@ -151,11 +151,12 @@ const PageDetails = ({ create, isHistory }) => {
             ]}
           />
           <Editable
-            placeholder="New Page"
+            placeholder="Page Name"
             fontWeight="600"
             fontSize={['2xl', '3xl']}
             isPreviewFocusable={!isReadOnly}
-            onChange={setPageTitle}
+            onSubmit={setPageTitle}
+            onChange={setPageName}
             isDisabled={isReadOnly}
             mt="5vh"
           >

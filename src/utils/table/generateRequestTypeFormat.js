@@ -8,5 +8,7 @@ export default function generateRequestTypeFormat(requestType) {
       return '[IMPR]'
     case 'chores':
       return '[CHR]'
+    default:
+      return requestType
   }
 }
