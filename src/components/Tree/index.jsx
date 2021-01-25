@@ -15,34 +15,46 @@ const Item = styled.div`
   margin-bottom: 0.3rem;
   background-color: ${theme.colors.formField};
   color: ${theme.colors.formFont};
-  width: 75%;
+  width: 80%;
   border-radius: 5px;
-  padding: 0.4rem;
-`
-
-const LeftElement = styled.div`
-  margin-left: 0.1rem;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-`
-const RightElement = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
+  min-height: 2rem;
+  padding: 0 0.4rem;
+  vertical-align: middle;
 `
 
 const RowElement = styled.div`
   display: flex;
   flex-direction: row;
-  padding-left: 0.3rem;
   justify-content: space-between;
   vertical-align: middle;
   align-items: center;
 `
 
+const PageElement = styled.div`
+  width: 100%;
+  padding: 0.4rem 0.3rem;
+  vertical-align: middle;
+`
+
 const DiscussionIcon = styled.div`
   color: ${theme.colors.brand};
+  display: flex;
+  flex-direction: row;
+`
+
+const ButtonContainer = styled.div`
+  min-height: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`
+
+const PageLink = styled(Link)`
+  width: 100%;
+  min-height: 2rem;
+  display: flex;
+  flex-direction: row;
 `
 
 const Tree = ({ item, data, setData, isReadOnly, isHistory }) => {
@@ -51,26 +63,30 @@ const Tree = ({ item, data, setData, isReadOnly, isHistory }) => {
   return (
     <Item left={item.depth}>
       <RowElement>
-        <Link to={isHistory ? `/page/${item.page.id}/history/` : `/page/${item.page.id}/`}>
-          <LeftElement>{item.page.title}</LeftElement>
-        </Link>
-        <RightElement>
-          <RowElement>
+        <PageLink to={isHistory ? `/page/${item.page.id}/history/` : `/page/${item.page.id}/`}>
+          <PageElement>{item.page.title}</PageElement>
+          <ButtonContainer>
             {user.is_admin && item.page.message_unread_by_admin_count > 0 && (
               <DiscussionIcon>
-                {item.page.message_unread_by_admin_count}{' '}
+                <span style={{ marginRight: '3px' }}>
+                  {item.page.message_unread_by_admin_count}
+                </span>
                 <Icon name="chat" size={['1.2rem', '1.5rem']} />
               </DiscussionIcon>
             )}
             {!user.is_admin && item.page.message_unread_by_requester_count > 0 && (
               <DiscussionIcon>
-                {item.page.message_unread_by_requester_count}{' '}
+                <span style={{ marginRight: '3px' }}>
+                  {item.page.message_unread_by_requester_count}
+                </span>
                 <Icon name="chat" size={['1.2rem', '1.5rem']} />
               </DiscussionIcon>
             )}
-            <DropdownMenu item={item} data={data} setData={setData} isReadOnly={isReadOnly} />
-          </RowElement>
-        </RightElement>
+          </ButtonContainer>
+        </PageLink>
+        <RowElement>
+          <DropdownMenu item={item} data={data} setData={setData} isReadOnly={isReadOnly} />
+        </RowElement>
       </RowElement>
     </Item>
   )
@@ -175,7 +191,7 @@ DropdownMenu.propTypes = {
     }).isRequired,
     depth: PropTypes.number.isRequired,
   }).isRequired,
-  setData: PropTypes.object.isRequired,
+  setData: PropTypes.func.isRequired,
   isReadOnly: PropTypes.bool,
 }
 

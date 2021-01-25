@@ -14,6 +14,7 @@ const FormFieldWrapper = ({
   isRequired,
   isHidden,
   isNoDiscussion,
+  isHiddenLabel,
 }) => {
   const { isMobile } = useWindowSize()
   const { create, isHistory, errors, discussions, targetPageId, targetProjectId } = useFormContext()
@@ -40,20 +41,28 @@ const FormFieldWrapper = ({
     )
   }
 
+  const fieldDescriptor = (
+    <>
+      <FormLabel textAlign={['left', 'right']} p={0} fontSize="sm">
+        {label}
+      </FormLabel>
+      <Stack mt="0.4rem" mr={isRequired ? '10px' : '0'}>
+        {helperText && (
+          <FormHelperText textAlign={['left', 'right']} mt="-0.4rem" fontSize="xs">
+            {helperText}
+          </FormHelperText>
+        )}
+      </Stack>
+    </>
+  )
+
   return (
     <FormControl isRequired={isRequired} isInvalid={errors[name] ? true : false} hidden={isHidden}>
       <Flex direction="row" justify="space-between" width="100%" mb="1.5rem">
         <Flex direction={['column', 'row']} align="flex-start" width="100%">
           <Flex direction="row" justify="space-between" width={['100%', 'auto']}>
             <Stack width={['100%', '11rem']} pr={4} mt={helperText ? '0' : '0.4rem'} mb={[1, 0]}>
-              <FormLabel textAlign={['left', 'right']} p={0} fontSize="sm">
-                {label}
-              </FormLabel>
-              {helperText && (
-                <FormHelperText textAlign={['left', 'right']} mt="-0.4rem" fontSize="xs">
-                  {helperText}
-                </FormHelperText>
-              )}
+              {!isHiddenLabel && fieldDescriptor}
             </Stack>
             {isMobile && !create && discussion}
           </Flex>
@@ -76,6 +85,7 @@ FormFieldWrapper.propTypes = {
   isRequired: PropTypes.bool,
   isHidden: PropTypes.bool,
   isNoDiscussion: PropTypes.bool,
+  isHiddenLabel: PropTypes.bool,
 }
 
 export default FormFieldWrapper

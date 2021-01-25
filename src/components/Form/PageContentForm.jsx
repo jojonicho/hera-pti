@@ -15,7 +15,6 @@ const PageContentForm = ({ create }) => (
         name="flow"
         label="Flow"
         helperText="additional subflows, e.g. display modal on submit"
-        isRequired
       />
       <ListInput
         name="preconditions"
