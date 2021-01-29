@@ -15,7 +15,7 @@ const Datepicker = ({
   setDeadline,
   ...props
 }) => {
-  const { register, isReadOnly } = useFormContext()
+  const { isReadOnly } = useFormContext()
 
   return (
     <FormFieldWrapper
@@ -26,7 +26,6 @@ const Datepicker = ({
       isNoDiscussion={isNoDiscussion}
     >
       <DatePicker
-        ref={register({ required: isRequired })}
         name={name}
         readOnly={isReadOnly}
         minDate={new Date()}
