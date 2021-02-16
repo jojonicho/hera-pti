@@ -5,8 +5,9 @@ import {
   EditableInput,
   Flex,
   IconButton,
-  Text,
   Stack,
+  Text,
+  useToast,
 } from '@chakra-ui/core'
 import React, { useState, useEffect, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
@@ -50,6 +51,8 @@ const PageDetails = ({ create, isHistory }) => {
   const [infoTabBorder, setInfoTabBorder] = useState('')
   const [contentTabBorder, setContentTabBorder] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+
+  const toast = useToast()
 
   const pageInfo = (
     <PageInfoForm create={create} parentPageOptions={parentPageOptions} parentPage={parent} />
@@ -107,12 +110,39 @@ const PageDetails = ({ create, isHistory }) => {
     const values = getValues()
     const payload = { title: pageName }
     inputFields.forEach(field => (payload[field] = cleanData(values[field])))
-    await updatePageApi(pageId, payload)
+    const [_, updateError] = await updatePageApi(pageId, payload)
+
+    if (updateError) {
+      console.log(updateError)
+      toast({
+        title: 'An error occurred.',
+        description: updateError.statusText,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+      return
+    }
+
+    toast({
+      title: 'Page saved sucessfully!',
+    })
 
     if (values.sketch_is_updated) {
       const data = new FormData()
       data.append('sketch', values.sketch)
-      await updatePageApi(pageId, data)
+      const [_, sketchUploadError] = await updatePageApi(pageId, data)
+
+      if (sketchUploadError) {
+        console.log(sketchUploadError)
+        toast({
+          title: 'An error occurred.',
+          description: sketchUploadError.statusText,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
     }
     create && history.push(`/page/${pageId}/`)
   }
